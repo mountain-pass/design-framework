@@ -57,6 +57,14 @@ const END = "/* === vendored fonts: end === */";
 // list of static weights: one file per family covers every weight the design
 // uses, and it is smaller than the statics it replaces.
 const FONTS = {
+  learn: {
+    // Baloo 2 stands in for the reference product's own rounded face, which is
+    // proprietary. It is the substitute that reaches weight 800 — this design
+    // sets buttons, headings and navigation there, and most openly-licensed
+    // rounded faces stop at 700.
+    query: "family=Baloo+2:wght@400..800",
+    licences: ["Baloo 2 — SIL Open Font License 1.1"],
+  },
   slate: {
     query: "family=Inter:wght@400..700&family=JetBrains+Mono:wght@400..500",
     licences: ["Inter — SIL Open Font License 1.1", "JetBrains Mono — SIL Open Font License 1.1"],

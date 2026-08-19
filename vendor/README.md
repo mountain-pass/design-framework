@@ -77,7 +77,7 @@ project — a relative `url()` would break both properties at once.
 | `warm-paper` | Crimson Pro, Inter, JetBrains Mono | SIL OFL 1.1 |
 | `material-design` | Roboto, Roboto Mono | Apache 2.0 |
 | `playful` | DM Sans, Fredoka | SIL OFL 1.1 |
-| `learn` | *none — see below* | |
+| `learn` | Baloo 2 | SIL OFL 1.1 |
 
 Each is requested as a variable axis (`wght@400..700`) rather than as separate
 static weights, so one file per family covers the whole range and is smaller
@@ -90,10 +90,13 @@ The cost is size — these `theme.css` files run 125–352KB rather than ~10KB. 
 consuming project that would rather serve the files itself can delete the
 `@font-face` block; the tokens below it only name the families.
 
-`learn` is the exception. Its stack is Duolingo Sans, Arial Rounded MT Bold and
-Trebuchet MS — all proprietary, none redistributable — so there is nothing to
-vendor, and its `@font-face` is `local()`-only by necessity. `designs/learn/DESIGN.md`
-records what that costs a phone and what to substitute.
+`learn` used to be the exception. Its stack named Duolingo Sans, Arial Rounded MT
+Bold and Trebuchet MS — all proprietary, none redistributable — so it shipped a
+`local()`-only `@font-face` that downloaded nothing and rendered rounded only on
+machines that happened to have one of those installed. Baloo 2 now stands in: it
+is openly licensed and reaches weight 800, which this design needs for buttons
+and navigation and which most rounded OFL faces do not. `designs/learn/DESIGN.md`
+records the substitution.
 
 ### Updating
 
