@@ -416,6 +416,25 @@ for (const name of designs) {
   // --- subresources: the vendored compiler and nothing else
   checkSubresources(label, html);
 
+  // --- the dark-mode toggle must persist to its own key
+  //
+  // Designs are made by copying a folder, and the storage key is the one string
+  // that has to change but produces no visible error if it does not. `learn`
+  // read `learn-theme` and wrote `playful-theme`, so its toggle never survived a
+  // refresh; `material-design` read and wrote `slate-theme`, so toggling it
+  // silently flipped `slate` as well, now that every design is served from one
+  // origin. Both were invisible until someone reloaded the page.
+  const expectedKey = `${name.replace(/^_/, "")}-theme`;
+  const readKey = html.match(/getItem\(\s*["']([^"']+)["']\s*\)/)?.[1];
+  const writeKey = html.match(/setItem\(\s*["']([^"']+)["']/)?.[1];
+  if (!readKey || !writeKey) {
+    fail(label, "index.html has no localStorage read/write pair — the dark-mode choice must persist");
+  } else if (readKey !== writeKey) {
+    fail(label, `index.html reads "${readKey}" but writes "${writeKey}" — the toggle cannot survive a refresh`);
+  } else if (readKey !== expectedKey) {
+    fail(label, `index.html stores its theme under "${readKey}", not "${expectedKey}" — designs served from one origin would share the setting`);
+  }
+
   // --- scaffold left behind
   if (md.includes("<!-- Copy this folder") || /^\s*<One-line description/m.test(md)) {
     fail(label, "DESIGN.md still contains scaffold placeholders");
