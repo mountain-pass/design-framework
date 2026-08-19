@@ -51,7 +51,8 @@ saturated version of the interface" rather than as a foreign colour dropped on t
 | `--muted-foreground` | `oklch(0.551 0.019 264)` | `oklch(0.682 0.016 264)` | Secondary text |
 | `--accent` | `oklch(0.958 0.011 264)` | `oklch(0.301 0.019 264)` | Hover surface |
 | `--destructive` | `oklch(0.577 0.212 27.3)` | `oklch(0.648 0.188 25.5)` | Danger |
-| `--border` / `--input` | `oklch(0.922 0.008 264)` | `oklch(0.301 0.018 264)` | Hairlines |
+| `--border` | `oklch(0.922 0.008 264)` | `oklch(0.301 0.018 264)` | Hairlines, dividers |
+| `--input` | `oklch(0.660 0.008 264)` | `oklch(0.500 0.018 264)` | Control boundaries |
 
 ### Why this primary
 
@@ -76,28 +77,44 @@ Computed from `theme.css` by `scripts/check.mjs`, not estimated:
 | `muted-foreground` on `background` | 4.83:1 | 6.57:1 | 4.5:1 |
 | `primary-foreground` on `primary` | 5.66:1 | 6.35:1 | 4.5:1 |
 | `primary` on `background` | 5.91:1 | 6.46:1 | 4.5:1 |
-| `destructive-foreground` on `destructive` | 4.62:1 | **3.37:1** ⚠ | 4.5:1 |
+| `destructive-foreground` on `destructive` | 4.62:1 | 5.13:1 | 4.5:1 |
+| `destructive` on `background` | 4.82:1 | 5.27:1 | 4.5:1 |
 | `ring` on `background` | 5.91:1 | 6.46:1 | 3:1 |
-| `input` on `background` | **1.26:1** ⚠ | **1.54:1** ⚠ | 3:1 |
-| `border` on `background` | 1.26:1 | 1.27:1 | decorative |
+| `input` on `background` | 3.11:1 | 3.13:1 | 3:1 |
+| `border` on `background` | 1.26:1 | 1.38:1 | decorative |
+
+Everything clears its minimum, and `check.mjs` fails the build if that stops being
+true.
 
 `muted-foreground` is deliberately kept above 4.5:1 rather than the 3:1 that
 "secondary text" is often allowed, because in a dense tool the secondary text is
 frequently the text that matters.
 
-**Two known failures**, carried deliberately and tracked rather than hidden:
+### Why `--border` and `--input` differ
 
-- `--input` at 1.26:1 does not meet the 3:1 that WCAG 1.4.11 requires of a control
-  boundary. In `slate` an outlined input's border is the only thing identifying it
-  as an input, so this is a real defect, not an exempt decorative hairline. Fixing
-  it means darkening `--input` away from `--border` — a visible change to the
-  design's hairline character, so it is called out here rather than silently
-  applied.
-- `destructive-foreground` on `destructive` falls to 3.37:1 in dark mode. This is
-  the classic dark-mode inversion trap described in `shared/ACCESSIBILITY.md`: the
-  fill lightens for dark mode while the foreground stays white.
+They used to hold the same pale hairline, which meant an outlined text field was
+identified by a 1.26:1 edge — well under the 3:1 WCAG 1.4.11 requires of a control
+boundary. They are now two different values on purpose:
 
-Until these are fixed, do not treat `slate` as AA-clean. See `## Accessibility`.
+- `--border` stays a hairline at 1.26:1. It separates cards, table rows, and
+  sections, and a divider carries no information, so it is exempt.
+- `--input` is `oklch(0.660 0.008 264)` — a mid grey at 3.11:1. It is the only
+  thing that says "this is a text field", so it is a UI boundary and is held to
+  the standard.
+
+This is the one place `slate` trades a little of its hairline character for
+legibility, and it is confined to form controls. Everything else keeps the
+Vercel-ish edge treatment described under Influences.
+
+### Why dark-mode destructive uses dark text
+
+In dark mode `--destructive` is a light red (`L=0.648`) so that error *text* clears
+4.5:1 against the dark page. A fill that light cannot also carry white text — the
+two constraints move in opposite directions, and there is no lightness that
+satisfies both. So dark mode puts **dark text on the red fill**
+(`--destructive-foreground: oklch(0.200 0.040 25.5)`), which reaches 5.13:1 while
+leaving the fill light enough to work as text at 5.27:1. Light mode is unaffected
+and still uses near-white on red.
 
 ### Rules
 
@@ -239,7 +256,9 @@ Anything not mentioned here is **stock shadcn/ui**, styled by the tokens.
 Icon-only buttons are `h-9 w-9` with the icon at 16px. Icons inside labelled
 buttons are 16px with `gap-2`.
 
-**Input** — `h-9`, `border-input`, `rounded-md`, `text-sm`. Placeholder is
+**Input** — `h-9`, `border-input`, `rounded-md`, `text-sm`. `border-input` is a
+visibly darker grey than `border` — that is deliberate (see Colour), so do not
+"fix" it by swapping in `border`. Placeholder is
 `text-muted-foreground`. The error state adds `border-destructive` and
 `focus-visible:ring-destructive`; the message below is `text-destructive text-xs`.
 The border does not thicken on error — thickening shifts layout by a pixel and the
@@ -320,15 +339,8 @@ also varies shape or dash pattern.
 
 ### Known gaps
 
-Carried openly rather than quietly, per `shared/ACCESSIBILITY.md` §9:
-
-1. `--input` is 1.26:1 against the background (needs 3:1). Outlined fields are not
-   reliably perceivable. Fix by darkening `--input` independently of `--border`.
-2. `--destructive-foreground` on `--destructive` is 3.37:1 in dark mode (needs
-   4.5:1). Fix by darkening dark-mode `--destructive` or by moving its foreground
-   off pure white.
-
-Both are reported by `node scripts/check.mjs`.
+None. Every pair in `CONTRAST_PAIRS` clears its minimum in both themes, verified by
+`node scripts/check.mjs`, which treats a shortfall as a build failure.
 
 ---
 

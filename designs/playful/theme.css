@@ -28,7 +28,7 @@
   --popover-foreground: oklch(0.25 0.02 280);
 
   /* Primary: vibrant purple */
-  --primary: oklch(0.58 0.19 285);
+  --primary: oklch(0.573 0.190 285);
   --primary-foreground: oklch(1 0 0);
 
   /* Secondary: soft lavender */
@@ -44,13 +44,13 @@
   --accent-foreground: oklch(0.20 0.03 50);
 
   /* Destructive: warm red */
-  --destructive: oklch(0.61 0.22 25);
+  --destructive: oklch(0.585 0.220 25);
   --destructive-foreground: oklch(1 0 0);
 
   /* Borders and rings */
   --border: oklch(0.90 0.01 280);
-  --input: oklch(0.88 0.015 280);
-  --ring: oklch(0.58 0.19 285);
+  --input: oklch(0.655 0.015 280);
+  --ring: oklch(0.573 0.190 285);
 
   /* Chart colors: vibrant and playful */
   --chart-1: oklch(0.58 0.19 285); /* purple */
@@ -62,7 +62,7 @@
   /* Sidebar (soft lavender background) */
   --sidebar: oklch(0.92 0.04 285);
   --sidebar-foreground: oklch(0.25 0.02 285);
-  --sidebar-primary: oklch(0.70 0.17 285);
+  --sidebar-primary: oklch(0.573 0.190 285);
   --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.55 0.20 285);
   --sidebar-accent-foreground: oklch(1 0 0);
@@ -97,15 +97,15 @@
 
   /* Accent: softer orange for dark */
   --accent: oklch(0.65 0.12 50);
-  --accent-foreground: oklch(0.98 0.01 285);
+  --accent-foreground: oklch(0.200 0.030 50);
 
   /* Destructive: coral red */
   --destructive: oklch(0.65 0.18 25);
-  --destructive-foreground: oklch(0.98 0.01 285);
+  --destructive-foreground: oklch(0.200 0.040 25);
 
   /* Borders and rings */
   --border: oklch(0.35 0.05 285);
-  --input: oklch(0.32 0.05 285);
+  --input: oklch(0.505 0.050 285);
   --ring: oklch(0.72 0.15 285);
 
   /* Chart colors: desaturated for dark mode */

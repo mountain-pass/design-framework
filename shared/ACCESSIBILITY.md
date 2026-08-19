@@ -52,7 +52,8 @@ The numbers live in `TOKENS.md`; the requirements live here.
 | Graphical objects needed to understand content | **3:1** | 1.4.11 |
 
 Every `--x` / `--x-foreground` pair must clear 4.5:1 in **both** light and dark.
-`check.mjs` computes these from `theme.css` and reports any pair that does not.
+`check.mjs` computes these from `theme.css` and fails the build on any pair that
+does not.
 
 ### The two that are always missed
 
@@ -67,7 +68,11 @@ is the most common one in this repo's own history.
 The exemption: if a field is identified by something *other* than its border — a
 filled `--muted` background clearly distinct from the page, for instance — then the
 border is decorative and 3:1 does not apply to it. Say so explicitly in
-`DESIGN.md`; do not leave it implied.
+`DESIGN.md`; do not leave it implied. Note that the *fill* then has to clear 3:1
+instead, so this is a different way to pay the cost, not a way to avoid it.
+
+Thickening the border does not help either: WCAG measures colour difference, not
+stroke width. A 2px hairline is exactly as non-compliant as a 1px one.
 
 **`--ring` has no foreground pair, so nothing constrains it by accident.** The focus
 ring must clear 3:1 against *whatever it is drawn on top of*, which for a ring with
@@ -262,8 +267,12 @@ node scripts/check.mjs        # tokens, sections, and computed contrast ratios
 
 `check.mjs` parses each `theme.css`, converts every `oklch()` value to sRGB, and
 computes real WCAG contrast ratios for the standard pairs in both light and dark.
-It reports what it finds. It does not, and cannot, tell you whether the design is
-usable — that still needs a person.
+A shortfall fails the build. It also verifies that `theme.css` and the kitchen
+sink's inline theme still agree, since a silent drift between them ships one set of
+colours to the demo and another to consumers.
+
+What it cannot do is tell you whether the design is usable. That still needs a
+person, which is what the list below is for.
 
 What a script cannot check, and you must do by hand:
 

@@ -185,9 +185,8 @@ contrast ratios for the standard pairs in both themes, so the numbers recorded i
 `DESIGN.md` are measured rather than estimated. It has no dependencies — Node 18+ is
 all you need.
 
-Contrast shortfalls are currently reported as **warnings** while the existing
-designs are brought up to standard; flip `CONTRAST_LEVEL` in `check.mjs` to `fail`
-to make them a hard gate.
+Contrast shortfalls are **build failures**. Every design in the repo currently
+clears the baseline in both themes, so a new one that does not is a regression.
 
 ---
 

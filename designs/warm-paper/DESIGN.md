@@ -52,12 +52,13 @@ a cool blue-grey.
 | `--foreground` | `oklch(0.26 0.015 30)` | `oklch(0.90 0.010 50)` | Body text |
 | `--card` | `oklch(0.985 0.010 55)` | `oklch(0.26 0.020 40)` | Raised surface |
 | `--popover` | `oklch(0.99 0.008 55)` | `oklch(0.28 0.020 40)` | Floating surface |
-| `--primary` | `oklch(0.46 0.095 25)` | `oklch(0.60 0.075 25)` | Oxblood accent |
+| `--primary` | `oklch(0.46 0.095 25)` | `oklch(0.625 0.075 25)` | Oxblood accent |
 | `--secondary` / `--muted` | `oklch(0.94 0.010 50)` | `oklch(0.32 0.018 40)` | Subdued fill |
 | `--muted-foreground` | `oklch(0.52 0.020 35)` | `oklch(0.66 0.015 45)` | Secondary text |
 | `--accent` | `oklch(0.92 0.012 50)` | `oklch(0.35 0.020 40)` | Hover surface |
 | `--destructive` | `oklch(0.52 0.15 25)` | `oklch(0.62 0.12 25)` | Danger |
-| `--border` / `--input` | `oklch(0.88 0.012 50)` | `oklch(0.35 0.018 40)` | Hairlines |
+| `--border` | `oklch(0.88 0.012 50)` | `oklch(0.35 0.018 40)` | Hairlines, dividers |
+| `--input` | `oklch(0.645 0.012 50)` | `oklch(0.515 0.018 40)` | Control boundaries |
 
 ### Why this primary
 
@@ -68,7 +69,7 @@ point — this design does not shout. The hue (25°, a brick red) sits in the sa
 warm family as the paper (50-55°) and the text (30°), so the accent reads as "the
 saturated version of what's already here" rather than as a foreign colour.
 
-In dark mode the primary lightens to L=0.60 and **drops chroma further** to 0.075.
+In dark mode the primary lightens to L=0.625 and **drops chroma further** to 0.075.
 This is critical: holding chroma constant while raising lightness produces a garish
 neon effect against a dark surface. Dark-mode colours need less saturation, not
 more.
@@ -81,28 +82,44 @@ Computed from `theme.css` by `scripts/check.mjs`, not estimated:
 |---|---|---|---|
 | `foreground` on `background` | 14.49:1 | 12.87:1 | 4.5:1 |
 | `muted-foreground` on `background` | 5.16:1 | 5.56:1 | 4.5:1 |
-| `primary-foreground` on `primary` | 7.05:1 | 4.62:1 | 4.5:1 |
-| `primary` on `background` | 6.94:1 | **4.25:1** ⚠ | 4.5:1 |
-| `destructive-foreground` on `destructive` | 5.60:1 | **3.42:1** ⚠ | 4.5:1 |
-| `ring` on `background` | 6.94:1 | 4.25:1 | 3:1 |
-| `input` on `background` | **1.34:1** ⚠ | **1.66:1** ⚠ | 3:1 |
-| `border` on `background` | 1.37:1 | 1.37:1 | decorative |
+| `primary-foreground` on `primary` | 7.05:1 | 5.11:1 | 4.5:1 |
+| `primary` on `background` | 6.94:1 | 4.71:1 | 4.5:1 |
+| `destructive-foreground` on `destructive` | 5.60:1 | 4.92:1 | 4.5:1 |
+| `destructive` on `background` | 5.52:1 | 4.51:1 | 4.5:1 |
+| `ring` on `background` | 6.94:1 | 4.71:1 | 3:1 |
+| `input` on `background` | 3.07:1 | 3.07:1 | 3:1 |
+| `border` on `background` | 1.34:1 | 1.53:1 | decorative |
+
+Everything clears its minimum, and `check.mjs` fails the build if that stops being
+true.
 
 `muted-foreground` is deliberately kept well above the minimum so that secondary
 text — which in a reading interface is often the text that matters — remains
 comfortably legible.
 
-**Three known failures**, tracked rather than hidden:
+### Why `--border` and `--input` differ
 
-- `--input` at 1.34:1 does not meet the 3:1 WCAG 1.4.11 requires of a control
-  boundary. `warm-paper` uses hairline-bordered fields with no background fill, so
-  the border is the *only* thing identifying a field — this is a real defect.
-- `--primary` on `--background` drops to 4.25:1 in dark mode, so oxblood links in
-  running text fall just under AA. It still clears 3:1, so it remains valid for
-  large text and for the focus ring.
-- `destructive-foreground` on `destructive` falls to 3.42:1 in dark mode.
+`warm-paper` uses hairline-bordered fields with no background fill, which meant the
+border was the *only* thing identifying a field — at 1.34:1, well under the 3:1
+WCAG 1.4.11 asks of a control boundary. The two tokens now hold different values:
 
-Until these are fixed, do not treat `warm-paper` as AA-clean. See `## Accessibility`.
+- `--border` stays a warm hairline at 1.34:1, separating cards and sections. A
+  divider carries no information, so it is exempt.
+- `--input` is `oklch(0.645 0.012 50)` — a warm mid-grey at 3.07:1, still on the
+  paper hue so it reads as ink rather than as a foreign grey.
+
+The generous rhythm of this design is unaffected; only the field edge darkens.
+
+### Why dark-mode destructive uses dark text
+
+Dark-mode `--destructive` has to stay light enough to work as error *text* on the
+dark page (4.51:1) while also carrying a foreground — and no single lightness does
+both with near-white text. Dark mode therefore puts **dark text on the red fill**
+(`--destructive-foreground: oklch(0.180 0.040 25)`), reaching 4.92:1. Light mode is
+unchanged.
+
+Dark-mode `--primary` was also lifted from `L=0.60` to `0.625`, which brings oxblood
+link text in running prose from 4.25:1 up to 4.71:1. `--ring` tracks it.
 
 ### Rules
 
@@ -298,8 +315,9 @@ but not showy.
 Inputs, textareas, selects: **sans font, regular weight (400), 14px**. These are
 UI, not content.
 
-Border: `border border-input` (hairline, same as `--border` in light mode, slightly
-lighter in dark). No inner shadow, no background fill on default state.
+Border: `border border-input`. `--input` is a distinctly darker warm grey than
+`--border` — the field edge has to be perceivable where a divider does not (see
+Colour). No inner shadow, no background fill on default state.
 
 Focus: `ring-2 ring-ring ring-offset-2 ring-offset-background`. The ring is the
 accent colour, appears instantly (no transition).
@@ -396,9 +414,9 @@ raises the bar on a few things beyond the shared baseline:
   overrides — never set a fixed height on a container holding prose.
 - The serif is used for *content*, never for UI chrome, so nothing functional
   depends on a webfont that may not load.
-- Links in running text are underlined, not merely oxblood. This matters more here
-  than in `slate`, because `--primary` on `--background` is only 4.25:1 in dark
-  mode — the underline is what carries the link, not the colour.
+- Links in running text are underlined, not merely oxblood. `--primary` now clears
+  AA in both themes (4.71:1 in dark), but the underline stays: colour alone is not
+  a link affordance, and WCAG 1.4.1 applies to links in prose.
 
 **State is never colour alone.** Status pills carry a text label alongside the dot.
 Form errors put the message in text below the field. The active nav item uses a
@@ -415,16 +433,8 @@ applies automatically. Note that this design animates `height` on accordions and
 
 ### Known gaps
 
-Carried openly rather than quietly, per `shared/ACCESSIBILITY.md` §9:
-
-1. `--input` is 1.34:1 against the background (needs 3:1). Fields are outlined with
-   no fill, so the boundary is the only identifier. Fix by darkening `--input`
-   independently of `--border`.
-2. `--primary` on `--background` is 4.25:1 in dark mode (needs 4.5:1 for body-size
-   link text). Fix by lightening dark-mode `--primary` slightly.
-3. `--destructive-foreground` on `--destructive` is 3.42:1 in dark mode.
-
-All three are reported by `node scripts/check.mjs`.
+None. Every pair in `CONTRAST_PAIRS` clears its minimum in both themes, verified by
+`node scripts/check.mjs`, which treats a shortfall as a build failure.
 
 ---
 

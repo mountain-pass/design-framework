@@ -24,46 +24,68 @@ What was deliberately *not* taken: overly cartoonish aesthetics or childish trea
 
 The palette centers on a vibrant purple (hue 285°) as primary, with bright orange (hue 50°) as accent. These colors sit at opposite ends of the warm spectrum, creating energy through contrast. Supporting colors include mint green for success states and warm pinks for charts.
 
-| Token | Light | Dark | Role | Contrast |
-|---|---|---|---|---|
-| `--background` | `oklch(0.99 0.005 280)` | `oklch(0.20 0.04 285)` | Page background | — |
-| `--foreground` | `oklch(0.25 0.02 280)` | `oklch(0.95 0.01 285)` | Body text | — |
-| `--card` | `oklch(1 0 0)` | `oklch(0.25 0.04 285)` | Card surface | — |
-| `--primary` | `oklch(0.58 0.19 285)` | `oklch(0.72 0.15 285)` | Vibrant purple | — |
-| `--primary-foreground` | `oklch(1 0 0)` | `oklch(0.20 0.04 285)` | Text on primary | — |
-| `--secondary` | `oklch(0.92 0.04 285)` | `oklch(0.30 0.06 285)` | Soft lavender fill | — |
-| `--accent` | `oklch(0.75 0.15 50)` | `oklch(0.65 0.12 50)` | Bright orange | — |
-| `--accent-foreground` | `oklch(0.20 0.03 50)` | `oklch(0.98 0.01 285)` | Text on accent | — |
-| `--muted` | `oklch(0.96 0.008 70)` | `oklch(0.28 0.04 285)` | Warm grey fill | — |
-| `--destructive` | `oklch(0.61 0.22 25)` | `oklch(0.65 0.18 25)` | Warm red | — |
-| `--border` | `oklch(0.90 0.01 280)` | `oklch(0.35 0.05 285)` | Default border | — |
+| Token | Light | Dark | Role |
+|---|---|---|---|
+| `--background` | `oklch(0.99 0.005 280)` | `oklch(0.20 0.04 285)` | Page background |
+| `--foreground` | `oklch(0.25 0.02 280)` | `oklch(0.95 0.01 285)` | Body text |
+| `--card` | `oklch(1 0 0)` | `oklch(0.25 0.04 285)` | Card surface |
+| `--primary` | `oklch(0.573 0.190 285)` | `oklch(0.72 0.15 285)` | Vibrant purple |
+| `--primary-foreground` | `oklch(1 0 0)` | `oklch(0.20 0.04 285)` | Text on primary |
+| `--secondary` | `oklch(0.92 0.04 285)` | `oklch(0.30 0.06 285)` | Soft lavender fill |
+| `--accent` | `oklch(0.75 0.15 50)` | `oklch(0.65 0.12 50)` | Bright orange |
+| `--accent-foreground` | `oklch(0.20 0.03 50)` | `oklch(0.200 0.030 50)` | Text on accent |
+| `--muted` | `oklch(0.96 0.008 70)` | `oklch(0.28 0.04 285)` | Warm grey fill |
+| `--destructive` | `oklch(0.585 0.220 25)` | `oklch(0.65 0.18 25)` | Warm red |
+| `--border` | `oklch(0.90 0.01 280)` | `oklch(0.35 0.05 285)` | Dividers |
+| `--input` | `oklch(0.655 0.015 280)` | `oklch(0.505 0.050 285)` | Control boundaries |
+
+**Reasoning:** Purple at hue 285° hits the sweet spot between blue and magenta — energetic without being garish. At 19% chroma in light mode, it's vivid enough to feel playful but not so saturated it fatigues. The orange accent at hue 50° provides warm contrast without fighting for attention.
+
+**Dark mode desaturation:** Dark surfaces reduce chroma by ~20% (primary drops from 0.19 to 0.15) to prevent the neon-glow effect that happens when you put saturated colors on dark backgrounds. The primary also lightens substantially (L 0.573 → 0.72) so it remains legible.
 
 ### Measured contrast
 
-Computed from `theme.css` by `scripts/check.mjs`. The estimates previously recorded
-in the table above were optimistic by 2–4× in places and have been removed.
+Computed from `theme.css` by `scripts/check.mjs`. The palette table above used to
+carry a "Contrast" column of estimates; they were optimistic by up to 2× and have
+been replaced by these measured values.
 
 | Pair | Light | Dark | Minimum |
 |---|---|---|---|
 | `foreground` on `background` | 15.58:1 | 15.71:1 | 4.5:1 |
 | `muted-foreground` on `background` | 5.85:1 | 5.60:1 | 4.5:1 |
-| `primary-foreground` on `primary` | 4.59:1 | 7.06:1 | 4.5:1 |
-| `primary` on `background` | **4.46:1** ⚠ | 7.06:1 | 4.5:1 |
-| `accent-foreground` on `accent` | 7.80:1 | **3.17:1** ⚠ | 4.5:1 |
-| `destructive-foreground` on `destructive` | **4.23:1** ⚠ | **3.32:1** ⚠ | 4.5:1 |
-| `destructive` on `background` | **4.11:1** ⚠ | 5.17:1 | 4.5:1 |
-| `ring` on `background` | 4.46:1 | 7.06:1 | 3:1 |
-| `input` on `background` | **1.40:1** ⚠ | **1.42:1** ⚠ | 3:1 |
+| `primary-foreground` on `primary` | 4.73:1 | 7.06:1 | 4.5:1 |
+| `primary` on `background` | 4.59:1 | 7.06:1 | 4.5:1 |
+| `accent-foreground` on `accent` | 7.80:1 | 5.40:1 | 4.5:1 |
+| `destructive-foreground` on `destructive` | 4.69:1 | 5.19:1 | 4.5:1 |
+| `destructive` on `background` | 4.56:1 | 5.17:1 | 4.5:1 |
+| `ring` on `background` | 4.59:1 | 7.06:1 | 3:1 |
+| `input` on `background` | 3.09:1 | 3.06:1 | 3:1 |
 
-`playful` is the least accessible of the three designs, and that is a direct
+Everything clears its minimum, and `check.mjs` fails the build if that stops being
+true.
+
+`playful` has the least headroom of the three designs, and that is a direct
 consequence of its brief: high-chroma purple and orange at mid lightness is exactly
-the region of the space where contrast is hardest to hold. Several pairs land just
-under AA rather than dramatically under it — `primary` at 4.46:1 misses by 0.04 —
-but "just under" is still under. See `## Accessibility`.
+the region where contrast is hardest to hold. Four pairs sit within 0.25 of the
+4.5:1 line, so **treat the palette as tight** — nudging `--primary` or
+`--destructive` lighter by even 0.02 in `L` will fail the build.
 
-**Reasoning:** Purple at hue 285° hits the sweet spot between blue and magenta — energetic without being garish. At 19% chroma in light mode, it's vivid enough to feel playful but not so saturated it fatigues. The orange accent at hue 50° provides warm contrast without fighting for attention.
+### What moved, and why
 
-**Dark mode desaturation:** Dark surfaces reduce chroma by ~20% (primary drops from 0.19 to 0.15) to prevent the neon-glow effect that happens when you put saturated colors on dark backgrounds. The primary also lightens substantially (L 0.58 → 0.72) so it remains legible.
+- `--primary` `L 0.58 → 0.573`. Purple link text was at 4.46:1, missing AA by 0.04.
+  `--ring` tracks it.
+- `--destructive` `L 0.61 → 0.585`. Error text and destructive buttons were both
+  under, at 4.11:1 and 4.23:1.
+- `--accent-foreground` in dark mode flipped from near-white to
+  `oklch(0.200 0.030 50)`. The orange fill lightens for dark mode, so dark text on
+  it reads far better than white — 3.17:1 became 5.40:1. Light mode already did
+  this; dark mode simply had not been updated to match.
+- `--destructive-foreground` in dark mode likewise became dark text on the red fill.
+- `--input` split away from `--border` and darkened to a mid grey. `border-2` made
+  fields *thicker* but no more contrasting — WCAG 1.4.11 measures colour, not width.
+- Light `--sidebar-primary` was `oklch(0.70 0.17 285)` in `theme.css` but
+  `oklch(0.58 0.19 285)` in `index.html`. The two files had drifted; the lighter
+  value could not carry its white foreground, so both now track `--primary`.
 
 ---
 
@@ -252,9 +274,10 @@ generous, and that is worth protecting:
 not "tighten it up" for a desktop build — the size is part of the aesthetic *and*
 the accessibility story, and shrinking it costs both.
 
-**`border-2` on form controls is doing accessibility work, not just decoration.**
-The doubled border weight is what makes fields findable given that `--input` itself
-is low contrast. Do not reduce it to 1px.
+**`border-2` on form controls is aesthetic, not an accessibility mitigation.**
+It was previously doing duty for a low-contrast `--input`, which it could not
+actually do — WCAG 1.4.11 measures colour, not stroke width. `--input` now carries
+its own 3:1, and `border-2` stays because the design wants it.
 
 **State is never colour alone.** Status pills carry text alongside the fill. Alerts
 carry an icon and a title, not just a tinted background. Because this palette leans
@@ -271,23 +294,11 @@ a colour transition and is safe to keep under reduced motion.
 
 ### Known gaps
 
-`playful` has more contrast failures than the other designs. All are reported by
-`node scripts/check.mjs`:
+None. Every pair in `CONTRAST_PAIRS` clears its minimum in both themes, verified by
+`node scripts/check.mjs`, which treats a shortfall as a build failure.
 
-1. **`--input` at 1.40:1** (needs 3:1). Partly mitigated by `border-2`, which makes
-   the boundary thicker but no more contrasting — WCAG measures colour, not width.
-   Fix by darkening `--input` independently of `--border`.
-2. **`--destructive` on `--background` at 4.11:1**, and
-   **`--destructive-foreground` on `--destructive` at 4.23:1 light / 3.32:1 dark.**
-   Error text and destructive buttons both miss AA. This is the most user-affecting
-   of the failures, because error states are exactly where legibility matters.
-3. **`--accent-foreground` on `--accent` at 3.17:1 in dark mode.** The orange
-   lightens for dark mode while its foreground stays near-white.
-4. **`--primary` on `--background` at 4.46:1**, missing by 0.04. Purple link text at
-   body size is marginally under; it is fine at large sizes and as a focus ring.
-
-Fixing 2 and 3 does not require abandoning the palette — both are lightness
-adjustments to the fill, and `oklch` makes them cheap to apply without shifting hue.
+The margins here are the thinnest in the repo, though — see "What this design is
+tight on" under Colour. Re-run the check after any palette change, however small.
 
 ---
 

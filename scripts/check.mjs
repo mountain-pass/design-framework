@@ -64,14 +64,17 @@ const CONTRAST_PAIRS = [
   ["primary", "background", 4.5],
   ["destructive", "background", 4.5],
   ["sidebar-foreground", "sidebar", 4.5],
+  ["sidebar-primary-foreground", "sidebar-primary", 4.5],
+  ["sidebar-accent-foreground", "sidebar-accent", 4.5],
   ["input", "background", 3.0],
   ["ring", "background", 3.0],
 ];
 
-// Contrast failures are reported as warnings rather than errors while the existing
-// designs are brought up to standard. Flip this to `fail` once they are — the
-// ratios are computed, not asserted, so this is a real gate when you want it.
-const CONTRAST_LEVEL = "warn";
+// Contrast failures are errors. Every design in this repo currently clears the
+// baseline, so a new one that does not is a regression, not a known issue. If you
+// are mid-way through building a design and want these downgraded while you work,
+// set this to `warn` — but do not commit it that way.
+const CONTRAST_LEVEL = "fail";
 
 let errors = 0;
 let warnings = 0;
@@ -211,6 +214,28 @@ for (const name of designs) {
         report(
           label,
           `theme.css ${mode}: --${fg} on --${bg} is ${ratio.toFixed(2)}:1, below the ${min}:1 minimum`
+        );
+      }
+    }
+  }
+
+  // --- theme.css and the kitchen sink's inline theme must agree
+  //
+  // CREATE-DESIGN.md requires the two to be kept in sync, and nothing used to
+  // enforce it, so they drifted. A stale value here is invisible: the demo looks
+  // right while the paste-ready file a consumer actually copies says something
+  // else, or vice versa.
+  for (const [mode, rule] of [["light", ROOT_RULE], ["dark", DARK_RULE]]) {
+    const fromCss = customProperties(block(css, rule()));
+    const fromHtml = customProperties(block(html, rule()));
+    if (!Object.keys(fromHtml).length) continue; // reported elsewhere if missing
+    for (const token of TOKENS) {
+      const a = fromCss[token];
+      const b = fromHtml[token];
+      if (a && b && a !== b) {
+        fail(
+          label,
+          `${mode} --${token} differs between theme.css (${a}) and index.html (${b}) — they must stay in sync`
         );
       }
     }
