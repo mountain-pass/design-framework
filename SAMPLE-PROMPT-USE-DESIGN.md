@@ -1,14 +1,13 @@
 # Sample prompt: use a design and a layout in another project
 
-A worked example of a **Mode 1** prompt — consuming this repo from somewhere
-else. Run it in a Claude Code session in your *own* project, not in this one.
+A complete example showing how to use this design framework in your own project.
+Copy the prompt below into a Claude Code session in your project (not this repo).
 
-The prompt references files directly from the GitHub repository using raw URLs,
-which return plain file content that AI agents can read directly.
+The prompt fetches files directly from GitHub using raw URLs, which return plain
+file content that AI agents can read easily.
 
-> This example uses `warm-paper`, which is created by
-> [`SAMPLE-PROMPT-CREATE-DESIGN.md`](SAMPLE-PROMPT-CREATE-DESIGN.md). Substitute
-> any design in `designs/` — `slate` works if you have not made another yet.
+> This example uses `warm-paper` and `app-shell`. You can substitute any design
+> and layout from the repo — try `slate` with `document-editor`, for instance.
 
 ---
 
@@ -45,19 +44,12 @@ Now build a reading-list app with Next.js, Tailwind v4 and shadcn/ui, using the
 - One detail page for a single article, and a settings page with a real form.
 - Light and dark both working, via the class strategy.
 
-Rules I care about, because they're the whole point of the repo:
-- Semantic tokens only — bg-background, text-muted-foreground, border-border.
-  No hex, no bg-blue-500. If you type a raw colour, you've broken it.
-- Honour the "Never" list in DESIGN.md. Tell me if you had to violate one.
-
-Two notes. `warm-paper` is an editorial, reading-first design and `app-shell` is
-a dense application shell, so this pairing is a deliberate stress test: the
-layout wins on structure and the design wins on appearance. If they genuinely
-conflict on something else, stop and tell me rather than silently picking one.
-
-When you're done, tell me which parts of DESIGN.md and LAYOUT.md were specific
-enough to act on directly, and where you had to make a judgement call because
-the instructions were vague. That feedback is what I'm actually testing.
+Important rules:
+- Use semantic tokens only — bg-background, text-muted-foreground, border-border.
+  Never use hex colours or Tailwind colour classes like bg-blue-500.
+- Follow the "Never" list in DESIGN.md. If you need to violate a rule, tell me why.
+- The layout controls structure; the design controls appearance. If they conflict
+  on something else, ask rather than making assumptions.
 ```
 
 ---
@@ -78,23 +70,11 @@ people leave out. `DESIGN.md` describes a button; `index.html` *is* one. Telling
 the agent to copy the class list from the demo rather than invent a treatment
 removes most of the drift.
 
-**It restates the token rule in the user's own voice.** The rule is already in
-`CLAUDE.md` and `DESIGN.md`, but hard-coding a colour is the single failure mode
-the whole repo exists to prevent, so it is worth the redundancy.
+**It restates the token rule explicitly.** While this rule is in `CLAUDE.md` and
+`DESIGN.md`, hard-coding colours is the most common mistake, so the redundancy
+helps ensure the agent follows it.
 
-**It pairs a design and layout that pull in different directions.** An editorial
-design in a dense application shell is a real test of the composition rule —
-layout wins on structure, design wins on appearance. If the agent silently
-resolves a genuine conflict instead of raising it, that is a finding about
-`CLAUDE.md`, not about the app.
-
-## The last paragraph is the actual experiment
-
-Asking where the instructions were vague turns each test run into a diff against
-the framework. Build output tells you whether one session went well; the
-vagueness report tells you what to edit.
-
-Run the same prompt in two or three fresh sessions. Where they diverge is where
-the source files are underspecified, and where several sessions all report the
-same gap, you have a concrete edit to make to `DESIGN.md`, `LAYOUT.md`, or the
-shared contracts. That is worth more than the app you get out of it.
+**It clarifies how designs and layouts compose.** The layout determines structure
+(regions, sizes, scroll behaviour). The design determines appearance (colours,
+type, components). Stating this prevents the agent from making incorrect
+assumptions when combining them.
