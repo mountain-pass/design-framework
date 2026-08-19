@@ -124,4 +124,5 @@ Every font must have a real fallback stack — `"Inter", ui-sans-serif, system-u
 sans-serif` — so the design degrades gracefully when the webfont does not load.
 
 Designs load webfonts from Google Fonts or use system stacks. Do not require a
-local font file, since the kitchen sink has to work by double-clicking the HTML.
+local font file — the kitchen sink ships as an HTML file and its `theme.css`, and
+nothing else is expected to travel with them.

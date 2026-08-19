@@ -4,8 +4,9 @@
    Paste this into your project's global stylesheet (app/globals.css in a
    Next.js + shadcn/ui project), below `@import "tailwindcss";`.
 
-   KEEP IN SYNC with the <style type="text/tailwindcss"> block in index.html.
-   This file is the source of truth.
+   This is the only copy of the theme. index.html fetches this file and hands
+   it to the Tailwind browser compiler, so the kitchen sink renders from the
+   same bytes you are pasting — there is nothing to keep in sync.
    ========================================================================= */
 
 @custom-variant dark (&:is(.dark *));
@@ -159,34 +160,6 @@
   --radius-2xl: calc(var(--radius) + 8px);
 }
 
-.bg-background { background-color: var(--background); }
-.bg-card { background-color: var(--card); }
-.bg-popover { background-color: var(--popover); }
-.bg-primary { background-color: var(--primary); }
-.bg-secondary { background-color: var(--secondary); }
-.bg-muted { background-color: var(--muted); }
-.bg-accent { background-color: var(--accent); }
-.bg-destructive { background-color: var(--destructive); }
-.bg-chart-1 { background-color: var(--chart-1); }
-.bg-chart-2 { background-color: var(--chart-2); }
-.bg-chart-3 { background-color: var(--chart-3); }
-.bg-chart-4 { background-color: var(--chart-4); }
-.bg-chart-5 { background-color: var(--chart-5); }
-
-.text-foreground { color: var(--foreground); }
-.text-primary { color: var(--primary); }
-.text-primary-foreground { color: var(--primary-foreground); }
-.text-secondary-foreground { color: var(--secondary-foreground); }
-.text-muted-foreground { color: var(--muted-foreground); }
-.text-accent-foreground { color: var(--accent-foreground); }
-.text-destructive-foreground { color: var(--destructive-foreground); }
-
-.border-border { border-color: var(--border); }
-.border-input { border-color: var(--input); }
-
-.font-display { font-family: var(--font-display); }
-.font-sans { font-family: var(--font-sans); }
-.font-mono { font-family: var(--font-mono); }
 
 @layer base {
   * {
@@ -199,6 +172,12 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+  }
   button,
   [type="button"],
   [type="submit"] {
@@ -207,6 +186,59 @@
     text-transform: uppercase;
     letter-spacing: 0.04em;
     font-weight: 800;
+    border-style: solid;
+    border-width: 0 2px 4px;
+    border-color: transparent;
+  }
+}
+
+/* The pressed-button illusion: a solid bottom border a few shades darker than
+   the face, so every button reads as a physical key. Rules rather than tokens
+   because the shade has to be derived from whichever fill the button carries. */
+@layer components {
+  button.bg-primary,
+  button.bg-secondary,
+  button.bg-accent,
+  button.bg-destructive,
+  [type="button"].bg-primary,
+  [type="button"].bg-secondary,
+  [type="button"].bg-accent,
+  [type="button"].bg-destructive {
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-color: rgba(20, 24, 28, 0.16);
+  }
+
+  button.bg-primary,
+  [type="button"].bg-primary {
+    border-bottom-color: color-mix(in srgb, var(--primary) 72%, black);
+  }
+
+  button.bg-secondary,
+  [type="button"].bg-secondary {
+    border-bottom-color: color-mix(in srgb, var(--secondary) 70%, black);
+  }
+
+  button.bg-accent,
+  [type="button"].bg-accent {
+    border-bottom-color: color-mix(in srgb, var(--accent) 72%, black);
+  }
+
+  button.bg-destructive,
+  [type="button"].bg-destructive {
+    border-bottom-color: color-mix(in srgb, var(--destructive) 72%, black);
+  }
+
+  button.border-2,
+  button.border,
+  button[class*="border-input"],
+  [type="button"].border-2,
+  [type="button"].border,
+  [type="button"][class*="border-input"] {
+    border-width: 2px 2px 6px;
+    border-color: rgba(15, 23, 42, 0.16);
+    border-bottom-color: rgba(15, 23, 42, 0.22);
   }
 }
 

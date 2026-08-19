@@ -113,10 +113,22 @@ framework depends on designs being comparable, and they are only comparable if t
 show the same things in the same order. Add at the end if you must; never remove,
 rename, or reorder.
 
-**Demos must open with no build step.** Single HTML file, Tailwind browser CDN,
-inline SVG icons, no imports of local JS or CSS files (a `file://` page cannot
-fetch them). If a demo needs `npm install` to look at, it has failed at its only
-job.
+**Demos must open with no build step.** Tailwind browser CDN, inline SVG icons,
+no bundler, no `npm install`. If a demo needs a build to look at, it has failed at
+its only job.
+
+A design's kitchen sink is the one place that loads a local file: it fetches its
+own `theme.css` and hands the text to the Tailwind browser compiler. That is what
+stops the theme from existing twice. It also means kitchen sinks must be **served
+over http(s)** — opened from `file://` the fetch is blocked and the page shows a
+banner saying so. Layout wireframes and voice string sinks have no companion CSS,
+so they stay single-file and open straight from disk.
+
+Do not "fix" this by adding a `<link rel="stylesheet">`: the Tailwind browser
+build only ever reads `style[type="text/tailwindcss"]` elements, so a linked
+theme yields a page with no utility classes at all. `@import` is worse — the
+browser build rejects local imports, and `@import "./theme.css"` silently
+resolves to Tailwind's *own* theme rather than the design's.
 
 **Accessibility is a contract, not a polish pass.** `shared/ACCESSIBILITY.md` is
 WCAG 2.2 AA, and it binds the demos in this repo as tightly as it binds the

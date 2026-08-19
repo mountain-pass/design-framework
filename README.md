@@ -78,7 +78,7 @@ before you write any code rather than after the copy is in.
 │   └── slate/               Reference implementation
 │       ├── DESIGN.md        Instructions for an AI implementing this design
 │       ├── theme.css        Paste-ready tokens for a real project
-│       └── index.html       Kitchen sink, opens with no build step
+│       └── index.html       Kitchen sink, renders from theme.css (serve, don't open)
 │
 ├── layouts/
 │   ├── _template/           Scaffold to copy

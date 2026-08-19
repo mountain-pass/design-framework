@@ -9,163 +9,61 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<!-- The Tailwind browser compiler only ever reads `style[type="text/tailwindcss"]`
+     elements, so theme.css cannot be pulled in with a <link>. It is fetched and
+     injected instead, which keeps theme.css the single source of truth: the demo
+     renders from the exact bytes a consumer pastes into their own project.
 
-<!-- ==========================================================================
-     THEME — keep in sync with theme.css (that file is the source of truth)
-     ======================================================================= -->
+     This requires the page to be served over http(s). Opened from file://, the
+     fetch is blocked as a cross-origin request and the banner below explains why.
+
+     `@import "tailwindcss";` is prepended here rather than stored in theme.css,
+     which is written to be pasted *below* an existing import. It cannot be left
+     to the compiler's own auto-prepend: that is skipped whenever the stylesheet
+     text contains "@import" anywhere at all — including inside a comment, as
+     theme.css's header has. The failure is silent and total, so it is spelled
+     out here. -->
+<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4">
+<script>
+  fetch("theme.css")
+    .then((res) => {
+      if (!res.ok) throw new Error(`theme.css → ${res.status} ${res.statusText}`);
+      return res.text();
+    })
+    .then((css) => {
+      const theme = document.createElement("style");
+      theme.type = "text/tailwindcss";
+      theme.textContent = '@import "tailwindcss";\n' + css;
+      document.head.prepend(theme);
+
+      const tailwind = document.createElement("script");
+      tailwind.src = "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4";
+      document.head.append(tailwind);
+    })
+    .catch((err) => {
+      document.addEventListener("DOMContentLoaded", () => {
+        const banner = document.createElement("p");
+        banner.setAttribute("role", "alert");
+        banner.style.cssText =
+          "margin:0;padding:1rem 1.25rem;font:500 14px/1.5 ui-sans-serif,system-ui,sans-serif;" +
+          "background:#7f1d1d;color:#fff";
+        banner.textContent =
+          "This page could not load theme.css (" + err.message + "), so it is " +
+          "rendering unstyled. Kitchen sinks read their theme over http(s) — " +
+          "serve the folder rather than opening the file directly.";
+        document.body.prepend(banner);
+      });
+    });
+</script>
+
+<!-- Demo-page chrome only — not part of the design system, and not in
+     theme.css. Every component below uses raw utilities so that its class
+     list can be read and copied straight out of the markup. -->
 <style type="text/tailwindcss">
-@custom-variant dark (&:is(.dark *));
-
-:root {
-  --radius: 0.75rem;
-
-  --font-sans: "Roboto", "Helvetica Neue", Arial, ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Roboto Slab", ui-serif, Georgia, Cambria, serif;
-  --font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-
-  /* Material Design 2 light theme - traditional blue (#2196F3) */
-  --background: oklch(0.99 0.002 245);
-  --foreground: oklch(0.18 0.015 200);
-  --card: oklch(0.98 0.005 245);
-  --card-foreground: oklch(0.18 0.015 200);
-  --popover: oklch(0.985 0.006 245);
-  --popover-foreground: oklch(0.18 0.015 200);
-  --primary: oklch(0.54 0.21 245);
-  --primary-foreground: oklch(0.99 0.002 180);
-  --secondary: oklch(0.56 0.27 350);
-  --secondary-foreground: oklch(0.99 0.002 180);
-  --muted: oklch(0.95 0.01 245);
-  --muted-foreground: oklch(0.48 0.025 200);
-  --accent: oklch(0.93 0.025 245);
-  --accent-foreground: oklch(0.25 0.02 195);
-  --destructive: oklch(0.55 0.22 25);
-  --destructive-foreground: oklch(0.99 0.002 25);
-  --border: oklch(0.88 0.015 245);
-  --input: oklch(0.65 0.035 245);
-  --ring: oklch(0.54 0.21 245);
-
-  --chart-1: oklch(0.54 0.21 245);
-  --chart-2: oklch(0.55 0.18 275);
-  --chart-3: oklch(0.62 0.16 145);
-  --chart-4: oklch(0.68 0.18 65);
-  --chart-5: oklch(0.58 0.2 340);
-
-  --sidebar: oklch(0.96 0.008 245);
-  --sidebar-foreground: oklch(0.18 0.015 200);
-  --sidebar-primary: oklch(0.54 0.21 245);
-  --sidebar-primary-foreground: oklch(0.99 0.002 180);
-  --sidebar-accent: oklch(0.92 0.03 245);
-  --sidebar-accent-foreground: oklch(0.25 0.02 195);
-  --sidebar-border: oklch(0.88 0.015 245);
-  --sidebar-ring: oklch(0.54 0.21 245);
-}
-
-.dark {
-  /* Material Design 3 dark theme - deliberately designed, not inverted */
-  --background: oklch(0.15 0.012 245);
-  --foreground: oklch(0.92 0.008 180);
-  --card: oklch(0.19 0.015 245);
-  --card-foreground: oklch(0.92 0.008 180);
-  --popover: oklch(0.22 0.018 245);
-  --popover-foreground: oklch(0.92 0.008 180);
-  --primary: oklch(0.72 0.17 245);
-  --primary-foreground: oklch(0.15 0.012 245);
-  --secondary: oklch(0.72 0.20 350);
-  --secondary-foreground: oklch(0.15 0.012 350);
-  --muted: oklch(0.25 0.02 245);
-  --muted-foreground: oklch(0.68 0.02 180);
-  --accent: oklch(0.30 0.03 245);
-  --accent-foreground: oklch(0.88 0.015 180);
-  --destructive: oklch(0.65 0.19 25);
-  --destructive-foreground: oklch(0.08 0.008 25);
-  --border: oklch(0.32 0.025 245);
-  --input: oklch(0.55 0.04 245);
-  --ring: oklch(0.72 0.17 245);
-
-  --chart-1: oklch(0.72 0.17 245);
-  --chart-2: oklch(0.68 0.14 275);
-  --chart-3: oklch(0.72 0.13 145);
-  --chart-4: oklch(0.78 0.14 65);
-  --chart-5: oklch(0.68 0.16 340);
-
-  --sidebar: oklch(0.18 0.014 245);
-  --sidebar-foreground: oklch(0.92 0.008 180);
-  --sidebar-primary: oklch(0.72 0.17 245);
-  --sidebar-primary-foreground: oklch(0.15 0.012 245);
-  --sidebar-accent: oklch(0.28 0.028 245);
-  --sidebar-accent-foreground: oklch(0.88 0.015 180);
-  --sidebar-border: oklch(0.32 0.025 245);
-  --sidebar-ring: oklch(0.72 0.17 245);
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-
-  --font-sans: var(--font-sans);
-  --font-serif: var(--font-serif);
-  --font-mono: var(--font-mono);
-
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-
-  /* Lower opacities than Tailwind's defaults — stock values read as grey
-     smudges against a near-white background. */
-  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.08);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.08);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.10), 0 4px 6px -4px rgb(0 0 0 / 0.10);
-}
-
 @layer base {
-  * { border-color: var(--border); }
-  body {
-    background-color: var(--background);
-    color: var(--foreground);
-    font-family: var(--font-sans);
-    font-feature-settings: "cv11", "ss01";
-    -webkit-font-smoothing: antialiased;
-  }
-  button { cursor: pointer; }
   html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
 }
 
-/* Demo-page chrome only. Not part of the design system — do not copy these
-   into a real project. Every actual component below uses raw utilities so the
-   class lists can be read and copied directly. */
 @layer components {
   .ks-section { @apply scroll-mt-20 border-t border-border py-12; }
   .ks-title   { @apply text-xs font-mono font-medium uppercase tracking-widest text-muted-foreground; }
@@ -173,14 +71,6 @@
   .ks-note    { @apply mt-1 max-w-[70ch] text-sm text-muted-foreground; }
   .ks-grid    { @apply mt-8 grid gap-8; }
   .ks-label   { @apply mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
 }
 </style>
 

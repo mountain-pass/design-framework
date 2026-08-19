@@ -293,25 +293,26 @@ for (const name of designs) {
     }
   }
 
-  // --- theme.css and the kitchen sink's inline theme must agree
+  // --- the kitchen sink must render from theme.css, not from a copy of it
   //
-  // CREATE-DESIGN.md requires the two to be kept in sync, and nothing used to
-  // enforce it, so they drifted. A stale value here is invisible: the demo looks
-  // right while the paste-ready file a consumer actually copies says something
-  // else, or vice versa.
+  // The demo used to carry its own <style type="text/tailwindcss"> duplicate of
+  // the whole theme, and the two drifted. index.html now fetches theme.css and
+  // hands it to the Tailwind browser compiler, so there is only one copy to be
+  // wrong. These two checks keep it that way.
+  if (!/fetch\(\s*["']theme\.css["']\s*\)/.test(html)) {
+    fail(label, "index.html does not fetch theme.css — the demo must render from the same bytes a consumer pastes");
+  }
+  if (/@theme\s+inline/.test(html)) {
+    fail(label, "index.html declares its own `@theme inline` block — the theme belongs in theme.css alone");
+  }
   for (const [mode, rule] of [["light", ROOT_RULE], ["dark", DARK_RULE]]) {
-    const fromCss = customProperties(block(css, rule()));
-    const fromHtml = customProperties(block(html, rule()));
-    if (!Object.keys(fromHtml).length) continue; // reported elsewhere if missing
-    for (const token of TOKENS) {
-      const a = fromCss[token];
-      const b = fromHtml[token];
-      if (a && b && a !== b) {
-        fail(
-          label,
-          `${mode} --${token} differs between theme.css (${a}) and index.html (${b}) — they must stay in sync`
-        );
-      }
+    const inline = customProperties(block(html, rule()));
+    const copied = TOKENS.filter((t) => inline[t]);
+    if (copied.length) {
+      fail(
+        label,
+        `index.html redeclares ${copied.length} ${mode} token(s) (${copied.slice(0, 3).join(", ")}…) — they would shadow theme.css and drift from it`
+      );
     }
   }
 

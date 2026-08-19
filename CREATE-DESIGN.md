@@ -86,14 +86,25 @@ The kitchen sink. Every section in `shared/COMPONENTS.md`, in order, with the ex
 
 Technical requirements:
 
-- One self-contained file. No local `<link>` or `<script src>` to files in the
-  folder — a `file://` page cannot fetch them, and the demo must work by
-  double-clicking.
-- Tailwind v4 browser build:
-  `<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>`
-- Theme goes in `<style type="text/tailwindcss">`, containing the same tokens as
-  `theme.css` plus the `@theme inline` mapping block. Keep the two in sync; put a
-  comment in both saying so.
+- The theme is **not** written into `index.html`. Copy the loader block from
+  `designs/_template/index.html` verbatim: it fetches `theme.css`, prepends
+  `@import "tailwindcss";`, injects the result as a
+  `<style type="text/tailwindcss">`, and only then loads the Tailwind browser
+  build. `theme.css` is therefore the single copy of the theme, and the demo
+  renders from the exact bytes a consumer pastes into their project.
+  - Do not substitute a `<link rel="stylesheet">`. The browser build only reads
+    `style[type="text/tailwindcss"]` elements, so the page would come out with no
+    utilities at all.
+  - Do not move the `@import "tailwindcss";` into `theme.css`. That file is
+    written to be pasted *below* an existing import. And do not rely on the
+    compiler adding it for you — it skips its own auto-prepend whenever the
+    stylesheet text contains "@import" anywhere, including inside a comment.
+- The only CSS left inline is the demo page's own chrome: the `.ks-*` helpers and
+  the `html { scroll-behavior }` rule. Anything that belongs to the design itself
+  belongs in `theme.css`, even when it is a rule rather than a token.
+- Kitchen sinks are served over http(s), not opened from `file://`.
+- Tailwind v4 browser build, loaded by that block:
+  `https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4`
 - Icons are inline SVG from [Lucide](https://lucide.dev). Do not fetch an icon
   font or sprite.
 - Webfonts come from Google Fonts or a system stack, and always with a real

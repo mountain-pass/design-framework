@@ -5,228 +5,69 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>learn — kitchen sink</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<!-- The Tailwind browser compiler only ever reads `style[type="text/tailwindcss"]`
+     elements, so theme.css cannot be pulled in with a <link>. It is fetched and
+     injected instead, which keeps theme.css the single source of truth: the demo
+     renders from the exact bytes a consumer pastes into their own project.
+
+     This requires the page to be served over http(s). Opened from file://, the
+     fetch is blocked as a cross-origin request and the banner below explains why.
+
+     `@import "tailwindcss";` is prepended here rather than stored in theme.css,
+     which is written to be pasted *below* an existing import. It cannot be left
+     to the compiler's own auto-prepend: that is skipped whenever the stylesheet
+     text contains "@import" anywhere at all — including inside a comment, as
+     theme.css's header has. The failure is silent and total, so it is spelled
+     out here. -->
+<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4">
+<script>
+  fetch("theme.css")
+    .then((res) => {
+      if (!res.ok) throw new Error(`theme.css → ${res.status} ${res.statusText}`);
+      return res.text();
+    })
+    .then((css) => {
+      const theme = document.createElement("style");
+      theme.type = "text/tailwindcss";
+      theme.textContent = '@import "tailwindcss";\n' + css;
+      document.head.prepend(theme);
+
+      const tailwind = document.createElement("script");
+      tailwind.src = "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4";
+      document.head.append(tailwind);
+    })
+    .catch((err) => {
+      document.addEventListener("DOMContentLoaded", () => {
+        const banner = document.createElement("p");
+        banner.setAttribute("role", "alert");
+        banner.style.cssText =
+          "margin:0;padding:1rem 1.25rem;font:500 14px/1.5 ui-sans-serif,system-ui,sans-serif;" +
+          "background:#7f1d1d;color:#fff";
+        banner.textContent =
+          "This page could not load theme.css (" + err.message + "), so it is " +
+          "rendering unstyled. Kitchen sinks read their theme over http(s) — " +
+          "serve the folder rather than opening the file directly.";
+        document.body.prepend(banner);
+      });
+    });
+</script>
 
 <!-- Keep in sync with theme.css -->
+<!-- Demo-page chrome only — not part of the design system, and not in
+     theme.css. Every component below uses raw utilities so that its class
+     list can be read and copied straight out of the markup. -->
 <style type="text/tailwindcss">
-@font-face {
-  font-family: "duolingo-sans";
-  src: local("Duolingo Sans"), local("duolingo-sans"), local("Arial Rounded MT Bold"), local("Trebuchet MS"), sans-serif;
-  font-weight: 400 800;
-  font-style: normal;
-}
-
-@custom-variant dark (&:is(.dark *));
-
-:root {
-  --radius: 0.75rem;
-  --font-sans: "duolingo-sans", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;
-  --font-display: "duolingo-sans", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
-
-  --background: oklch(0.985 0.010 110);
-  --foreground: oklch(0.25 0.020 220);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.25 0.020 220);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.25 0.020 220);
-  --primary: oklch(0.77 0.18 145);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.96 0.020 108);
-  --secondary-foreground: oklch(0.27 0.028 220);
-  --muted: oklch(0.97 0.012 110);
-  --muted-foreground: oklch(0.52 0.020 220);
-  --accent: oklch(0.92 0.11 84);
-  --accent-foreground: oklch(0.27 0.028 84);
-  --destructive: oklch(0.68 0.18 27);
-  --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.88 0.015 220);
-  --input: oklch(0.58 0.022 220);
-  --ring: oklch(0.77 0.18 145);
-
-  --chart-1: oklch(0.74 0.165 145);
-  --chart-2: oklch(0.78 0.16 235);
-  --chart-3: oklch(0.72 0.12 160);
-  --chart-4: oklch(0.80 0.14 80);
-  --chart-5: oklch(0.76 0.18 330);
-
-  --sidebar: oklch(0.97 0.010 110);
-  --sidebar-foreground: oklch(0.25 0.020 220);
-  --sidebar-primary: oklch(0.77 0.18 145);
-  --sidebar-primary-foreground: oklch(0.20 0.030 145);
-  --sidebar-accent: oklch(0.92 0.060 145);
-  --sidebar-accent-foreground: oklch(0.22 0.032 145);
-  --sidebar-border: oklch(0.88 0.013 220);
-  --sidebar-ring: oklch(0.77 0.18 145);
-}
-
-.dark {
-  --background: oklch(0.19 0.020 225);
-  --foreground: oklch(0.97 0.008 225);
-  --card: oklch(0.22 0.018 225);
-  --card-foreground: oklch(0.97 0.008 225);
-  --popover: oklch(0.25 0.020 225);
-  --popover-foreground: oklch(0.97 0.008 225);
-  --primary: oklch(0.80 0.17 145);
-  --primary-foreground: oklch(0.12 0.020 145);
-  --secondary: oklch(0.30 0.022 225);
-  --secondary-foreground: oklch(0.92 0.010 225);
-  --muted: oklch(0.24 0.018 225);
-  --muted-foreground: oklch(0.72 0.016 225);
-  --accent: oklch(0.86 0.12 85);
-  --accent-foreground: oklch(0.18 0.028 85);
-  --destructive: oklch(0.70 0.18 28);
-  --destructive-foreground: oklch(0.18 0.024 28);
-  --border: oklch(0.33 0.015 225);
-  --input: oklch(0.57 0.018 225);
-  --ring: oklch(0.80 0.17 145);
-
-  --chart-1: oklch(0.76 0.17 145);
-  --chart-2: oklch(0.76 0.16 235);
-  --chart-3: oklch(0.74 0.14 160);
-  --chart-4: oklch(0.82 0.12 85);
-  --chart-5: oklch(0.78 0.18 330);
-
-  --sidebar: oklch(0.20 0.020 225);
-  --sidebar-foreground: oklch(0.95 0.010 225);
-  --sidebar-primary: oklch(0.80 0.17 145);
-  --sidebar-primary-foreground: oklch(0.12 0.020 145);
-  --sidebar-accent: oklch(0.29 0.020 225);
-  --sidebar-accent-foreground: oklch(0.92 0.010 225);
-  --sidebar-border: oklch(0.32 0.015 225);
-  --sidebar-ring: oklch(0.80 0.17 145);
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-
-  --font-sans: var(--font-sans);
-  --font-display: var(--font-display);
-  --font-mono: var(--font-mono);
-
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-}
-
 @layer base {
-  * { border-color: var(--border); }
-  body {
-    background-color: var(--background);
-    color: var(--foreground);
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-  }
-  button,
-  [type="button"],
-  [type="submit"] {
-    cursor: pointer;
-    font-family: var(--font-display);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    font-weight: 800;
-    border-style: solid;
-    border-width: 0 2px 4px;
-    border-color: transparent;
-  }
   html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
-  h1, h2, h3, h4 { font-family: var(--font-display); }
 }
 
 @layer components {
-  button.bg-primary,
-  button.bg-secondary,
-  button.bg-accent,
-  button.bg-destructive,
-  [type="button"].bg-primary,
-  [type="button"].bg-secondary,
-  [type="button"].bg-accent,
-  [type="button"].bg-destructive {
-    border-left-width: 0;
-    border-right-width: 0;
-    border-top-width: 0;
-    border-bottom-color: rgba(20, 24, 28, 0.16);
-  }
-
-  button.bg-primary,
-  [type="button"].bg-primary {
-    border-bottom-color: color-mix(in srgb, var(--primary) 72%, black);
-  }
-
-  button.bg-secondary,
-  [type="button"].bg-secondary {
-    border-bottom-color: color-mix(in srgb, var(--secondary) 70%, black);
-  }
-
-  button.bg-accent,
-  [type="button"].bg-accent {
-    border-bottom-color: color-mix(in srgb, var(--accent) 72%, black);
-  }
-
-  button.bg-destructive,
-  [type="button"].bg-destructive {
-    border-bottom-color: color-mix(in srgb, var(--destructive) 72%, black);
-  }
-
-  button.border-2,
-  button.border,
-  button[class*="border-input"],
-  [type="button"].border-2,
-  [type="button"].border,
-  [type="button"][class*="border-input"] {
-    border-width: 2px 2px 6px;
-    border-color: rgba(15, 23, 42, 0.16);
-    border-bottom-color: rgba(15, 23, 42, 0.22);
-  }
-
   .ks-section { @apply scroll-mt-20 border-t border-border py-16; }
   .ks-title   { @apply text-xs font-bold uppercase tracking-widest text-primary; }
   .ks-lede    { @apply mt-3 text-3xl font-bold tracking-tight; }
   .ks-note    { @apply mt-2 max-w-[70ch] text-base leading-relaxed text-muted-foreground; }
   .ks-grid    { @apply mt-10 grid gap-8; }
   .ks-label   { @apply mb-4 text-sm font-semibold uppercase tracking-wide text-foreground; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
 }
 </style>
 

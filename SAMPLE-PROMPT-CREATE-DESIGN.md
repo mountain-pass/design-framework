@@ -71,7 +71,8 @@ one the agent invented.
 `node scripts/check.mjs` verifies the mechanical parts — every token defined in
 both light and dark, all thirty kitchen-sink sections present and in order, no
 hard-coded colour, an `## Accessibility` section in `DESIGN.md`, and that
-`theme.css` still agrees with the theme inlined in `index.html`. It also converts
+`index.html` renders from `theme.css` rather than carrying its own copy of the
+tokens. It also converts
 every `oklch()` value to sRGB and **computes the real WCAG contrast ratios** in
 both themes, failing the build on any pair below its minimum — so the ratios
 recorded in `DESIGN.md` are measured rather than estimated. Estimated ratios in

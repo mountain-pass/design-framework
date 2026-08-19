@@ -10,8 +10,9 @@
    Paste this into your project's global stylesheet (app/globals.css in a
    Next.js + shadcn/ui project), below `@import "tailwindcss";`.
 
-   KEEP IN SYNC with the <style type="text/tailwindcss"> block in index.html.
-   This file is the source of truth.
+   This is the only copy of the theme. index.html fetches this file and hands
+   it to the Tailwind browser compiler, so the kitchen sink renders from the
+   same bytes you are pasting — there is nothing to keep in sync.
    ========================================================================= */
 
 @custom-variant dark (&:is(.dark *));

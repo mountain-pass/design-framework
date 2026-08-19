@@ -33,152 +33,61 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- <link href="https://fonts.googleapis.com/css2?family=...&display=swap" rel="stylesheet"> -->
 
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<!-- The Tailwind browser compiler only ever reads `style[type="text/tailwindcss"]`
+     elements, so theme.css cannot be pulled in with a <link>. It is fetched and
+     injected instead, which keeps theme.css the single source of truth: the demo
+     renders from the exact bytes a consumer pastes into their own project.
 
-<!-- ==========================================================================
-     THEME — replace with your design's tokens.
-     Keep identical to theme.css (that file is the source of truth).
-     The block below is slate's, present only so the scaffold renders.
-     ======================================================================= -->
+     This requires the page to be served over http(s). Opened from file://, the
+     fetch is blocked as a cross-origin request and the banner below explains why.
+
+     `@import "tailwindcss";` is prepended here rather than stored in theme.css,
+     which is written to be pasted *below* an existing import. It cannot be left
+     to the compiler's own auto-prepend: that is skipped whenever the stylesheet
+     text contains "@import" anywhere at all — including inside a comment, as
+     theme.css's header has. The failure is silent and total, so it is spelled
+     out here. -->
+<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4">
+<script>
+  fetch("theme.css")
+    .then((res) => {
+      if (!res.ok) throw new Error(`theme.css → ${res.status} ${res.statusText}`);
+      return res.text();
+    })
+    .then((css) => {
+      const theme = document.createElement("style");
+      theme.type = "text/tailwindcss";
+      theme.textContent = '@import "tailwindcss";\n' + css;
+      document.head.prepend(theme);
+
+      const tailwind = document.createElement("script");
+      tailwind.src = "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4";
+      document.head.append(tailwind);
+    })
+    .catch((err) => {
+      document.addEventListener("DOMContentLoaded", () => {
+        const banner = document.createElement("p");
+        banner.setAttribute("role", "alert");
+        banner.style.cssText =
+          "margin:0;padding:1rem 1.25rem;font:500 14px/1.5 ui-sans-serif,system-ui,sans-serif;" +
+          "background:#7f1d1d;color:#fff";
+        banner.textContent =
+          "This page could not load theme.css (" + err.message + "), so it is " +
+          "rendering unstyled. Kitchen sinks read their theme over http(s) — " +
+          "serve the folder rather than opening the file directly.";
+        document.body.prepend(banner);
+      });
+    });
+</script>
+
+<!-- Demo-page chrome only — not part of the design system, and not in
+     theme.css. Every component below uses raw utilities so that its class
+     list can be read and copied straight out of the markup. -->
 <style type="text/tailwindcss">
-@custom-variant dark (&:is(.dark *));
-
-:root {
-  --radius: 0.5rem;
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
-
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.21 0.02 264);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.21 0.02 264);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.21 0.02 264);
-  --primary: oklch(0.51 0.16 264);
-  --primary-foreground: oklch(0.985 0.003 264);
-  --secondary: oklch(0.968 0.007 264);
-  --secondary-foreground: oklch(0.28 0.025 264);
-  --muted: oklch(0.968 0.007 264);
-  --muted-foreground: oklch(0.551 0.019 264);
-  --accent: oklch(0.958 0.011 264);
-  --accent-foreground: oklch(0.28 0.025 264);
-  --destructive: oklch(0.577 0.212 27.3);
-  --destructive-foreground: oklch(0.985 0.003 264);
-  --border: oklch(0.922 0.008 264);
-  --input: oklch(0.922 0.008 264);
-  --ring: oklch(0.51 0.16 264);
-
-  --chart-1: oklch(0.51 0.16 264);
-  --chart-2: oklch(0.62 0.13 195);
-  --chart-3: oklch(0.68 0.15 145);
-  --chart-4: oklch(0.72 0.16 75);
-  --chart-5: oklch(0.61 0.19 340);
-
-  --sidebar: oklch(0.985 0.004 264);
-  --sidebar-foreground: oklch(0.21 0.02 264);
-  --sidebar-primary: oklch(0.51 0.16 264);
-  --sidebar-primary-foreground: oklch(0.985 0.003 264);
-  --sidebar-accent: oklch(0.945 0.012 264);
-  --sidebar-accent-foreground: oklch(0.28 0.025 264);
-  --sidebar-border: oklch(0.922 0.008 264);
-  --sidebar-ring: oklch(0.51 0.16 264);
-}
-
-.dark {
-  --background: oklch(0.181 0.014 264);
-  --foreground: oklch(0.961 0.005 264);
-  --card: oklch(0.221 0.016 264);
-  --card-foreground: oklch(0.961 0.005 264);
-  --popover: oklch(0.241 0.017 264);
-  --popover-foreground: oklch(0.961 0.005 264);
-  --primary: oklch(0.681 0.135 264);
-  --primary-foreground: oklch(0.191 0.028 264);
-  --secondary: oklch(0.271 0.017 264);
-  --secondary-foreground: oklch(0.961 0.005 264);
-  --muted: oklch(0.271 0.017 264);
-  --muted-foreground: oklch(0.682 0.016 264);
-  --accent: oklch(0.301 0.019 264);
-  --accent-foreground: oklch(0.961 0.005 264);
-  --destructive: oklch(0.648 0.188 25.5);
-  --destructive-foreground: oklch(0.981 0.005 264);
-  --border: oklch(0.301 0.018 264);
-  --input: oklch(0.331 0.018 264);
-  --ring: oklch(0.681 0.135 264);
-
-  --chart-1: oklch(0.681 0.135 264);
-  --chart-2: oklch(0.72 0.115 195);
-  --chart-3: oklch(0.755 0.13 145);
-  --chart-4: oklch(0.795 0.14 75);
-  --chart-5: oklch(0.705 0.16 340);
-
-  --sidebar: oklch(0.208 0.016 264);
-  --sidebar-foreground: oklch(0.961 0.005 264);
-  --sidebar-primary: oklch(0.681 0.135 264);
-  --sidebar-primary-foreground: oklch(0.191 0.028 264);
-  --sidebar-accent: oklch(0.291 0.019 264);
-  --sidebar-accent-foreground: oklch(0.961 0.005 264);
-  --sidebar-border: oklch(0.301 0.018 264);
-  --sidebar-ring: oklch(0.681 0.135 264);
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-
-  --font-sans: var(--font-sans);
-  --font-serif: var(--font-serif);
-  --font-mono: var(--font-mono);
-
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-}
-
 @layer base {
-  * { border-color: var(--border); }
-  body {
-    background-color: var(--background);
-    color: var(--foreground);
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-  }
-  button { cursor: pointer; }
   html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
 }
 
-/* Demo-page chrome only — not part of the design system. */
 @layer components {
   .ks-section { @apply scroll-mt-20 border-t border-border py-12; }
   .ks-title   { @apply text-xs font-mono font-medium uppercase tracking-widest text-muted-foreground; }
@@ -187,14 +96,6 @@
   .ks-grid    { @apply mt-8 grid gap-8; }
   .ks-label   { @apply mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground; }
   .ks-todo    { @apply mt-8 rounded-lg border border-dashed border-border p-8 text-center text-sm text-muted-foreground; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
 }
 </style>
 

@@ -17,8 +17,8 @@ Any design combines with any layout.
 | File | Purpose |
 |---|---|
 | `DESIGN.md` | Instructions for an AI implementing this design. The specifics — actual numbers, actual prohibitions. |
-| `theme.css` | Paste-ready CSS custom properties, in shadcn/ui's `globals.css` format. Drops straight into a real project. |
-| `index.html` | The kitchen sink. Every component in the design, no build step — double-click it. |
+| `theme.css` | Paste-ready CSS custom properties, in shadcn/ui's `globals.css` format. Drops straight into a real project, and is also what the kitchen sink renders from. |
+| `index.html` | The kitchen sink. Every component in the design, no build step. Fetches `theme.css`, so serve the folder rather than opening the file. |
 
 ## Using one
 

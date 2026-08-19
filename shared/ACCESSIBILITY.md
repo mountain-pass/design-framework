@@ -267,9 +267,10 @@ node scripts/check.mjs        # tokens, sections, and computed contrast ratios
 
 `check.mjs` parses each `theme.css`, converts every `oklch()` value to sRGB, and
 computes real WCAG contrast ratios for the standard pairs in both light and dark.
-A shortfall fails the build. It also verifies that `theme.css` and the kitchen
-sink's inline theme still agree, since a silent drift between them ships one set of
-colours to the demo and another to consumers.
+A shortfall fails the build. The demo and the paste-ready file can no longer
+disagree — the kitchen sink renders by fetching `theme.css` — so the ratios
+`check.mjs` measures are the ratios a consumer gets. `check.mjs` enforces that
+wiring too, failing any `index.html` that declares its own theme tokens.
 
 What it cannot do is tell you whether the design is usable. That still needs a
 person, which is what the list below is for.

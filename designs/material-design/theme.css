@@ -7,8 +7,9 @@
    Paste this into your project's global stylesheet (app/globals.css in a
    Next.js + shadcn/ui project), below `@import "tailwindcss";`.
 
-   KEEP IN SYNC with the <style type="text/tailwindcss"> block in index.html.
-   This file is the source of truth.
+   This is the only copy of the theme. index.html fetches this file and hands
+   it to the Tailwind browser compiler, so the kitchen sink renders from the
+   same bytes you are pasting — there is nothing to keep in sync.
    ========================================================================= */
 
 @custom-variant dark (&:is(.dark *));
@@ -151,6 +152,13 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* Elevation. Lower opacities than Tailwind's defaults — the stock values read
+     as grey smudges against a near-white background. */
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.08);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.08);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.10), 0 4px 6px -4px rgb(0 0 0 / 0.10);
 }
 
 @layer base {
@@ -161,6 +169,7 @@
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
   }
   button {
     cursor: pointer;
