@@ -34,11 +34,11 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.25 0.020 220);
 
-  --primary: oklch(0.77 0.18 145);
+  --primary: oklch(0.7478 0.2286 137.66);
   --primary-foreground: oklch(1 0 0);
 
-  --secondary: oklch(0.96 0.020 108);
-  --secondary-foreground: oklch(0.27 0.028 220);
+  --secondary: oklch(0.7599 0.1495 232.1);
+  --secondary-foreground: oklch(1 0 0);
 
   --muted: oklch(0.97 0.012 110);
   --muted-foreground: oklch(0.52 0.020 220);
@@ -51,7 +51,7 @@
 
   --border: oklch(0.88 0.015 220);
   --input: oklch(0.58 0.022 220);
-  --ring: oklch(0.77 0.18 145);
+  --ring: oklch(0.7478 0.2286 137.66);
 
   --chart-1: oklch(0.74 0.165 145);
   --chart-2: oklch(0.78 0.16 235);
@@ -80,10 +80,10 @@
   --popover-foreground: oklch(0.97 0.008 225);
 
   --primary: oklch(0.80 0.17 145);
-  --primary-foreground: oklch(0.12 0.020 145);
+  --primary-foreground: oklch(0.2423 0.0204 223.87);
 
-  --secondary: oklch(0.30 0.022 225);
-  --secondary-foreground: oklch(0.92 0.010 225);
+  --secondary: oklch(0.7648 0.1311 232.94);
+  --secondary-foreground: oklch(0.2423 0.0204 223.87);
 
   --muted: oklch(0.24 0.018 225);
   --muted-foreground: oklch(0.72 0.016 225);
@@ -107,7 +107,7 @@
   --sidebar: oklch(0.20 0.020 225);
   --sidebar-foreground: oklch(0.95 0.010 225);
   --sidebar-primary: oklch(0.80 0.17 145);
-  --sidebar-primary-foreground: oklch(0.12 0.020 145);
+  --sidebar-primary-foreground: oklch(0.2423 0.0204 223.87);
   --sidebar-accent: oklch(0.29 0.020 225);
   --sidebar-accent-foreground: oklch(0.92 0.010 225);
   --sidebar-border: oklch(0.32 0.015 225);
@@ -239,6 +239,18 @@
     border-width: 2px 2px 6px;
     border-color: rgba(15, 23, 42, 0.16);
     border-bottom-color: rgba(15, 23, 42, 0.22);
+    transition-property: border-bottom-width;
+    transition-duration: 150ms;
+    transition-timing-function: ease-out;
+  }
+
+  button.border-2:active,
+  button.border:active,
+  button[class*="border-input"]:active,
+  [type="button"].border-2:active,
+  [type="button"].border:active,
+  [type="button"][class*="border-input"]:active {
+    border-bottom-width: 0;
   }
 }
 
