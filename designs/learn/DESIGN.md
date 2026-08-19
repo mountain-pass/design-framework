@@ -114,6 +114,29 @@ green: it is what stops a dense grid of controls from reading as a dashboard.
 Buttons, headings and navigation are all set in it at weight 800, uppercase, with
 `0.04em` tracking.
 
+### This stack ships no webfont, and that has a cost
+
+Every other design in this repo vendors its typeface into `theme.css` as base64
+woff2, so it renders identically everywhere. This one cannot: all three named
+families are proprietary and not redistributable. Duolingo Sans is the reference
+product's own font; Arial Rounded MT Bold is Monotype's and ships with macOS;
+Trebuchet MS is Microsoft's and ships with Windows and macOS. The `@font-face`
+rule in `theme.css` is `local()`-only for the same reason — it resolves against
+fonts already installed on the device and downloads nothing.
+
+So the roundness that this section calls load-bearing is present on a Mac or a
+Windows desktop and absent on iOS, Android and most Linux, where the stack falls
+through to the system sans. The design still works — it is still green, still
+rounded in its shapes, still lifted in its buttons — but on a phone it is missing
+the part of its identity that the type was carrying.
+
+If you are shipping this to devices you do not control, substitute an
+openly-licensed rounded face and vendor it the way the other designs do. Nunito
+is the closest match to the stack above and reaches weight 800 as this design
+requires; Baloo 2 is a heavier alternative. Change `--font-sans` and
+`--font-display` together — they are deliberately the same stack — and run
+`node scripts/vendor-fonts.mjs` after adding the design to its `FONTS` table.
+
 | Level | Size | Weight | Line height | Tracking |
 |---|---|---|---|---|
 | Display | 3rem / 48px | 700 | 1.1 | -0.02em |
@@ -256,7 +279,7 @@ None.
 None.
 
 ### Navigation
-Top nav bar is `h-16` (64px) vs slate's h-14 (56px). The extra height accommodates the more prominent logo typography (Fredoka at 18px bold) and makes touch targets more comfortable.
+Top nav bar is `h-16` (64px) vs slate's h-14 (56px). The extra height accommodates the more prominent logo typography (the rounded face at 18px bold) and makes touch targets more comfortable.
 
 Sidebar items use `rounded-lg` and show a clear `bg-accent` highlight for the active item. Hover uses `bg-secondary/50` — the soft lavender.
 
@@ -351,13 +374,13 @@ tight on" under Colour. Re-run the check after any palette change, however small
 
 5. **Never use drop shadows on flat surfaces.** Shadows are for elevation — cards, buttons, dialogs. Page backgrounds, section dividers, and inline elements stay flat. A shadow on a `<p>` tag is a mistake.
 
-6. **Never stack headings without content between them.** If an h2 is immediately followed by an h3, one of them is wrong. Headings introduce content; they aren't decoration. This matters more in playful designs because the display font (Fredoka) is visually distinctive — stacked headings look like a type specimen, not a hierarchy.
+6. **Never stack headings without content between them.** If an h2 is immediately followed by an h3, one of them is wrong. Headings introduce content; they aren't decoration. This matters more here because the rounded display face is visually distinctive — stacked headings look like a type specimen, not a hierarchy.
 
 7. **Never animate anything that causes reflow.** Colour, opacity, shadow, and transform can transition. Height, width, padding, margin, and border width cannot — animating those relays out the page around them. Buttons don't scale on hover and panels don't slide open. The exceptions are purpose-built animation components (carousels, drawers) where movement is the point, and the button press described under Motion, which moves a `transform` and a `box-shadow` and so touches no other pixel on the page.
 
 8. **Never let gold or blue outrank the green.** Green is the action colour: the primary button, the progress fill, the completed state. Gold belongs to rewards and streaks, blue to navigation and secondary actions. A screen whose main call to action is gold has inverted the hierarchy — the learner should always be able to find "the green one".
 
-9. **Never use thin font weights (300 or lighter).** DM Sans starts at 400 Regular and goes up. Thin weights on colored backgrounds become illegible, and they undermine the friendly, approachable tone. Headings are bold (700); UI text is regular (400) or semibold (600). That's the range.
+9. **Never use thin font weights (300 or lighter).** The stack starts at 400 Regular and goes up. Thin weights on colored backgrounds become illegible, and they undermine the friendly, approachable tone. Headings are bold (700); UI text is regular (400) or semibold (600). That's the range.
 
 10. **Never use this design for high-density data dashboards.** The roomy padding, large radii, and tall components make it terrible for applications that need to show 50 rows of data above the fold. Playful optimizes for delight, not information density. If the product is a data table with occasional UI around it, use slate.
 
@@ -368,7 +391,7 @@ tight on" under Colour. Re-run the check after any palette change, however small
 No custom tokens beyond the standard set. Everything this design needs exists in `shared/TOKENS.md`. The only addition is a CSS custom property for the display font:
 
 ```css
---font-display: "Fredoka", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+--font-display: "duolingo-sans", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;
 ```
 
 Used in the theme block as `font-family: var(--font-display)` for h1–h4. If a consumer ignores `--font-display`, headings fall back to `--font-sans` and the design still works — it just loses some personality.
