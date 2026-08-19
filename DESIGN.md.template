@@ -1,0 +1,53 @@
+# DESIGN.md
+
+<!--
+  Template for a third-party project's root DESIGN.md.
+
+  This repo (mountain-pass/design-framework) is the source of truth for this
+  project's design system. Copy this file into the target project's repo root
+  as `DESIGN.md`, fill in the placeholders below, and delete this comment.
+
+  Placeholders:
+    {{DESIGN}}  - design folder name, e.g. slate, warm-paper
+    {{LAYOUT}}  - layout folder name, e.g. app-shell, document-editor
+    {{REF}}     - branch, tag, or commit in design-framework, e.g. main
+-->
+
+This project's design system lives in a separate repo:
+[mountain-pass/design-framework](https://github.com/mountain-pass/design-framework).
+
+Use the `{{DESIGN}}` design and the `{{LAYOUT}}` layout from that repo. Before
+styling or building any UI, fetch and read these files in full:
+
+```
+https://raw.githubusercontent.com/mountain-pass/design-framework/{{REF}}/CLAUDE.md
+https://raw.githubusercontent.com/mountain-pass/design-framework/{{REF}}/shared/TOKENS.md
+https://raw.githubusercontent.com/mountain-pass/design-framework/{{REF}}/shared/COMPONENTS.md
+https://raw.githubusercontent.com/mountain-pass/design-framework/{{REF}}/designs/{{DESIGN}}/DESIGN.md
+https://raw.githubusercontent.com/mountain-pass/design-framework/{{REF}}/layouts/{{LAYOUT}}/LAYOUT.md
+```
+
+Also open the kitchen sink demo — it is the rendered answer to "what does this
+component look like", not just a description of one:
+
+```
+https://raw.githubusercontent.com/mountain-pass/design-framework/{{REF}}/designs/{{DESIGN}}/index.html
+```
+
+Copy the theme verbatim from:
+
+```
+https://raw.githubusercontent.com/mountain-pass/design-framework/{{REF}}/designs/{{DESIGN}}/theme.css
+```
+
+## Rules
+
+- Use semantic tokens only (`bg-background`, `text-muted-foreground`,
+  `border-border`, ...). Never hard-code hex colours or Tailwind colour
+  classes like `bg-blue-500`.
+- The layout controls structure (regions, sizes, responsive behaviour, scroll
+  model). The design controls appearance (colour, type, spacing, component
+  styling). If they conflict on anything else, ask rather than guessing.
+- Follow the "Never" list in the design's `DESIGN.md`. If a rule genuinely
+  can't be followed, say why instead of silently breaking it.
+- Both light and dark mode are part of the deliverable, not an afterthought.

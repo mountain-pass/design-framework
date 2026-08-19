@@ -42,6 +42,8 @@ a routing structure, layout has leaked into it.
 │
 ├── CREATE-DESIGN.md         Prompt: paste into an AI to generate a new design
 ├── CREATE-LAYOUT.md         Prompt: paste into an AI to generate a new layout
+├── DESIGN.md.template       Copy into a third-party project's root as DESIGN.md
+│                            to point its agent at this repo
 │
 ├── SAMPLE-PROMPT-CREATE-DESIGN.md   Worked example: adding a design
 ├── SAMPLE-PROMPT-CREATE-LAYOUT.md   Worked example: adding a layout
@@ -94,6 +96,15 @@ read the HTML directly and see exactly which classes produce which result. The
 markup mirrors what shadcn's React components render, so translating back to JSX
 is mechanical.
 
+**On [DTCG tokens](https://www.designtokens.org/):** considered and skipped.
+DTCG defines a JSON `{value, type, description}` schema for cross-tool token
+interop (Figma, Style Dictionary, etc.). This repo's tokens are CSS custom
+properties matched to Tailwind/shadcn utility classes — the format a
+Next.js/shadcn project actually consumes directly. Maintaining a parallel DTCG
+representation would mean keeping two token formats in sync for a tool-interop
+benefit none of this repo's consumers currently need. Worth revisiting if a
+design tool in the pipeline starts consuming DTCG directly.
+
 ---
 
 ## Using it
@@ -140,6 +151,19 @@ it is shaped that way and what to check when it finishes:
 | [`SAMPLE-PROMPT-CREATE-DESIGN.md`](SAMPLE-PROMPT-CREATE-DESIGN.md) | Add a design (`warm-paper`, an editorial reading-first look) |
 | [`SAMPLE-PROMPT-CREATE-LAYOUT.md`](SAMPLE-PROMPT-CREATE-LAYOUT.md) | Add a layout (`split-inbox`, a three-pane list-detail shell) |
 | [`SAMPLE-PROMPT-USE-DESIGN.md`](SAMPLE-PROMPT-USE-DESIGN.md) | Build an app in another project using a design + layout from here |
+
+### Pointing a third-party project at this repo
+
+[`DESIGN.md.template`](DESIGN.md.template) is a copy-paste starting point for a
+consuming project's own root `DESIGN.md`. `DESIGN.md` is an emerging convention
+([google-labs-code/design.md](https://github.com/google-labs-code/design.md))
+that AI coding agents look for by default, the same way they look for
+`CLAUDE.md` or `AGENTS.md`. Dropping a filled-in copy in a project's root means
+an agent working in that project discovers this design system on its own,
+without the design/layout names having to be spelled out in every prompt.
+
+Copy the template to the target project as `DESIGN.md`, fill in `{{DESIGN}}`,
+`{{LAYOUT}}`, and `{{REF}}`, and delete the leading comment.
 
 ---
 
