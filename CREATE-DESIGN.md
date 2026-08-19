@@ -103,8 +103,10 @@ Technical requirements:
   the `html { scroll-behavior }` rule. Anything that belongs to the design itself
   belongs in `theme.css`, even when it is a rule rather than a token.
 - Kitchen sinks are served over http(s), not opened from `file://`.
-- Tailwind v4 browser build, loaded by that block:
-  `https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4`
+- Tailwind v4 browser build, loaded by that block from
+  `../../vendor/tailwind-browser-<version>.js`. Copy the path from an existing
+  design rather than typing it — every page in the repo must load the same
+  vendored build, and `check.mjs` fails if one drifts.
 - Icons are inline SVG from [Lucide](https://lucide.dev). Do not fetch an icon
   font or sprite.
 - Webfonts come from Google Fonts or a system stack, and always with a real

@@ -93,6 +93,9 @@ before you write any code rather than after the copy is in.
 │       ├── VOICE.md         Instructions for an AI writing in this voice
 │       └── index.html       String sink, opens with no build step
 │
+├── vendor/
+│   └── tailwind-browser-4.3.3.js   The compiler every demo runs, pinned
+│
 └── scripts/
     ├── check.mjs            Validates every folder against the contracts
     └── build-gallery.mjs    Regenerates index.html from the folders
@@ -111,8 +114,12 @@ different one every time.
   names, variant names, and token names in this repo match shadcn exactly, so a
   `theme.css` here drops straight into a real shadcn project.
 - **[Lucide](https://lucide.dev)** for icons, inlined as SVG.
-- **No build step for the demos.** Every `index.html` is a single self-contained
-  file using the Tailwind browser CDN. Double-click it and it works.
+- **No build step for the demos.** Every `index.html` compiles its own Tailwind
+  in the browser, from `vendor/tailwind-browser-4.3.3.js` — committed rather than
+  fetched from a CDN so that a demo's rendering is a property of the commit, and
+  so a checkout works offline. Layout wireframes open by double-clicking. Kitchen
+  sinks additionally fetch their `theme.css`, so serve those over http(s); opened
+  from `file://` they say so rather than looking broken.
 
 The demos are static HTML rather than React because a demo you have to `npm
 install` to look at is a demo nobody looks at — including an AI agent, which can

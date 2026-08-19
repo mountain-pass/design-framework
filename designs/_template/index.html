@@ -47,7 +47,7 @@
      text contains "@import" anywhere at all — including inside a comment, as
      theme.css's header has. The failure is silent and total, so it is spelled
      out here. -->
-<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4">
+<link rel="preload" as="script" href="../../vendor/tailwind-browser-4.3.3.js">
 <script>
   fetch("theme.css")
     .then((res) => {
@@ -61,7 +61,7 @@
       document.head.prepend(theme);
 
       const tailwind = document.createElement("script");
-      tailwind.src = "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4";
+      tailwind.src = "../../vendor/tailwind-browser-4.3.3.js";
       document.head.append(tailwind);
     })
     .catch((err) => {

@@ -113,9 +113,16 @@ framework depends on designs being comparable, and they are only comparable if t
 show the same things in the same order. Add at the end if you must; never remove,
 rename, or reorder.
 
-**Demos must open with no build step.** Tailwind browser CDN, inline SVG icons,
-no bundler, no `npm install`. If a demo needs a build to look at, it has failed at
-its only job.
+**Demos must open with no build step.** The vendored Tailwind browser compiler
+(`vendor/tailwind-browser-<version>.js`), inline SVG icons, no bundler, no `npm
+install`. If a demo needs a build to look at, it has failed at its only job.
+
+The compiler is committed rather than loaded from a CDN: a floating version means
+the same commit renders differently depending on when it is opened, which is not
+something a reference library can afford. Every page must load the same vendored
+build — `check.mjs` fails a partial upgrade — and `vendor/README.md` has the
+update procedure. It is the only local file a demo may load besides a design's
+own `theme.css`.
 
 A design's kitchen sink is the one place that loads a local file: it fetches its
 own `theme.css` and hands the text to the Tailwind browser compiler. That is what

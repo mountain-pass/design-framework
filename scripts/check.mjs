@@ -235,6 +235,50 @@ const budgetSpecimens = (html) =>
   [...html.matchAll(/<([a-z]+)[^>]*\bdata-budget="([a-z-]+)"[^>]*>([\s\S]*?)<\/\1>/g)]
     .map((m) => ({ key: m[2], text: renderedText(m[3]) }));
 
+// ------------------------------------------------------------------ vendor ---
+//
+// The Tailwind compiler is committed to vendor/ rather than loaded from a CDN,
+// so that a demo's rendering is a property of the commit (see vendor/README.md).
+// The version lives in the filename, which means a half-finished upgrade would
+// leave pages running different compilers. The expected name is derived from
+// what is actually on disk, so there is only one place to change it.
+
+const vendored = existsSync(join(ROOT, "vendor"))
+  ? readdirSync(join(ROOT, "vendor")).filter((f) => /^tailwind-browser-.+\.js$/.test(f))
+  : [];
+
+if (vendored.length !== 1) {
+  fail(
+    "vendor",
+    `expected exactly one tailwind-browser-*.js, found ${vendored.length}${vendored.length ? ` (${vendored.join(", ")})` : ""}`
+  );
+}
+
+const TAILWIND = vendored.length === 1 ? `../../vendor/${vendored[0]}` : null;
+
+// The vendored compiler is the only local subresource a demo may load. Anything
+// else has to be inline: a design folder travels as its index.html plus its
+// theme.css, and wireframes and string sinks open straight from disk.
+function checkSubresources(label, html, { tailwind = true } = {}) {
+  if (tailwind && TAILWIND && !html.includes(TAILWIND)) {
+    const found = html.match(/tailwind-browser-[^"']+\.js|cdn\.jsdelivr\.net[^"']*/);
+    fail(
+      label,
+      found
+        ? `index.html loads ${found[0]} — every page must run the vendored ${vendored[0]}`
+        : `index.html does not load the vendored Tailwind compiler (${TAILWIND})`
+    );
+  }
+  const local = (
+    html.match(
+      /<(?:link|script|img)[^>]*(?:href|src)="(?!https?:|data:|#|mailto:)[^"]+\.(?:css|js|png|jpe?g|svg|webp)"/g
+    ) || []
+  ).filter((tag) => !tag.includes("vendor/tailwind-browser-"));
+  if (local.length) {
+    fail(label, `index.html references ${local.length} local file(s) besides the vendored compiler — inline them instead`);
+  }
+}
+
 // ---------------------------------------------------------------- designs ---
 
 const designs = folders("designs");
@@ -351,11 +395,8 @@ for (const name of designs) {
     fail(label, `index.html uses Tailwind palette class(es) instead of tokens: ${unique.slice(0, 5).join(", ")}${unique.length > 5 ? ` (+${unique.length - 5} more)` : ""}`);
   }
 
-  // --- self-contained: no local subresources (file:// cannot fetch them)
-  const localLink = body.match(/<(?:link|script|img)[^>]*(?:href|src)="(?!https?:|data:|#|mailto:)[^"]+\.(?:css|js|png|jpe?g|svg|webp)"/g);
-  if (localLink) {
-    fail(label, `index.html references ${localLink.length} local file(s) — a file:// page cannot fetch them; inline instead`);
-  }
+  // --- subresources: the vendored compiler and nothing else
+  checkSubresources(label, html);
 
   // --- scaffold left behind
   if (md.includes("<!-- Copy this folder") || /^\s*<One-line description/m.test(md)) {
@@ -394,6 +435,9 @@ for (const name of layouts) {
 
   const html = read("layouts", name, "index.html");
   const md = read("layouts", name, "LAYOUT.md");
+
+  // --- subresources: the vendored compiler and nothing else
+  checkSubresources(label, html);
 
   // --- wireframes carry placeholders
   const slots = html.match(/&lt;[a-z][^&]*&gt;/g) || [];
@@ -504,10 +548,7 @@ for (const name of voices) {
   }
 
   // --- self-contained: no local subresources (file:// cannot fetch them)
-  const localLink = body.match(/<(?:link|script|img)[^>]*(?:href|src)="(?!https?:|data:|#|mailto:)[^"]+\.(?:css|js|png|jpe?g|svg|webp)"/g);
-  if (localLink) {
-    fail(label, `index.html references ${localLink.length} local file(s) — a file:// page cannot fetch them; inline instead`);
-  }
+  checkSubresources(label, html, { tailwind: false });
 
   // --- declared length budgets, checked against the voice's own specimens
   const budgets = parseBudgets(md);

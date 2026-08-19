@@ -51,7 +51,10 @@ A wireframe of the layout with every region drawn and labelled.
 
 Technical requirements:
 
-- One self-contained file, Tailwind v4 browser CDN, opens by double-clicking.
+- One self-contained file plus the vendored Tailwind compiler
+  (`<script src="../../vendor/tailwind-browser-<version>.js"></script>` — copy the
+  path from an existing layout). Opens by double-clicking; a relative script
+  loads fine from `file://`.
 - Greyscale only. Dashed or thin solid borders, a light neutral fill, monospace
   labels. No brand colour. One muted accent is permitted *only* to highlight the
   active region in the diagram, and it must be a neutral tint.
