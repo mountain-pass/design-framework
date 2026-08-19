@@ -35,7 +35,7 @@ anything long-form. Not for dense dashboards.
 Push the choices far enough that it is unmistakably a different design from
 `slate` when the two kitchen sinks are opened side by side. Run
 `node scripts/check.mjs` and `node scripts/build-gallery.mjs` before you
-finish, and tell me the measured contrast ratios you got.
+finish, and paste me the contrast table it computes.
 ```
 
 ---
@@ -70,11 +70,20 @@ one the agent invented.
 
 `node scripts/check.mjs` verifies the mechanical parts — every token defined in
 both light and dark, all thirty kitchen-sink sections present and in order, no
-hard-coded colour. It cannot tell you the design is any good. So also open
+hard-coded colour, an `## Accessibility` section in `DESIGN.md`, and that
+`theme.css` still agrees with the theme inlined in `index.html`. It also converts
+every `oklch()` value to sRGB and **computes the real WCAG contrast ratios** in
+both themes, failing the build on any pair below its minimum — so the ratios
+recorded in `DESIGN.md` are measured rather than estimated. Estimated ratios in
+this repo were historically optimistic by up to 4×.
+
+What it cannot tell you is whether the design is any good. So also open
 `designs/warm-paper/index.html` next to `designs/slate/index.html` and ask:
 
 - Do they look like two designs, or one design with the hue rotated?
 - Does the dark theme look chosen, or merely survivable?
 - Is anything illegible? Thin type on a tinted background is the usual offender.
+- Tab through it. Is the focus ring visible on every control?
+- Take a greyscale screenshot. Is every status still distinguishable?
 - Does the `Never` list in `DESIGN.md` contain rules that are actually specific
   to this design, or generic advice that would apply to anything?
