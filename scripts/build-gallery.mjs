@@ -200,6 +200,10 @@ const html = `<!doctype html>
     <p>The agent reads the <code>DESIGN.md</code> and <code>LAYOUT.md</code> in the named folders,
       copies the design's <code>theme.css</code> into the project, and fills the layout's regions with
       the design's components. <code>CLAUDE.md</code> in the repo root has the full agent instructions.</p>
+    <p>Alternatively, copy <code>DESIGN.md.template</code> into your project's repo root as
+      <code>DESIGN.md</code>, fill in the design and layout names, and delete the leading comment.
+      <code>DESIGN.md</code> is a convention agents look for by default, so this points them at the
+      right design and layout without having to name them in every prompt.</p>
     <h3>Adding your own</h3>
     <p>Point an agent at <code>CREATE-DESIGN.md</code> or <code>CREATE-LAYOUT.md</code> along with what
       you want. Both are written as complete prompts. Run <code>node scripts/check.mjs</code> and
