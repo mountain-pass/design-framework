@@ -43,6 +43,10 @@ a routing structure, layout has leaked into it.
 ├── CREATE-DESIGN.md         Prompt: paste into an AI to generate a new design
 ├── CREATE-LAYOUT.md         Prompt: paste into an AI to generate a new layout
 │
+├── SAMPLE-PROMPT-CREATE-DESIGN.md   Worked example: adding a design
+├── SAMPLE-PROMPT-CREATE-LAYOUT.md   Worked example: adding a layout
+├── SAMPLE-PROMPT-USE-DESIGN.md      Worked example: consuming this repo
+│
 ├── shared/
 │   ├── COMPONENTS.md        The kitchen sink contract — the component list
 │   │                        every design must render, in order
@@ -124,6 +128,18 @@ want:
 
 The prompt file tells the agent what to produce, what the constraints are, and how
 to check its own work.
+
+### Sample prompts
+
+If you would rather start from a filled-in example than write a brief from
+scratch, three are included — each is a copy-pasteable prompt plus notes on why
+it is shaped that way and what to check when it finishes:
+
+| File | Use it to |
+|---|---|
+| [`SAMPLE-PROMPT-CREATE-DESIGN.md`](SAMPLE-PROMPT-CREATE-DESIGN.md) | Add a design (`warm-paper`, an editorial reading-first look) |
+| [`SAMPLE-PROMPT-CREATE-LAYOUT.md`](SAMPLE-PROMPT-CREATE-LAYOUT.md) | Add a layout (`split-inbox`, a three-pane list-detail shell) |
+| [`SAMPLE-PROMPT-USE-DESIGN.md`](SAMPLE-PROMPT-USE-DESIGN.md) | Build an app in another project using a design + layout from here |
 
 ---
 
