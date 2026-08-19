@@ -1,0 +1,200 @@
+/* ============================================================================
+   <name> — theme tokens
+   ----------------------------------------------------------------------------
+   Every value below is a PLACEHOLDER carried over from the `slate` reference.
+   Replace all of them. A design that ships with slate's values is not a design.
+
+   Read shared/TOKENS.md for what each token is for, and CREATE-DESIGN.md for
+   the rules (oklch values, deliberate dark theme, measured contrast).
+
+   Paste this into your project's global stylesheet (app/globals.css in a
+   Next.js + shadcn/ui project), below `@import "tailwindcss";`.
+
+   KEEP IN SYNC with the <style type="text/tailwindcss"> block in index.html.
+   This file is the source of truth.
+   ========================================================================= */
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --radius: 0.5rem;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.21 0.02 264);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.21 0.02 264);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.21 0.02 264);
+
+  --primary: oklch(0.51 0.16 264);
+  --primary-foreground: oklch(0.985 0.003 264);
+
+  --secondary: oklch(0.968 0.007 264);
+  --secondary-foreground: oklch(0.28 0.025 264);
+
+  --muted: oklch(0.968 0.007 264);
+  --muted-foreground: oklch(0.551 0.019 264);
+
+  --accent: oklch(0.958 0.011 264);
+  --accent-foreground: oklch(0.28 0.025 264);
+
+  --destructive: oklch(0.577 0.212 27.3);
+  --destructive-foreground: oklch(0.985 0.003 264);
+
+  --border: oklch(0.922 0.008 264);
+  --input: oklch(0.922 0.008 264);
+  --ring: oklch(0.51 0.16 264);
+
+  --chart-1: oklch(0.51 0.16 264);
+  --chart-2: oklch(0.62 0.13 195);
+  --chart-3: oklch(0.68 0.15 145);
+  --chart-4: oklch(0.72 0.16 75);
+  --chart-5: oklch(0.61 0.19 340);
+
+  --sidebar: oklch(0.985 0.004 264);
+  --sidebar-foreground: oklch(0.21 0.02 264);
+  --sidebar-primary: oklch(0.51 0.16 264);
+  --sidebar-primary-foreground: oklch(0.985 0.003 264);
+  --sidebar-accent: oklch(0.945 0.012 264);
+  --sidebar-accent-foreground: oklch(0.28 0.025 264);
+  --sidebar-border: oklch(0.922 0.008 264);
+  --sidebar-ring: oklch(0.51 0.16 264);
+}
+
+.dark {
+  --background: oklch(0.181 0.014 264);
+  --foreground: oklch(0.961 0.005 264);
+
+  --card: oklch(0.221 0.016 264);
+  --card-foreground: oklch(0.961 0.005 264);
+
+  --popover: oklch(0.241 0.017 264);
+  --popover-foreground: oklch(0.961 0.005 264);
+
+  --primary: oklch(0.681 0.135 264);
+  --primary-foreground: oklch(0.191 0.028 264);
+
+  --secondary: oklch(0.271 0.017 264);
+  --secondary-foreground: oklch(0.961 0.005 264);
+
+  --muted: oklch(0.271 0.017 264);
+  --muted-foreground: oklch(0.682 0.016 264);
+
+  --accent: oklch(0.301 0.019 264);
+  --accent-foreground: oklch(0.961 0.005 264);
+
+  --destructive: oklch(0.648 0.188 25.5);
+  --destructive-foreground: oklch(0.981 0.005 264);
+
+  --border: oklch(0.301 0.018 264);
+  --input: oklch(0.331 0.018 264);
+  --ring: oklch(0.681 0.135 264);
+
+  --chart-1: oklch(0.681 0.135 264);
+  --chart-2: oklch(0.72 0.115 195);
+  --chart-3: oklch(0.755 0.13 145);
+  --chart-4: oklch(0.795 0.14 75);
+  --chart-5: oklch(0.705 0.16 340);
+
+  --sidebar: oklch(0.208 0.016 264);
+  --sidebar-foreground: oklch(0.961 0.005 264);
+  --sidebar-primary: oklch(0.681 0.135 264);
+  --sidebar-primary-foreground: oklch(0.191 0.028 264);
+  --sidebar-accent: oklch(0.291 0.019 264);
+  --sidebar-accent-foreground: oklch(0.961 0.005 264);
+  --sidebar-border: oklch(0.301 0.018 264);
+  --sidebar-ring: oklch(0.681 0.135 264);
+}
+
+/* Maps the semantic tokens above onto Tailwind's utility namespaces, so that
+   `bg-background`, `text-muted-foreground`, `border-border`, `rounded-lg` and
+   friends resolve. `inline` means the values are substituted at build time. */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Lower opacities than Tailwind's defaults — the stock values read as grey
+     smudges against a near-white background. */
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.08);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.08);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.10), 0 4px 6px -4px rgb(0 0 0 / 0.10);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>&lt;name&gt; — wireframe</title>
+
+<!--
+  SCAFFOLD. Copy this folder to layouts/<name>/ and fill it in.
+
+  1. Read CREATE-LAYOUT.md (repo root) first.
+  2. Use layouts/app-shell/index.html as the reference — it is a complete
+     worked example with a region diagram, a breakpoint strip, and a scroll
+     model table.
+  3. Run `node scripts/check.mjs` and `node scripts/build-gallery.mjs`.
+
+  Hard rules:
+  - Greyscale only. The .rgn / .slot / .dim / .bar classes below are the whole
+    vocabulary. No brand colour — a layout must combine with any design, and it
+    cannot if it has already picked a palette.
+  - Draw regions at their REAL proportions. A sidebar specified w-64 is drawn
+    w-64, not "roughly a sixth". The wireframe is a spec.
+  - Every region carries a <placeholder> naming what goes there, and a .dim
+    annotation carrying its sizing rule.
+  - Include the breakpoint strip. It is where layouts actually differ from one
+    another and where implementers most often guess wrong.
+  - Mark the scroll boundaries. Which regions scroll independently is the most
+    commonly botched part of a multi-pane layout.
+-->
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+<style type="text/tailwindcss">
+:root {
+  --wire-bg:     oklch(0.985 0 0);
+  --wire-panel:  oklch(0.955 0 0);
+  --wire-line:   oklch(0.80 0 0);
+  --wire-ink:    oklch(0.32 0 0);
+  --wire-dim:    oklch(0.56 0 0);
+  --wire-mark:   oklch(0.90 0 0);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --wire-bg:    oklch(0.19 0 0);
+    --wire-panel: oklch(0.24 0 0);
+    --wire-line:  oklch(0.42 0 0);
+    --wire-ink:   oklch(0.88 0 0);
+    --wire-dim:   oklch(0.62 0 0);
+    --wire-mark:  oklch(0.30 0 0);
+  }
+}
+
+@theme inline {
+  --color-wire-bg: var(--wire-bg);
+  --color-wire-panel: var(--wire-panel);
+  --color-wire-line: var(--wire-line);
+  --color-wire-ink: var(--wire-ink);
+  --color-wire-dim: var(--wire-dim);
+  --color-wire-mark: var(--wire-mark);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@layer base {
+  body {
+    background-color: var(--wire-bg);
+    color: var(--wire-ink);
+    font-family: var(--font-mono);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer components {
+  /* A wireframe region: dashed outline, no fill. */
+  .rgn   { @apply rounded border border-dashed border-wire-line; }
+  /* A filled region, for chrome that is structurally distinct. */
+  .rgn-f { @apply rounded border border-dashed border-wire-line bg-wire-panel; }
+  /* The placeholder text inside a region. */
+  .slot  { @apply text-[0.6875rem] leading-tight text-wire-ink; }
+  /* The sizing annotation on a region. */
+  .dim   { @apply text-[0.625rem] leading-tight text-wire-dim; }
+  /* A solid content-stand-in bar. */
+  .bar   { @apply rounded-sm bg-wire-mark; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="mx-auto max-w-[1400px] px-4 py-8 sm:px-6">
+
+  <header class="mb-8">
+    <p class="text-[0.6875rem] uppercase tracking-widest text-wire-dim">Layout wireframe</p>
+    <h1 class="mt-1.5 text-2xl font-medium tracking-tight">&lt;name&gt;</h1>
+    <p class="mt-2 max-w-[75ch] text-xs leading-relaxed text-wire-dim">
+      &lt;One-line description, then the defining structural decision and why it matters. See LAYOUT.md.&gt;
+    </p>
+  </header>
+
+  <!-- ======================================================================
+       DESKTOP — the layout at its real proportions
+       =================================================================== -->
+  <p class="mb-2 text-[0.6875rem] uppercase tracking-widest text-wire-dim">Desktop · &lt;breakpoint&gt;</p>
+
+  <div class="rgn flex h-[42rem] overflow-hidden">
+    <!-- TODO: draw the regions.
+
+         Each region needs:
+           - a <placeholder in angle brackets> naming what goes there
+           - a .dim annotation with its real sizing rule (w-64 shrink-0,
+             flex-1 min-w-0, max-w-3xl mx-auto, h-14 sticky top-0, …)
+           - an explicit note where it scrolls independently
+
+         Pattern:
+
+         <aside class="w-64 shrink-0 ...">
+           <div class="rgn p-3">
+             <span class="slot block">&lt;primary navigation&gt;</span>
+             <span class="dim block">w-64 shrink-0 · overflow-y-auto</span>
+           </div>
+         </aside>
+    -->
+    <div class="flex flex-1 items-center justify-center">
+      <p class="dim">TODO — see layouts/app-shell/index.html for a worked example</p>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       BREAKPOINT STRIP — required
+       =================================================================== -->
+  <p class="mb-2 mt-12 text-[0.6875rem] uppercase tracking-widest text-wire-dim">Breakpoint behaviour</p>
+  <p class="mb-4 max-w-[75ch] text-xs leading-relaxed text-wire-dim">
+    Resize this window from ~360px to full width and verify the diagram above does what these say it does.
+    That is the claim most likely to be wrong, because it cannot be checked without actually dragging the window.
+  </p>
+
+  <div class="grid gap-4 lg:grid-cols-3">
+    <div class="rgn p-3">
+      <p class="text-[0.6875rem] font-medium">&lt; md · under 768px</p>
+      <p class="dim mt-1">&lt;what collapses, what becomes an overlay, what disappears and what replaces it&gt;</p>
+      <div class="rgn-f mt-3 flex h-44 items-center justify-center"><span class="dim">TODO</span></div>
+    </div>
+    <div class="rgn p-3">
+      <p class="text-[0.6875rem] font-medium">md – lg · 768–1024px</p>
+      <p class="dim mt-1">&lt;behaviour&gt;</p>
+      <div class="rgn-f mt-3 flex h-44 items-center justify-center"><span class="dim">TODO</span></div>
+    </div>
+    <div class="rgn p-3">
+      <p class="text-[0.6875rem] font-medium">≥ lg · 1024px+</p>
+      <p class="dim mt-1">&lt;behaviour&gt;</p>
+      <div class="rgn-f mt-3 flex h-44 items-center justify-center"><span class="dim">TODO</span></div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       SCROLL MODEL — required
+       =================================================================== -->
+  <p class="mb-2 mt-12 text-[0.6875rem] uppercase tracking-widest text-wire-dim">Scroll model</p>
+  <div class="rgn overflow-x-auto">
+    <table class="w-full min-w-[42rem] text-xs">
+      <thead class="border-b border-dashed border-wire-line bg-wire-panel">
+        <tr class="[&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:font-medium">
+          <th class="w-40">Region</th><th class="w-52">Declaration</th><th>Behaviour</th>
+        </tr>
+      </thead>
+      <tbody class="[&_td]:px-3 [&_td]:py-2 [&_td]:align-top [&_tr]:border-b [&_tr]:border-dashed [&_tr]:border-wire-line">
+        <tr><td>html, body</td><td class="text-wire-dim">&lt;declaration&gt;</td><td class="text-wire-dim">&lt;does the page scroll as a whole, or is the shell viewport-locked?&gt;</td></tr>
+        <tr><td>&lt;region&gt;</td><td class="text-wire-dim">&lt;declaration&gt;</td><td class="text-wire-dim">&lt;behaviour&gt;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>

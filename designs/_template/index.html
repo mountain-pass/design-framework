@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>&lt;name&gt; — kitchen sink</title>
+
+<!--
+  SCAFFOLD. Copy this folder to designs/<name>/ and fill it in.
+
+  1. Read CREATE-DESIGN.md (repo root) and shared/COMPONENTS.md first.
+  2. Replace the theme block below with your design's tokens, keeping
+     theme.css in sync. theme.css is the source of truth.
+  3. Fill in every section stub. The section IDs are fixed by
+     shared/COMPONENTS.md and scripts/check.mjs verifies them — do not
+     rename, remove, or reorder them.
+  4. Use designs/slate/index.html as the reference for markup and depth of
+     detail. It is a complete worked example of every section here.
+  5. Run `node scripts/check.mjs` and `node scripts/build-gallery.mjs`.
+
+  Hard rules:
+  - Semantic tokens only. No hex, no bg-blue-500, no oklch() outside the
+    theme block.
+  - Overlays (dialog, sheet, popover, tooltip, dropdown, command palette)
+    render inline and open — never behind a click.
+  - Real product copy, not lorem ipsum. You cannot judge a table's density
+    with fake words in it.
+  - Every interactive element gets a visible focus ring. Tab through the
+    page before calling it done.
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- <link href="https://fonts.googleapis.com/css2?family=...&display=swap" rel="stylesheet"> -->
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+<!-- ==========================================================================
+     THEME — replace with your design's tokens.
+     Keep identical to theme.css (that file is the source of truth).
+     The block below is slate's, present only so the scaffold renders.
+     ======================================================================= -->
+<style type="text/tailwindcss">
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --radius: 0.5rem;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.21 0.02 264);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.21 0.02 264);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.21 0.02 264);
+  --primary: oklch(0.51 0.16 264);
+  --primary-foreground: oklch(0.985 0.003 264);
+  --secondary: oklch(0.968 0.007 264);
+  --secondary-foreground: oklch(0.28 0.025 264);
+  --muted: oklch(0.968 0.007 264);
+  --muted-foreground: oklch(0.551 0.019 264);
+  --accent: oklch(0.958 0.011 264);
+  --accent-foreground: oklch(0.28 0.025 264);
+  --destructive: oklch(0.577 0.212 27.3);
+  --destructive-foreground: oklch(0.985 0.003 264);
+  --border: oklch(0.922 0.008 264);
+  --input: oklch(0.922 0.008 264);
+  --ring: oklch(0.51 0.16 264);
+
+  --chart-1: oklch(0.51 0.16 264);
+  --chart-2: oklch(0.62 0.13 195);
+  --chart-3: oklch(0.68 0.15 145);
+  --chart-4: oklch(0.72 0.16 75);
+  --chart-5: oklch(0.61 0.19 340);
+
+  --sidebar: oklch(0.985 0.004 264);
+  --sidebar-foreground: oklch(0.21 0.02 264);
+  --sidebar-primary: oklch(0.51 0.16 264);
+  --sidebar-primary-foreground: oklch(0.985 0.003 264);
+  --sidebar-accent: oklch(0.945 0.012 264);
+  --sidebar-accent-foreground: oklch(0.28 0.025 264);
+  --sidebar-border: oklch(0.922 0.008 264);
+  --sidebar-ring: oklch(0.51 0.16 264);
+}
+
+.dark {
+  --background: oklch(0.181 0.014 264);
+  --foreground: oklch(0.961 0.005 264);
+  --card: oklch(0.221 0.016 264);
+  --card-foreground: oklch(0.961 0.005 264);
+  --popover: oklch(0.241 0.017 264);
+  --popover-foreground: oklch(0.961 0.005 264);
+  --primary: oklch(0.681 0.135 264);
+  --primary-foreground: oklch(0.191 0.028 264);
+  --secondary: oklch(0.271 0.017 264);
+  --secondary-foreground: oklch(0.961 0.005 264);
+  --muted: oklch(0.271 0.017 264);
+  --muted-foreground: oklch(0.682 0.016 264);
+  --accent: oklch(0.301 0.019 264);
+  --accent-foreground: oklch(0.961 0.005 264);
+  --destructive: oklch(0.648 0.188 25.5);
+  --destructive-foreground: oklch(0.981 0.005 264);
+  --border: oklch(0.301 0.018 264);
+  --input: oklch(0.331 0.018 264);
+  --ring: oklch(0.681 0.135 264);
+
+  --chart-1: oklch(0.681 0.135 264);
+  --chart-2: oklch(0.72 0.115 195);
+  --chart-3: oklch(0.755 0.13 145);
+  --chart-4: oklch(0.795 0.14 75);
+  --chart-5: oklch(0.705 0.16 340);
+
+  --sidebar: oklch(0.208 0.016 264);
+  --sidebar-foreground: oklch(0.961 0.005 264);
+  --sidebar-primary: oklch(0.681 0.135 264);
+  --sidebar-primary-foreground: oklch(0.191 0.028 264);
+  --sidebar-accent: oklch(0.291 0.019 264);
+  --sidebar-accent-foreground: oklch(0.961 0.005 264);
+  --sidebar-border: oklch(0.301 0.018 264);
+  --sidebar-ring: oklch(0.681 0.135 264);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * { border-color: var(--border); }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+}
+
+/* Demo-page chrome only — not part of the design system. */
+@layer components {
+  .ks-section { @apply scroll-mt-20 border-t border-border py-12; }
+  .ks-title   { @apply text-xs font-mono font-medium uppercase tracking-widest text-muted-foreground; }
+  .ks-lede    { @apply mt-2 text-2xl font-semibold tracking-tight; }
+  .ks-note    { @apply mt-1 max-w-[70ch] text-sm text-muted-foreground; }
+  .ks-grid    { @apply mt-8 grid gap-8; }
+  .ks-label   { @apply mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground; }
+  .ks-todo    { @apply mt-8 rounded-lg border border-dashed border-border p-8 text-center text-sm text-muted-foreground; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+
+<script>
+  (function () {
+    var s = localStorage.getItem("template-theme");
+    if (s === "dark" || (!s && matchMedia("(prefers-color-scheme: dark)").matches)) {
+      document.documentElement.classList.add("dark");
+    }
+  })();
+</script>
+</head>
+
+<body class="bg-background text-foreground">
+
+<a href="#tokens" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:text-primary-foreground">Skip to content</a>
+
+<header class="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
+  <div class="mx-auto flex h-14 max-w-6xl items-center gap-4 px-4 sm:px-6">
+    <div class="leading-tight">
+      <div class="text-sm font-semibold tracking-tight">&lt;name&gt;</div>
+      <div class="hidden text-xs text-muted-foreground sm:block">&lt;one-line description&gt;</div>
+    </div>
+    <div class="ml-auto flex items-center gap-2">
+      <a href="./DESIGN.md" class="hidden h-8 items-center rounded-md px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:inline-flex">DESIGN.md</a>
+      <button id="theme-toggle" type="button" aria-label="Toggle dark mode"
+        class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-input bg-background transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+        <svg class="h-4 w-4 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        <svg class="hidden h-4 w-4 dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <details class="mx-auto max-w-6xl border-t border-border px-4 sm:px-6">
+    <summary class="cursor-pointer list-none py-2.5 text-xs font-medium text-muted-foreground hover:text-foreground">Contents — 30 sections</summary>
+    <nav class="grid grid-cols-2 gap-x-6 gap-y-1 pb-4 text-sm sm:grid-cols-4 lg:grid-cols-5">
+      <a href="#tokens" class="text-muted-foreground hover:text-foreground">Tokens</a>
+      <a href="#typography" class="text-muted-foreground hover:text-foreground">Typography</a>
+      <a href="#elevation" class="text-muted-foreground hover:text-foreground">Elevation</a>
+      <a href="#buttons" class="text-muted-foreground hover:text-foreground">Buttons</a>
+      <a href="#inputs" class="text-muted-foreground hover:text-foreground">Inputs</a>
+      <a href="#form" class="text-muted-foreground hover:text-foreground">Form</a>
+      <a href="#card" class="text-muted-foreground hover:text-foreground">Card</a>
+      <a href="#table" class="text-muted-foreground hover:text-foreground">Table</a>
+      <a href="#list" class="text-muted-foreground hover:text-foreground">List &amp; feed</a>
+      <a href="#badges" class="text-muted-foreground hover:text-foreground">Badges</a>
+      <a href="#avatar" class="text-muted-foreground hover:text-foreground">Avatar</a>
+      <a href="#dataviz" class="text-muted-foreground hover:text-foreground">Data viz</a>
+      <a href="#nav" class="text-muted-foreground hover:text-foreground">Navigation</a>
+      <a href="#tabs" class="text-muted-foreground hover:text-foreground">Tabs</a>
+      <a href="#breadcrumb" class="text-muted-foreground hover:text-foreground">Breadcrumb</a>
+      <a href="#menu" class="text-muted-foreground hover:text-foreground">Menus</a>
+      <a href="#alerts" class="text-muted-foreground hover:text-foreground">Alerts</a>
+      <a href="#dialog" class="text-muted-foreground hover:text-foreground">Dialog</a>
+      <a href="#progress" class="text-muted-foreground hover:text-foreground">Progress</a>
+      <a href="#toast" class="text-muted-foreground hover:text-foreground">Toast</a>
+      <a href="#empty" class="text-muted-foreground hover:text-foreground">Empty states</a>
+      <a href="#page-header" class="text-muted-foreground hover:text-foreground">Page header</a>
+      <a href="#hero" class="text-muted-foreground hover:text-foreground">Hero</a>
+      <a href="#features" class="text-muted-foreground hover:text-foreground">Features</a>
+      <a href="#pricing" class="text-muted-foreground hover:text-foreground">Pricing</a>
+      <a href="#testimonial" class="text-muted-foreground hover:text-foreground">Testimonial</a>
+      <a href="#cta" class="text-muted-foreground hover:text-foreground">CTA</a>
+      <a href="#footer" class="text-muted-foreground hover:text-foreground">Footer</a>
+      <a href="#icons" class="text-muted-foreground hover:text-foreground">Icons</a>
+      <a href="#motion" class="text-muted-foreground hover:text-foreground">Motion</a>
+    </nav>
+  </details>
+</header>
+
+<main class="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
+
+<section id="tokens" class="ks-section border-t-0">
+  <p class="ks-title">01 · Foundations</p>
+  <h2 class="ks-lede">Colour tokens</h2>
+  <p class="ks-note">Swatch grid: every semantic token labelled with its variable name and resolved value, plus the five chart series in order.</p>
+  <div class="ks-todo">TODO — see shared/COMPONENTS.md §1 and designs/slate/index.html#tokens</div>
+</section>
+
+<section id="typography" class="ks-section">
+  <p class="ks-title">02 · Foundations</p>
+  <h2 class="ks-lede">Typography</h2>
+  <p class="ks-note">h1–h4, lead, body, small, caption, blockquote, inline code, lists, and an inline link. Label each level with its size, weight, line height and tracking.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="elevation" class="ks-section">
+  <p class="ks-title">03 · Foundations</p>
+  <h2 class="ks-lede">Surface &amp; elevation</h2>
+  <p class="ks-note">The shadow ramp, the radius ramp, and a demonstration of how a card sits on the page background.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="buttons" class="ks-section">
+  <p class="ks-title">04 · Primitives</p>
+  <h2 class="ks-lede">Button</h2>
+  <p class="ks-note">Six variants, four sizes, all states (including hover and active shown statically), with icons, and a button group plus a split button.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="inputs" class="ks-section">
+  <p class="ks-title">05 · Primitives</p>
+  <h2 class="ks-lede">Form controls</h2>
+  <p class="ks-note">Input, textarea, select, checkbox, radio group, switch, slider, label, help text, error message — each in every state named in COMPONENTS.md.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="form" class="ks-section">
+  <p class="ks-title">06 · Primitives</p>
+  <h2 class="ks-lede">Composed form</h2>
+  <p class="ks-note">A realistic form. Fieldsets, required markers, one inline validation error, help text, and a footer action row. This is what shows spacing and rhythm.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="card" class="ks-section">
+  <p class="ks-title">07 · Data display</p>
+  <h2 class="ks-lede">Card</h2>
+  <p class="ks-note">Basic card, card with a header action, stat card with up and down deltas, and a media card.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="table" class="ks-section">
+  <p class="ks-title">08 · Data display</p>
+  <h2 class="ks-lede">Table</h2>
+  <p class="ks-note">Five-plus rows, a sortable column, a status badge, an avatar, a right-aligned numeric column, row actions, a selected row, and pagination.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="list" class="ks-section">
+  <p class="ks-title">09 · Data display</p>
+  <h2 class="ks-lede">List &amp; feed</h2>
+  <p class="ks-note">A settings-style list, an activity feed with avatars and timestamps, and a description list.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="badges" class="ks-section">
+  <p class="ks-title">10 · Data display</p>
+  <h2 class="ks-lede">Badge &amp; status</h2>
+  <p class="ks-note">Four badge variants, five status pills with leading dots, and a counter badge on an icon.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="avatar" class="ks-section">
+  <p class="ks-title">11 · Data display</p>
+  <h2 class="ks-lede">Avatar</h2>
+  <p class="ks-note">Image, initials fallback, status dot, and an overlapping group with an overflow chip.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="dataviz" class="ks-section">
+  <p class="ks-title">12 · Data display</p>
+  <h2 class="ks-lede">Data visualisation</h2>
+  <p class="ks-note">A bar chart, a line or area chart, and sparklines, using the chart tokens in order. Inline SVG — they do not need to be real charts, only to show the chart colours next to each other with axis, gridline and legend styling.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="nav" class="ks-section">
+  <p class="ks-title">13 · Navigation</p>
+  <h2 class="ks-lede">Navigation</h2>
+  <p class="ks-note">Top bar, sidebar with a collapsible group and a nested child, and a collapsed/mobile representation. Components only — where they sit on a page is a layout decision.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="tabs" class="ks-section">
+  <p class="ks-title">14 · Navigation</p>
+  <h2 class="ks-lede">Tabs &amp; segmented control</h2>
+  <p class="ks-note">Horizontal tabs with a visible panel, a segmented control, and a vertical tab variant.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="breadcrumb" class="ks-section">
+  <p class="ks-title">15 · Navigation</p>
+  <h2 class="ks-lede">Breadcrumb &amp; pagination</h2>
+  <p class="ks-note">Breadcrumb with three levels and an overflow ellipsis; pagination with previous/next, numbers, and an ellipsis.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="menu" class="ks-section">
+  <p class="ks-title">16 · Navigation</p>
+  <h2 class="ks-lede">Menus</h2>
+  <p class="ks-note">A dropdown menu and a command palette, both rendered open and inline. Include a label, icons, a shortcut hint, a separator, a submenu indicator, a checkbox item, and a destructive item.</p>
+  <div class="ks-todo">TODO — must be visible without executing JavaScript</div>
+</section>
+
+<section id="alerts" class="ks-section">
+  <p class="ks-title">17 · Feedback</p>
+  <h2 class="ks-lede">Alert &amp; callout</h2>
+  <p class="ks-note">Four intents — info, success, warning, destructive — each with icon, title and description. One with an action link.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="dialog" class="ks-section">
+  <p class="ks-title">18 · Overlays</p>
+  <h2 class="ks-lede">Dialog, sheet &amp; popover</h2>
+  <p class="ks-note">Dialog, destructive alert dialog, sheet/drawer, popover and tooltip — all rendered statically and inline, not as real overlays.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="progress" class="ks-section">
+  <p class="ks-title">19 · Feedback</p>
+  <h2 class="ks-lede">Progress &amp; loading</h2>
+  <p class="ks-note">Progress bar, spinner, circular progress ring, and three skeleton shapes.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="toast" class="ks-section">
+  <p class="ks-title">20 · Feedback</p>
+  <h2 class="ks-lede">Toast &amp; notification</h2>
+  <p class="ks-note">A stack of neutral, success and destructive toasts, with a dismiss control and one undo action.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="empty" class="ks-section">
+  <p class="ks-title">21 · Feedback</p>
+  <h2 class="ks-lede">Empty, error &amp; loading states</h2>
+  <p class="ks-note">An empty state with a primary action, a no-search-results state, and an error state with retry.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="page-header" class="ks-section">
+  <p class="ks-title">22 · Composed</p>
+  <h2 class="ks-lede">Application page header</h2>
+  <p class="ks-note">Breadcrumb, title, description, secondary actions, one primary action, and a tab bar beneath.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="hero" class="ks-section">
+  <p class="ks-title">23 · Composed</p>
+  <h2 class="ks-lede">Marketing hero</h2>
+  <p class="ks-note">Eyebrow, headline, subheadline, two calls to action, and a visual.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="features" class="ks-section">
+  <p class="ks-title">24 · Composed</p>
+  <h2 class="ks-lede">Feature grid</h2>
+  <p class="ks-note">Three or six feature cards with icon, title and body.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="pricing" class="ks-section">
+  <p class="ks-title">25 · Composed</p>
+  <h2 class="ks-lede">Pricing table</h2>
+  <p class="ks-note">Three tiers, one recommended, each with price, description, feature list with check icons, and a call to action.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="testimonial" class="ks-section">
+  <p class="ks-title">26 · Composed</p>
+  <h2 class="ks-lede">Testimonial</h2>
+  <p class="ks-note">A quote with attribution, avatar and company.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="cta" class="ks-section">
+  <p class="ks-title">27 · Composed</p>
+  <h2 class="ks-lede">Call to action band</h2>
+  <p class="ks-note">A full-width band with headline and action, in an inverted or accented treatment.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="footer" class="ks-section">
+  <p class="ks-title">28 · Composed</p>
+  <h2 class="ks-lede">Footer</h2>
+  <p class="ks-note">Multi-column link groups, brand mark, legal line, and social icons.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="icons" class="ks-section">
+  <p class="ks-title">29 · Utility</p>
+  <h2 class="ks-lede">Icon set</h2>
+  <p class="ks-note">12–20 inline SVG icons at the design's standard size, showing stroke weight and corner treatment. Lucide unless DESIGN.md says otherwise and says why.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+<section id="motion" class="ks-section">
+  <p class="ks-title">30 · Utility</p>
+  <h2 class="ks-lede">Motion &amp; interaction</h2>
+  <p class="ks-note">A written table of duration, easing, hover, focus, active and disabled treatments, plus a live focus-ring example to tab through.</p>
+  <div class="ks-todo">TODO</div>
+</section>
+
+</main>
+
+<script>
+  document.getElementById("theme-toggle").addEventListener("click", function () {
+    var dark = document.documentElement.classList.toggle("dark");
+    localStorage.setItem("template-theme", dark ? "dark" : "light");
+  });
+</script>
+</body>
+</html>

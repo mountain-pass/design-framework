@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>document-editor — wireframe</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+<style type="text/tailwindcss">
+/* Wireframes are deliberately greyscale. If this file starts looking
+   attractive, styling has leaked in and the layout has stopped being
+   combinable with an arbitrary design. */
+:root {
+  --wire-bg:     oklch(0.985 0 0);
+  --wire-panel:  oklch(0.955 0 0);
+  --wire-line:   oklch(0.80 0 0);
+  --wire-ink:    oklch(0.32 0 0);
+  --wire-dim:    oklch(0.56 0 0);
+  --wire-mark:   oklch(0.90 0 0);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --wire-bg:    oklch(0.19 0 0);
+    --wire-panel: oklch(0.24 0 0);
+    --wire-line:  oklch(0.42 0 0);
+    --wire-ink:   oklch(0.88 0 0);
+    --wire-dim:   oklch(0.62 0 0);
+    --wire-mark:  oklch(0.30 0 0);
+  }
+}
+
+@theme inline {
+  --color-wire-bg: var(--wire-bg);
+  --color-wire-panel: var(--wire-panel);
+  --color-wire-line: var(--wire-line);
+  --color-wire-ink: var(--wire-ink);
+  --color-wire-dim: var(--wire-dim);
+  --color-wire-mark: var(--wire-mark);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@layer base {
+  body {
+    background-color: var(--wire-bg);
+    color: var(--wire-ink);
+    font-family: var(--font-mono);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer components {
+  .rgn   { @apply rounded border border-dashed border-wire-line; }
+  .rgn-f { @apply rounded border border-dashed border-wire-line bg-wire-panel; }
+  .slot  { @apply text-[0.6875rem] leading-tight text-wire-ink; }
+  .dim   { @apply text-[0.625rem] leading-tight text-wire-dim; }
+  .bar   { @apply rounded-sm bg-wire-mark; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="mx-auto max-w-[1400px] px-4 py-8 sm:px-6">
+
+  <header class="mb-8">
+    <p class="text-[0.6875rem] uppercase tracking-widest text-wire-dim">Layout wireframe</p>
+    <h1 class="mt-1.5 text-2xl font-medium tracking-tight">document-editor</h1>
+    <p class="mt-2 max-w-[75ch] text-xs leading-relaxed text-wire-dim">
+      A centred writing surface with a collapsible document tree on the left and a contextual inspector on the right.
+      The measure is fixed at <span class="text-wire-ink">max-w-[46rem]</span> — extra window width goes to the margins
+      or to a panel, <span class="text-wire-ink">never</span> to longer lines. See LAYOUT.md.
+    </p>
+  </header>
+
+  <!-- ======================================================================
+       DESKTOP
+       =================================================================== -->
+  <p class="mb-2 text-[0.6875rem] uppercase tracking-widest text-wire-dim">Desktop · ≥ xl (1280px+) · all panels open</p>
+
+  <div class="rgn flex h-[44rem] flex-col overflow-hidden">
+
+    <!-- ---------- TOOLBAR — spans full width, above all three columns ---------- -->
+    <header class="flex h-12 shrink-0 items-center gap-2 border-b border-dashed border-wire-line bg-wire-panel px-3">
+      <div class="rgn flex h-7 w-16 shrink-0 items-center justify-center">
+        <span class="dim">&lt;panel toggles&gt;</span>
+      </div>
+      <div class="rgn flex h-7 min-w-0 flex-1 items-center px-2">
+        <span class="slot truncate">&lt;breadcrumb&gt;</span>
+      </div>
+      <div class="rgn flex h-7 w-48 shrink-0 items-center justify-center">
+        <span class="slot">&lt;document controls go here&gt;</span>
+      </div>
+      <div class="rgn flex h-7 w-24 shrink-0 items-center justify-center">
+        <span class="dim">&lt;save state&gt;</span>
+      </div>
+      <div class="rgn flex h-7 w-28 shrink-0 items-center justify-center">
+        <span class="dim">&lt;share&gt;</span>
+      </div>
+    </header>
+    <div class="border-b border-dashed border-wire-line bg-wire-panel/60 px-3 py-1">
+      <p class="dim">header · h-12 sticky top-0 · spans all three columns — controls apply to the document regardless of panel state</p>
+    </div>
+
+    <!-- ---------- THE THREE COLUMNS ---------- -->
+    <div class="flex min-h-0 flex-1">
+
+      <!-- TREE -->
+      <nav class="flex w-60 shrink-0 flex-col border-r border-dashed border-wire-line bg-wire-panel">
+        <div class="shrink-0 border-b border-dashed border-wire-line p-2">
+          <div class="rgn flex h-7 items-center justify-center">
+            <span class="dim">&lt;tree search&gt;</span>
+          </div>
+        </div>
+        <div class="flex-1 space-y-2 overflow-y-auto p-2">
+          <span class="slot block">&lt;document tree&gt;</span>
+          <span class="dim block">role="tree" · three levels · roving tabindex</span>
+          <div class="space-y-1 pt-1">
+            <div class="bar h-6 w-full opacity-40"></div>
+            <div class="ml-3 space-y-1 border-l border-dashed border-wire-line pl-2">
+              <div class="bar h-6 w-full opacity-90"></div>
+              <div class="ml-3 space-y-1 border-l border-dashed border-wire-line pl-2">
+                <div class="bar h-5 w-full opacity-30"></div>
+                <div class="bar h-5 w-full opacity-30"></div>
+              </div>
+              <div class="bar h-6 w-full opacity-40"></div>
+            </div>
+            <div class="bar h-6 w-full opacity-40"></div>
+            <div class="bar h-6 w-full opacity-40"></div>
+          </div>
+          <p class="dim pt-2">overflow-y-auto — own scroll</p>
+        </div>
+        <div class="shrink-0 border-t border-dashed border-wire-line px-2 py-1.5">
+          <p class="dim">nav · w-60 shrink-0 · collapses to 0</p>
+        </div>
+      </nav>
+
+      <!-- DOCUMENT PANE -->
+      <main class="min-w-0 flex-1 overflow-y-auto">
+        <div class="border-b border-dashed border-wire-line bg-wire-panel/60 px-4 py-1">
+          <p class="dim">main · flex-1 min-w-0 overflow-y-auto — <span class="text-wire-ink">THE scroll region</span></p>
+        </div>
+
+        <!-- The margins are drawn so the fixed measure is visible -->
+        <div class="flex justify-center px-4 py-6">
+          <div class="w-full max-w-[46rem]">
+            <div class="rgn relative space-y-3 p-4">
+              <span class="absolute -top-2 left-3 bg-wire-bg px-1.5 text-[0.625rem] text-wire-dim">max-w-[46rem] mx-auto px-8 — the measure, fixed</span>
+
+              <div class="rgn p-3">
+                <span class="slot block">&lt;document title&gt;</span>
+                <div class="bar mt-2 h-8 w-3/4"></div>
+              </div>
+
+              <div class="rgn flex items-center gap-2 p-3">
+                <span class="slot shrink-0">&lt;document metadata&gt;</span>
+                <div class="bar h-5 w-5 shrink-0 rounded-full"></div>
+                <div class="bar h-3 w-24 opacity-50"></div>
+                <div class="bar h-3 w-16 opacity-50"></div>
+              </div>
+
+              <div class="rgn space-y-3 p-3">
+                <span class="slot block">&lt;document body&gt;</span>
+                <span class="dim block">full prose scale — h2/h3, paragraphs, lists, blockquote, code</span>
+                <div class="space-y-1.5 pt-1">
+                  <div class="bar h-3 w-full opacity-45"></div>
+                  <div class="bar h-3 w-full opacity-45"></div>
+                  <div class="bar h-3 w-5/6 opacity-45"></div>
+                </div>
+                <div class="bar h-5 w-40"></div>
+                <div class="space-y-1.5">
+                  <div class="bar h-3 w-full opacity-45"></div>
+                  <div class="bar h-3 w-full opacity-45"></div>
+                  <div class="bar h-3 w-2/3 opacity-45"></div>
+                </div>
+
+                <!-- the deliberate exception -->
+                <div class="-mx-6 rgn bg-wire-panel p-2">
+                  <span class="dim">&lt;code block / table / image&gt; — may break the measure up to max-w-[60rem]. Text never does.</span>
+                  <div class="mt-1.5 space-y-1">
+                    <div class="bar h-2.5 w-full opacity-60"></div>
+                    <div class="bar h-2.5 w-4/5 opacity-60"></div>
+                  </div>
+                </div>
+
+                <div class="space-y-1.5">
+                  <div class="bar h-3 w-full opacity-45"></div>
+                  <div class="bar h-3 w-3/4 opacity-45"></div>
+                </div>
+              </div>
+
+              <div class="rgn flex h-24 items-center justify-center">
+                <span class="dim">scroll — the toolbar and both panels stay put</span>
+              </div>
+            </div>
+            <p class="dim mt-2 text-center">extra window width goes here, to the margins — never to a longer line</p>
+          </div>
+        </div>
+      </main>
+
+      <!-- INSPECTOR -->
+      <aside class="flex w-80 shrink-0 flex-col border-l border-dashed border-wire-line">
+        <div class="shrink-0 border-b border-dashed border-wire-line p-2">
+          <div class="rgn flex h-8 items-center justify-center">
+            <span class="slot">&lt;inspector tabs&gt;</span>
+          </div>
+        </div>
+        <div class="flex-1 space-y-3 overflow-y-auto p-3">
+          <div class="rgn space-y-2 p-3">
+            <span class="slot block">&lt;properties panel&gt;</span>
+            <span class="dim block">selection properties, or document properties when nothing is selected</span>
+            <div class="space-y-2 pt-1">
+              <div class="flex items-center justify-between gap-2">
+                <div class="bar h-3 w-16 opacity-50"></div><div class="bar h-3 w-24 opacity-70"></div>
+              </div>
+              <div class="flex items-center justify-between gap-2">
+                <div class="bar h-3 w-20 opacity-50"></div><div class="bar h-3 w-20 opacity-70"></div>
+              </div>
+              <div class="flex items-center justify-between gap-2">
+                <div class="bar h-3 w-14 opacity-50"></div><div class="bar h-6 w-28 opacity-70"></div>
+              </div>
+            </div>
+          </div>
+          <div class="rgn space-y-2 p-3">
+            <span class="slot block">&lt;table of contents&gt;</span>
+            <span class="dim block">within-document nav lives here, not a second tree</span>
+            <div class="space-y-1 pt-1">
+              <div class="bar h-3 w-full opacity-60"></div>
+              <div class="bar ml-3 h-3 w-4/5 opacity-35"></div>
+              <div class="bar ml-3 h-3 w-3/5 opacity-35"></div>
+              <div class="bar h-3 w-full opacity-35"></div>
+            </div>
+          </div>
+          <div class="rgn flex h-32 items-center justify-center p-3">
+            <span class="slot text-center">&lt;comments / activity&gt;</span>
+          </div>
+          <p class="dim">overflow-y-auto — own scroll</p>
+        </div>
+        <div class="shrink-0 border-t border-dashed border-wire-line px-3 py-1.5">
+          <p class="dim">aside · w-80 shrink-0 · collapses to 0</p>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       PANEL STATES
+       =================================================================== -->
+  <p class="mb-2 mt-12 text-[0.6875rem] uppercase tracking-widest text-wire-dim">Panel states</p>
+  <p class="mb-4 max-w-[75ch] text-xs leading-relaxed text-wire-dim">
+    Both panels collapse independently, at every breakpoint, and the state persists across sessions.
+    Collapsing both is <span class="text-wire-ink">focus mode</span> — a first-class state of this layout, and the
+    reason the panels collapse to nothing rather than merely narrowing.
+  </p>
+
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="rgn p-3">
+      <p class="text-[0.6875rem] font-medium">Both open</p>
+      <div class="rgn-f mt-3 flex h-36 flex-col overflow-hidden">
+        <div class="h-5 shrink-0 border-b border-dashed border-wire-line"></div>
+        <div class="flex flex-1 gap-1 p-1">
+          <div class="w-10 shrink-0 rgn"></div>
+          <div class="min-w-0 flex-1 rgn"></div>
+          <div class="w-12 shrink-0 rgn"></div>
+        </div>
+      </div>
+      <p class="dim mt-2">w-60 + flex-1 + w-80</p>
+    </div>
+
+    <div class="rgn p-3">
+      <p class="text-[0.6875rem] font-medium">Tree collapsed</p>
+      <div class="rgn-f mt-3 flex h-36 flex-col overflow-hidden">
+        <div class="h-5 shrink-0 border-b border-dashed border-wire-line"></div>
+        <div class="flex flex-1 gap-1 p-1">
+          <div class="min-w-0 flex-1 rgn"></div>
+          <div class="w-12 shrink-0 rgn"></div>
+        </div>
+      </div>
+      <p class="dim mt-2">Measure stays 46rem — the document does not widen</p>
+    </div>
+
+    <div class="rgn p-3">
+      <p class="text-[0.6875rem] font-medium">Inspector collapsed</p>
+      <div class="rgn-f mt-3 flex h-36 flex-col overflow-hidden">
+        <div class="h-5 shrink-0 border-b border-dashed border-wire-line"></div>
+        <div class="flex flex-1 gap-1 p-1">
+          <div class="w-10 shrink-0 rgn"></div>
+          <div class="min-w-0 flex-1 rgn"></div>
+        </div>
+      </div>
+      <p class="dim mt-2">Default below xl</p>
+    </div>
+
+    <div class="rgn border-wire-ink/40 p-3">
+      <p class="text-[0.6875rem] font-medium">Focus mode — both collapsed</p>
+      <div class="rgn-f mt-3 flex h-36 flex-col overflow-hidden">
+        <div class="h-5 shrink-0 border-b border-dashed border-wire-line"></div>
+        <div class="flex flex-1 justify-center p-1">
+          <div class="w-20 rgn"></div>
+        </div>
+      </div>
+      <p class="dim mt-2">Toolbar + document only. Margins absorb all width.</p>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       BREAKPOINT STRIP
+       =================================================================== -->
+  <p class="mb-2 mt-12 text-[0.6875rem] uppercase tracking-widest text-wire-dim">Breakpoint behaviour</p>
+
+  <div class="grid gap-4 lg:grid-cols-3">
+    <div class="rgn p-3">
+      <p class="text-[0.6875rem] font-medium">&lt; lg · under 1024px</p>
+      <p class="dim mt-1">Both panels hidden. Tree opens as an overlay sheet from the left, inspector from the right, each with a scrim. Document gutter drops to px-4 and the measure fills the viewport.</p>
+      <div class="rgn-f mt-3 flex h-44 flex-col overflow-hidden">
+        <div class="flex h-6 shrink-0 items-center justify-between border-b border-dashed border-wire-line px-1.5">
+          <div class="bar h-3.5 w-3.5"></div>
+          <div class="bar h-3.5 w-3.5"></div>
+        </div>
+        <div class="flex-1 space-y-1.5 p-1.5">
+          <div class="rgn h-7"><span class="dim block p-1">title</span></div>
+          <div class="rgn flex-1 h-24"><span class="dim block p-1">document body, full width</span></div>
+        </div>
+      </div>
+      <p class="dim mt-2">Overlays are modal: focus trap, Escape closes, focus returns to trigger.</p>
+    </div>
+
+    <div class="rgn p-3">
+      <p class="text-[0.6875rem] font-medium">lg – xl · 1024–1280px</p>
+      <p class="dim mt-1">Tree visible at w-60. Inspector hidden but available as an overlay. Measure is at its full 46rem.</p>
+      <div class="rgn-f mt-3 flex h-44 flex-col overflow-hidden">
+        <div class="h-6 shrink-0 border-b border-dashed border-wire-line"></div>
+        <div class="flex flex-1 gap-1.5 p-1.5">
+          <div class="w-12 shrink-0 rgn"><span class="dim block p-1">tree</span></div>
+          <div class="flex min-w-0 flex-1 justify-center">
+            <div class="w-4/5 rgn"><span class="dim block p-1">document</span></div>
+          </div>
+        </div>
+      </div>
+      <p class="dim mt-2">w-60 + flex-1</p>
+    </div>
+
+    <div class="rgn p-3">
+      <p class="text-[0.6875rem] font-medium">≥ xl · 1280px+</p>
+      <p class="dim mt-1">All three regions visible. Any width beyond this widens the document pane's margins, not the measure.</p>
+      <div class="rgn-f mt-3 flex h-44 flex-col overflow-hidden">
+        <div class="h-6 shrink-0 border-b border-dashed border-wire-line"></div>
+        <div class="flex flex-1 gap-1.5 p-1.5">
+          <div class="w-10 shrink-0 rgn"><span class="dim block p-1">tree</span></div>
+          <div class="flex min-w-0 flex-1 justify-center">
+            <div class="w-3/4 rgn"><span class="dim block p-1">document</span></div>
+          </div>
+          <div class="w-12 shrink-0 rgn"><span class="dim block p-1">inspector</span></div>
+        </div>
+      </div>
+      <p class="dim mt-2">w-60 + flex-1 + w-80</p>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       SCROLL MODEL
+       =================================================================== -->
+  <p class="mb-2 mt-12 text-[0.6875rem] uppercase tracking-widest text-wire-dim">Scroll model</p>
+  <div class="rgn overflow-x-auto">
+    <table class="w-full min-w-[42rem] text-xs">
+      <thead class="border-b border-dashed border-wire-line bg-wire-panel">
+        <tr class="[&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:font-medium">
+          <th class="w-40">Region</th><th class="w-52">Declaration</th><th>Behaviour</th>
+        </tr>
+      </thead>
+      <tbody class="[&_td]:px-3 [&_td]:py-2 [&_td]:align-top [&_tr]:border-b [&_tr]:border-dashed [&_tr]:border-wire-line">
+        <tr><td>html, body</td><td class="text-wire-dim">h-screen overflow-hidden</td><td class="text-wire-dim">Never scroll.</td></tr>
+        <tr><td>Row wrapper</td><td class="text-wire-dim">flex min-h-0 flex-1</td><td class="text-wire-dim"><span class="text-wire-ink">min-h-0 is load-bearing</span> — without it the children refuse to shrink and the inner scroll panes never engage.</td></tr>
+        <tr><td>Toolbar</td><td class="text-wire-dim">h-12 shrink-0 sticky top-0</td><td class="text-wire-dim">May hide on scroll-down; always returns on scroll-up. Never permanently dismissible.</td></tr>
+        <tr><td>Tree</td><td class="text-wire-dim">w-60 shrink-0 overflow-y-auto</td><td class="text-wire-dim">Independent scroll.</td></tr>
+        <tr><td>Document pane</td><td class="text-wire-dim">flex-1 min-w-0 overflow-y-auto</td><td class="text-wire-dim">Primary scroll region. Anchors and scroll restoration target this, not window.</td></tr>
+        <tr><td>Inspector</td><td class="text-wire-dim">w-80 shrink-0 overflow-y-auto</td><td class="text-wire-dim">Independent scroll.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>

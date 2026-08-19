@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>app-shell — wireframe</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+<style type="text/tailwindcss">
+/* Wireframes are deliberately greyscale. If this file starts looking
+   attractive, styling has leaked in and the layout has stopped being
+   combinable with an arbitrary design. */
+:root {
+  --wire-bg:     oklch(0.985 0 0);
+  --wire-panel:  oklch(0.955 0 0);
+  --wire-line:   oklch(0.80 0 0);
+  --wire-ink:    oklch(0.32 0 0);
+  --wire-dim:    oklch(0.56 0 0);
+  --wire-mark:   oklch(0.90 0 0);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --wire-bg:    oklch(0.19 0 0);
+    --wire-panel: oklch(0.24 0 0);
+    --wire-line:  oklch(0.42 0 0);
+    --wire-ink:   oklch(0.88 0 0);
+    --wire-dim:   oklch(0.62 0 0);
+    --wire-mark:  oklch(0.30 0 0);
+  }
+}
+
+@theme inline {
+  --color-wire-bg: var(--wire-bg);
+  --color-wire-panel: var(--wire-panel);
+  --color-wire-line: var(--wire-line);
+  --color-wire-ink: var(--wire-ink);
+  --color-wire-dim: var(--wire-dim);
+  --color-wire-mark: var(--wire-mark);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@layer base {
+  body {
+    background-color: var(--wire-bg);
+    color: var(--wire-ink);
+    font-family: var(--font-mono);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer components {
+  /* A wireframe region: dashed outline, no fill. */
+  .rgn   { @apply rounded border border-dashed border-wire-line; }
+  /* A filled region, for chrome that is structurally distinct. */
+  .rgn-f { @apply rounded border border-dashed border-wire-line bg-wire-panel; }
+  /* The placeholder text inside a region. */
+  .slot  { @apply text-[0.6875rem] leading-tight text-wire-ink; }
+  /* The sizing annotation on a region. */
+  .dim   { @apply text-[0.625rem] leading-tight text-wire-dim; }
+  /* A solid content-stand-in bar. */
+  .bar   { @apply rounded-sm bg-wire-mark; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="mx-auto max-w-[1400px] px-4 py-8 sm:px-6">
+
+  <header class="mb-8">
+    <p class="text-[0.6875rem] uppercase tracking-widest text-wire-dim">Layout wireframe</p>
+    <h1 class="mt-1.5 text-2xl font-medium tracking-tight">app-shell</h1>
+    <p class="mt-2 max-w-[75ch] text-xs leading-relaxed text-wire-dim">
+      Viewport-locked application shell. Fixed sidebar, fixed top bar, one scrolling content pane.
+      The page itself never scrolls — see <span class="text-wire-ink">LAYOUT.md</span> for why that matters.
+      Annotations in <span class="text-wire-ink">grey</span> are the real Tailwind values; draw them exactly.
+    </p>
+  </header>
+
+  <!-- ======================================================================
+       DESKTOP — the layout at its real proportions
+       =================================================================== -->
+  <p class="mb-2 text-[0.6875rem] uppercase tracking-widest text-wire-dim">Desktop · ≥ xl (1280px+)</p>
+
+  <div class="rgn flex h-[42rem] overflow-hidden">
+
+    <!-- ---------- SIDEBAR ---------- -->
+    <aside class="flex w-64 shrink-0 flex-col border-r border-dashed border-wire-line bg-wire-panel">
+      <div class="flex h-14 shrink-0 items-center border-b border-dashed border-wire-line px-3">
+        <div class="rgn flex h-8 w-full items-center justify-center">
+          <span class="slot">&lt;brand / workspace switcher&gt;</span>
+        </div>
+      </div>
+
+      <nav class="flex-1 space-y-2 overflow-y-auto p-3">
+        <p class="dim">overflow-y-auto — own scroll region</p>
+        <div class="rgn space-y-2 p-2">
+          <span class="slot block">&lt;primary navigation&gt;</span>
+          <span class="dim block">one level of nesting max</span>
+          <div class="space-y-1.5 pt-1">
+            <div class="bar h-6 w-full opacity-90"></div>
+            <div class="bar h-6 w-full opacity-40"></div>
+            <div class="bar h-6 w-full opacity-40"></div>
+            <div class="ml-4 space-y-1.5 border-l border-dashed border-wire-line pl-2">
+              <div class="bar h-5 w-full opacity-30"></div>
+              <div class="bar h-5 w-full opacity-30"></div>
+            </div>
+            <div class="bar h-6 w-full opacity-40"></div>
+          </div>
+        </div>
+        <div class="rgn p-2">
+          <span class="slot block">&lt;nav group: workspace&gt;</span>
+          <div class="mt-2 space-y-1.5">
+            <div class="bar h-6 w-full opacity-40"></div>
+            <div class="bar h-6 w-full opacity-40"></div>
+          </div>
+        </div>
+      </nav>
+
+      <div class="shrink-0 border-t border-dashed border-wire-line p-3">
+        <div class="rgn flex h-10 items-center justify-center">
+          <span class="slot">&lt;user menu&gt;</span>
+        </div>
+        <p class="dim mt-1.5">mt-auto · shrink-0 · never scrolls</p>
+      </div>
+
+      <div class="border-t border-dashed border-wire-line px-3 py-2">
+        <p class="dim">aside · w-64 shrink-0</p>
+      </div>
+    </aside>
+
+    <!-- ---------- EVERYTHING RIGHT OF THE SIDEBAR ---------- -->
+    <div class="flex min-w-0 flex-1 flex-col">
+
+      <!-- TOP BAR -->
+      <header class="flex h-14 shrink-0 items-center gap-3 border-b border-dashed border-wire-line bg-wire-panel px-3">
+        <div class="rgn flex h-8 min-w-0 flex-1 items-center px-2">
+          <span class="slot truncate">&lt;breadcrumb&gt;</span>
+        </div>
+        <div class="rgn flex h-8 w-56 shrink-0 items-center justify-center">
+          <span class="slot">&lt;global search&gt;</span>
+        </div>
+        <div class="rgn flex h-8 w-32 shrink-0 items-center justify-center">
+          <span class="slot">&lt;global actions&gt;</span>
+        </div>
+        <span class="dim shrink-0">header · h-14 · never scrolls</span>
+      </header>
+
+      <!-- CONTENT PANE — the only scroll region -->
+      <main class="min-h-0 flex-1 overflow-y-auto">
+        <div class="border-b border-dashed border-wire-line bg-wire-panel/60 px-6 py-1.5">
+          <p class="dim">main · flex-1 min-w-0 overflow-y-auto — <span class="text-wire-ink">THE scroll region</span>. Sticky children use top-0, not top-14.</p>
+        </div>
+
+        <div class="mx-auto flex max-w-7xl gap-6 px-6 py-6">
+
+          <!-- PAGE COLUMN -->
+          <div class="min-w-0 flex-1 space-y-4">
+            <div class="rgn space-y-2 p-3">
+              <span class="slot block">&lt;page header&gt;</span>
+              <span class="dim block">breadcrumb · h1 · description · actions · may be sticky top-0</span>
+              <div class="flex items-start justify-between gap-4 pt-1">
+                <div class="space-y-1.5">
+                  <div class="bar h-6 w-48"></div>
+                  <div class="bar h-3 w-64 opacity-50"></div>
+                </div>
+                <div class="flex gap-1.5">
+                  <div class="bar h-8 w-20 opacity-50"></div>
+                  <div class="bar h-8 w-24"></div>
+                </div>
+              </div>
+              <div class="rgn mt-2 flex h-9 items-center px-2">
+                <span class="slot">&lt;tabs for different sections&gt;</span>
+              </div>
+            </div>
+
+            <div class="rgn flex min-h-64 flex-col p-3">
+              <span class="slot block">&lt;primary content&gt;</span>
+              <span class="dim block">min-w-0 flex-1 · max-w-7xl mx-auto · cards, tables, forms, lists</span>
+              <div class="mt-3 grid grid-cols-3 gap-3">
+                <div class="rgn h-20"></div>
+                <div class="rgn h-20"></div>
+                <div class="rgn h-20"></div>
+              </div>
+              <div class="rgn mt-3 flex-1 p-2">
+                <span class="dim">wide content scrolls inside its own overflow-x-auto container — the shell never scrolls sideways</span>
+                <div class="mt-2 space-y-1.5">
+                  <div class="bar h-8 w-full opacity-60"></div>
+                  <div class="bar h-8 w-full opacity-35"></div>
+                  <div class="bar h-8 w-full opacity-35"></div>
+                  <div class="bar h-8 w-full opacity-35"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="rgn flex h-32 items-center justify-center">
+              <span class="dim">scroll to confirm: the sidebar and top bar stay put</span>
+            </div>
+          </div>
+
+          <!-- RIGHT RAIL -->
+          <aside class="hidden w-72 shrink-0 space-y-3 xl:block">
+            <div class="rgn space-y-2 p-3">
+              <span class="slot block">&lt;contextual rail&gt;</span>
+              <span class="dim block">w-72 shrink-0 · own scroll · xl and up only</span>
+              <div class="space-y-2 pt-1">
+                <div class="rgn h-16"></div>
+                <div class="rgn h-16"></div>
+              </div>
+            </div>
+            <div class="rgn flex h-40 items-center justify-center p-3">
+              <span class="slot text-center">&lt;activity feed&gt;<br><span class="dim">or metadata, or help</span></span>
+            </div>
+          </aside>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       BREAKPOINT STRIP
+       =================================================================== -->
+  <p class="mb-2 mt-12 text-[0.6875rem] uppercase tracking-widest text-wire-dim">Breakpoint behaviour</p>
+  <p class="mb-4 max-w-[75ch] text-xs leading-relaxed text-wire-dim">
+    This is where layouts actually differ from one another, and where implementers most often guess wrong.
+    Resize this window from ~360px to full width and check the shell above against these diagrams.
+  </p>
+
+  <div class="grid gap-4 lg:grid-cols-4">
+
+    <!-- MOBILE -->
+    <div class="rgn p-3">
+      <p class="text-[0.6875rem] font-medium">&lt; md · under 768px</p>
+      <p class="dim mt-1">Sidebar hidden → overlay sheet + scrim. Rail hidden, contents move inline below body. Gutter px-4.</p>
+      <div class="rgn-f mt-3 flex h-52 flex-col overflow-hidden">
+        <div class="flex h-7 shrink-0 items-center gap-1.5 border-b border-dashed border-wire-line px-1.5">
+          <div class="bar h-4 w-4"></div>
+          <span class="dim">☰ opens sidebar</span>
+        </div>
+        <div class="flex-1 space-y-1.5 overflow-hidden p-1.5">
+          <div class="rgn h-8"><span class="dim block p-1">page header</span></div>
+          <div class="rgn h-16"><span class="dim block p-1">primary content</span></div>
+          <div class="rgn h-12 border-wire-line/60"><span class="dim block p-1">rail content, inline</span></div>
+        </div>
+      </div>
+      <p class="dim mt-2">Targets grow to 44px. Shell may relax to normal document scrolling here.</p>
+    </div>
+
+    <!-- TABLET -->
+    <div class="rgn p-3">
+      <p class="text-[0.6875rem] font-medium">md – lg · 768–1024px</p>
+      <p class="dim mt-1">Sidebar collapses to a w-14 icon rail. Labels become hover tooltips. Rail still hidden.</p>
+      <div class="rgn-f mt-3 flex h-52 overflow-hidden">
+        <div class="flex w-8 shrink-0 flex-col items-center gap-1.5 border-r border-dashed border-wire-line py-1.5">
+          <div class="bar h-5 w-5"></div>
+          <div class="bar h-5 w-5 opacity-40"></div>
+          <div class="bar h-5 w-5 opacity-40"></div>
+        </div>
+        <div class="flex min-w-0 flex-1 flex-col">
+          <div class="h-7 shrink-0 border-b border-dashed border-wire-line"></div>
+          <div class="flex-1 space-y-1.5 p-1.5">
+            <div class="rgn h-8"></div>
+            <div class="rgn h-24"></div>
+          </div>
+        </div>
+      </div>
+      <p class="dim mt-2">w-14 icon rail</p>
+    </div>
+
+    <!-- LAPTOP -->
+    <div class="rgn p-3">
+      <p class="text-[0.6875rem] font-medium">lg – xl · 1024–1280px</p>
+      <p class="dim mt-1">Full w-64 sidebar. Right rail still hidden — content takes the full remaining width.</p>
+      <div class="rgn-f mt-3 flex h-52 overflow-hidden">
+        <div class="w-14 shrink-0 space-y-1.5 border-r border-dashed border-wire-line p-1.5">
+          <div class="bar h-4 w-full"></div>
+          <div class="bar h-4 w-full opacity-40"></div>
+          <div class="bar h-4 w-full opacity-40"></div>
+        </div>
+        <div class="flex min-w-0 flex-1 flex-col">
+          <div class="h-7 shrink-0 border-b border-dashed border-wire-line"></div>
+          <div class="flex-1 space-y-1.5 p-1.5">
+            <div class="rgn h-8"></div>
+            <div class="rgn h-24"></div>
+          </div>
+        </div>
+      </div>
+      <p class="dim mt-2">w-64 sidebar · max-w-7xl content</p>
+    </div>
+
+    <!-- DESKTOP -->
+    <div class="rgn p-3">
+      <p class="text-[0.6875rem] font-medium">≥ xl · 1280px+</p>
+      <p class="dim mt-1">Everything visible. Right rail appears at w-72 with its own scroll.</p>
+      <div class="rgn-f mt-3 flex h-52 overflow-hidden">
+        <div class="w-12 shrink-0 space-y-1.5 border-r border-dashed border-wire-line p-1.5">
+          <div class="bar h-4 w-full"></div>
+          <div class="bar h-4 w-full opacity-40"></div>
+          <div class="bar h-4 w-full opacity-40"></div>
+        </div>
+        <div class="flex min-w-0 flex-1 flex-col">
+          <div class="h-7 shrink-0 border-b border-dashed border-wire-line"></div>
+          <div class="flex flex-1 gap-1.5 p-1.5">
+            <div class="min-w-0 flex-1 space-y-1.5">
+              <div class="rgn h-8"></div>
+              <div class="rgn h-24"></div>
+            </div>
+            <div class="w-12 shrink-0 space-y-1.5">
+              <div class="rgn h-10"></div>
+              <div class="rgn h-14"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="dim mt-2">w-64 + flex-1 + w-72</p>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       SCROLL MODEL
+       =================================================================== -->
+  <p class="mb-2 mt-12 text-[0.6875rem] uppercase tracking-widest text-wire-dim">Scroll model</p>
+  <div class="rgn overflow-x-auto">
+    <table class="w-full min-w-[42rem] text-xs">
+      <thead class="border-b border-dashed border-wire-line bg-wire-panel">
+        <tr class="[&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:font-medium">
+          <th class="w-40">Region</th><th class="w-52">Declaration</th><th>Behaviour</th>
+        </tr>
+      </thead>
+      <tbody class="[&_td]:px-3 [&_td]:py-2 [&_td]:align-top [&_tr]:border-b [&_tr]:border-dashed [&_tr]:border-wire-line">
+        <tr><td>html, body</td><td class="text-wire-dim">h-screen overflow-hidden</td><td class="text-wire-dim">Never scroll. This is what makes it a shell.</td></tr>
+        <tr><td>Sidebar nav</td><td class="text-wire-dim">flex-1 overflow-y-auto</td><td class="text-wire-dim">Own scrollbar. Brand and user menu are shrink-0 and stay pinned.</td></tr>
+        <tr><td>Top bar</td><td class="text-wire-dim">h-14 shrink-0</td><td class="text-wire-dim">Fixed. Never moves, never scrolls.</td></tr>
+        <tr><td>Content pane</td><td class="text-wire-dim">flex-1 min-w-0 overflow-y-auto</td><td class="text-wire-dim">The primary scroll region. Sticky children resolve against this, so they use top-0.</td></tr>
+        <tr><td>Right rail</td><td class="text-wire-dim">w-72 shrink-0 overflow-y-auto</td><td class="text-wire-dim">Scrolls independently once taller than the pane.</td></tr>
+        <tr><td>Wide content</td><td class="text-wire-dim">overflow-x-auto</td><td class="text-wire-dim">Tables and code scroll inside themselves. The shell never scrolls sideways.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="mt-8 max-w-[75ch] text-xs leading-relaxed text-wire-dim">
+    <span class="text-wire-ink">min-w-0 is load-bearing.</span> Without it on the flex children between the shell and the
+    content, a wide table or a long unbroken string pushes the content pane past the viewport and produces a horizontal
+    scrollbar on the whole shell. This is the most common bug in this layout.
+  </p>
+
+</div>
+
+</body>
+</html>
