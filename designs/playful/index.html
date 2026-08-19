@@ -649,8 +649,8 @@
     <div>
       <p class="ks-label">Slider</p>
       <div class="space-y-4">
-        <input type="range" value="60" class="h-2 w-full appearance-none rounded-full bg-secondary outline-none [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:shadow-md">
-        <p class="text-sm text-muted-foreground">Value: 60%</p>
+        <input type="range" min="0" max="100" value="60" aria-label="Daily goal" style="--slider-fill: 60%" class="h-2 w-full appearance-none rounded-full bg-muted bg-[linear-gradient(to_right,var(--primary)_var(--slider-fill),transparent_var(--slider-fill))] outline-none [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:shadow-md">
+        <p class="text-sm text-muted-foreground">Value: <span data-slider-value>60</span>%</p>
       </div>
     </div>
   </div>
@@ -2208,6 +2208,20 @@
 </main>
 
 <script>
+  // The filled portion of a range input is not stylable in every engine, so the
+  // track paints it as a gradient stop driven by --slider-fill. Keep it in step
+  // with the value, or dragging the thumb leaves the fill behind.
+  document.querySelectorAll("input[type=range]").forEach(function (el) {
+    var paint = function () {
+      var min = Number(el.min || 0), max = Number(el.max || 100);
+      el.style.setProperty("--slider-fill", ((el.value - min) / (max - min)) * 100 + "%");
+      var out = el.parentElement.querySelector("[data-slider-value]");
+      if (out) out.textContent = el.value;
+    };
+    el.addEventListener("input", paint);
+    paint();
+  });
+
   document.getElementById("theme-toggle").addEventListener("click", function () {
     var dark = document.documentElement.classList.toggle("dark");
     localStorage.setItem("playful-theme", dark ? "dark" : "light");
