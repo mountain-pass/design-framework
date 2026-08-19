@@ -204,7 +204,8 @@ node scripts/build-gallery.mjs # regenerate index.html
 `check.mjs` verifies that every design has the required files, defines every
 required token in both light and dark, and renders every required kitchen sink
 section; that every layout documents its regions, scroll model and accessibility;
-and that every voice answers every string sink slot, in order, in greyscale. It also converts every `oklch()` token to sRGB and computes real WCAG
+and that every voice answers every string sink slot, in order, in greyscale, with
+its declared length budgets measured against its own specimens. It also converts every `oklch()` token to sRGB and computes real WCAG
 contrast ratios for the standard pairs in both themes, so the numbers recorded in a
 `DESIGN.md` are measured rather than estimated. It has no dependencies — Node 18+ is
 all you need.

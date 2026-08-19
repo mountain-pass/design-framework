@@ -121,7 +121,15 @@ A voice that suits everything suits nothing.>
 
 <!-- The one place voice touches layout. A design sizes its regions around these, so
      a voice that runs long must say so rather than letting a consuming project find
-     out when its buttons wrap. -->
+     out when its buttons wrap.
+
+     check.mjs parses this table and measures your string sink against it, so:
+       - Keep these row labels EXACTLY as they are. They are how the checker maps a
+         budget to a data-budget key in index.html.
+       - Every row here needs at least one data-budget specimen in index.html, and
+         every tagged specimen needs a row here. See shared/COPY.md.
+       - Set the numbers from the strings you actually wrote, not from the strings
+         you wish you had written. -->
 
 | Slot | Budget |
 |---|---|
@@ -136,4 +144,6 @@ A voice that suits everything suits nothing.>
 | Notification subject | ≤ |
 | Tooltip | ≤ |
 
-<Where this voice sits on the terse/expansive axis, and which designs that suits.>
+<Where this voice sits on the terse/expansive axis, which designs that suits, and
+which — if any — it does not fit. Name them; a consuming project should learn about
+a clash here, not when its buttons wrap.>

@@ -183,6 +183,55 @@ sections above, not invented ones.
 
 ---
 
+## Marking specimens for the budget check
+
+A voice's `VOICE.md` publishes character budgets per slot, and a design sizes its
+components around them. That contract is only worth anything if the voice's own
+specimens honour it, so `check.mjs` reads the budget table out of `VOICE.md` and
+measures the tagged strings in this file against it.
+
+Tag a specimen by putting `data-budget="<key>"` on the element holding the string:
+
+```html
+<span class="btn" data-budget="button">Create a project</span>
+<span class="s" data-budget="toast">Project created</span>
+<strong data-budget="empty-heading">No projects yet</strong>
+```
+
+The ten keys, and the `VOICE.md` row each one reads its budget from:
+
+| `data-budget` | Row in the Length budgets table |
+|---|---|
+| `button` | Button label |
+| `field-label` | Field label |
+| `help` | Help text |
+| `toast` | Toast |
+| `error` | Error message |
+| `empty-heading` | Empty state heading |
+| `empty-body` | Empty state body |
+| `page-title` | Page title |
+| `notification-subject` | Notification subject |
+| `tooltip` | Tooltip |
+
+Three rules the checker enforces:
+
+- **Every specimen you tag must have a declared budget.** Tagging a key `VOICE.md`
+  does not define is an error, not a silent pass.
+- **Every declared budget must have at least one tagged specimen.** Otherwise a
+  voice could satisfy the check by tagging nothing at all.
+- **The measured length is the rendered text** — inner tags stripped, entities
+  decoded, whitespace collapsed. What the reader sees is what the budget is about.
+
+Tag specimens, not commentary. A `.s sub` line explaining *why* a string is written
+that way is prose about the voice, not an example of it, and tagging it will measure
+the wrong thing.
+
+The attribute is `data-budget` rather than `data-slot` on purpose: shadcn/ui already
+uses `data-slot` on its own components, and these files get copied into shadcn
+projects.
+
+---
+
 ## Order on the page
 
 Sections appear in the order listed above. The page opens with a header containing

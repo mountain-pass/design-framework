@@ -172,6 +172,69 @@ const customProperties = (cssBlock) => {
   return out;
 };
 
+// ------------------------------------------------------- length budgets ---
+// The one place the axes negotiate: a voice publishes character budgets per
+// slot and a design sizes its components around them. That contract is only
+// real if the voice's own specimens honour it, so the budgets are parsed out
+// of VOICE.md and checked against the strings in the string sink.
+//
+// Specimens opt in with data-budget="<key>". The attribute is deliberately not
+// `data-slot`, which shadcn/ui already uses on its own components.
+
+const BUDGET_KEYS = {
+  "button label": "button",
+  "field label": "field-label",
+  "help text": "help",
+  "toast": "toast",
+  "error message": "error",
+  "empty state heading": "empty-heading",
+  "empty state body": "empty-body",
+  "page title": "page-title",
+  "notification subject": "notification-subject",
+  "tooltip": "tooltip",
+};
+
+// Reads the table under "## Length budgets". The first numeric cell after the
+// slot name is that voice's own budget; later columns (a comparison against
+// another voice, say) are ignored.
+const parseBudgets = (md) => {
+  const heading = /^##\s*.*Length budgets\s*$/im.exec(md);
+  if (!heading) return null;
+  let rest = md.slice(heading.index + heading[0].length);
+  const next = /^##\s/m.exec(rest);
+  if (next) rest = rest.slice(0, next.index);
+
+  const out = {};
+  for (const row of rest.matchAll(/^\|([^|]+)\|([^|]+)\|/gm)) {
+    const label = row[1].replace(/[`*]/g, "").trim().toLowerCase();
+    const key = BUDGET_KEYS[label];
+    if (!key) continue;
+    const n = /(\d+)/.exec(row[2]);
+    if (n) out[key] = parseInt(n[1], 10);
+  }
+  return out;
+};
+
+// Rendered text of a specimen: inner tags stripped, entities decoded,
+// whitespace collapsed — what a reader actually sees, which is what a budget
+// is about.
+const renderedText = (fragment) =>
+  fragment
+    .replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&mdash;/g, "—")
+    .replace(/&middot;/g, "·")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, "&")
+    .replace(/\s+/g, " ")
+    .trim();
+
+const budgetSpecimens = (html) =>
+  [...html.matchAll(/<([a-z]+)[^>]*\bdata-budget="([a-z-]+)"[^>]*>([\s\S]*?)<\/\1>/g)]
+    .map((m) => ({ key: m[2], text: renderedText(m[3]) }));
+
 // ---------------------------------------------------------------- designs ---
 
 const designs = folders("designs");
@@ -443,6 +506,32 @@ for (const name of voices) {
   const localLink = body.match(/<(?:link|script|img)[^>]*(?:href|src)="(?!https?:|data:|#|mailto:)[^"]+\.(?:css|js|png|jpe?g|svg|webp)"/g);
   if (localLink) {
     fail(label, `index.html references ${localLink.length} local file(s) — a file:// page cannot fetch them; inline instead`);
+  }
+
+  // --- declared length budgets, checked against the voice's own specimens
+  const budgets = parseBudgets(md);
+  if (budgets) {
+    const seen = new Set();
+    for (const { key, text } of budgetSpecimens(html)) {
+      seen.add(key);
+      const max = budgets[key];
+      if (max === undefined) {
+        fail(label, `index.html tags a data-budget="${key}" specimen, but VOICE.md declares no budget for it`);
+        continue;
+      }
+      if (text.length > max) {
+        fail(
+          label,
+          `${key} specimen is ${text.length} characters, over the ${max} VOICE.md declares: "${text}"`
+        );
+      }
+    }
+    // Without this, a voice could pass by simply tagging nothing.
+    for (const key of Object.keys(budgets)) {
+      if (!seen.has(key)) {
+        fail(label, `VOICE.md declares a ${key} budget, but index.html has no data-budget="${key}" specimen to check it against`);
+      }
+    }
   }
 
   // --- the shared example product keeps voices comparable

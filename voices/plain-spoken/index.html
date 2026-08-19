@@ -141,22 +141,22 @@
 <section id="buttons">
   <h2>3. Buttons and calls to action</h2>
   <div class="slot"><span class="cap">Primary action</span>
-    <div class="btnrow"><span class="btn">Create project</span><span class="btn">Save changes</span><span class="btn">Send invitations</span></div></div>
+    <div class="btnrow"><span class="btn" data-budget="button">Create project</span><span class="btn" data-budget="button">Save changes</span><span class="btn" data-budget="button">Send invitations</span></div></div>
   <div class="slot"><span class="cap">In progress, then done</span>
-    <div class="btnrow"><span class="btn">Saving</span><span class="btn">Saved</span></div>
+    <div class="btnrow"><span class="btn" data-budget="button">Saving</span><span class="btn" data-budget="button">Saved</span></div>
     <span class="s sub">No ellipsis on the in-progress label — the spinner already says it is working.</span></div>
   <div class="slot"><span class="cap">Cancel and dismiss</span>
-    <div class="btnrow"><span class="btn sec">Cancel</span><span class="btn sec">Not now</span><span class="btn sec">Close</span></div>
+    <div class="btnrow"><span class="btn sec" data-budget="button">Cancel</span><span class="btn sec" data-budget="button">Not now</span><span class="btn sec" data-budget="button">Close</span></div>
     <span class="s sub"><code>Cancel</code> is the one button allowed to have no object.</span></div>
   <div class="slot"><span class="cap">Destructive</span>
-    <div class="btnrow"><span class="btn">Delete project</span><span class="btn">Delete 3 notes</span><span class="btn">Remove collaborator</span></div>
+    <div class="btnrow"><span class="btn" data-budget="button">Delete project</span><span class="btn" data-budget="button">Delete 3 notes</span><span class="btn" data-budget="button">Remove collaborator</span></div>
     <span class="s sub">The count goes in the label. A reader should never have to look elsewhere to know the scope.</span></div>
   <div class="slot"><span class="cap">Navigational CTA</span>
-    <div class="btnrow"><span class="btn">Read the setup guide</span><span class="btn">See all projects</span></div>
+    <div class="btnrow"><span class="btn" data-budget="button">Read the setup guide</span><span class="btn" data-budget="button">See all projects</span></div>
     <span class="s sub">Never <code>Click here</code>, never <code>Learn more</code> on its own.</span></div>
   <div class="slot"><span class="cap">Disabled, with its tooltip</span>
-    <div class="btnrow"><span class="btn sec">Send invitations</span></div>
-    <span class="s sub">Tooltip: <code>Add at least one email address first</code></span></div>
+    <div class="btnrow"><span class="btn sec" data-budget="button">Send invitations</span></div>
+    <span class="s sub">Tooltip: <code data-budget="tooltip">Add at least one email address first</code></span></div>
 </section>
 
 <section id="menu">
@@ -168,9 +168,9 @@
     <span class="s">Move to workspace</span>
     <span class="s">Delete project</span></div>
   <div class="slot"><span class="cap">Page titles</span>
-    <span class="s">List: <code>Projects</code></span>
-    <span class="s">Detail: <code>Field interviews, March</code></span>
-    <span class="s">Settings: <code>Project settings</code></span>
+    <span class="s">List: <code data-budget="page-title">Projects</code></span>
+    <span class="s">Detail: <code data-budget="page-title">Field interviews, March</code></span>
+    <span class="s">Settings: <code data-budget="page-title">Project settings</code></span>
     <span class="s sub">Noun phrases. The detail title is the thing's own name, not <code>Project detail</code>.</span></div>
 </section>
 
@@ -178,47 +178,47 @@
   <h2>5. Labels, help text, placeholders</h2>
   <p class="note">The label names the field. The help text explains format or consequence. Neither repeats the other.</p>
   <div class="slot"><span class="cap">Field with help text</span>
-    <span class="s"><strong>Project name</strong></span>
-    <span class="s sub">Collaborators see this name</span></div>
+    <span class="s"><strong data-budget="field-label">Project name</strong></span>
+    <span class="s sub" data-budget="help">Collaborators see this name</span></div>
   <div class="slot"><span class="cap">Field with format help</span>
-    <span class="s"><strong>Retention period</strong></span>
-    <span class="s sub">Notes are deleted after this many days. Leave empty to keep them indefinitely</span></div>
+    <span class="s"><strong data-budget="field-label">Retention period</strong></span>
+    <span class="s sub" data-budget="help">Notes are deleted after this many days. Leave empty to keep them indefinitely</span></div>
   <div class="slot"><span class="cap">Field with a consequence</span>
-    <span class="s"><strong>Workspace URL</strong></span>
-    <span class="s sub">Changing this breaks existing links</span></div>
+    <span class="s"><strong data-budget="field-label">Workspace URL</strong></span>
+    <span class="s sub" data-budget="help">Changing this breaks existing links</span></div>
   <div class="slot"><span class="cap">Placeholder used correctly</span>
-    <span class="s"><strong>Email address</strong></span>
+    <span class="s"><strong data-budget="field-label">Email address</strong></span>
     <span class="s sub">Placeholder: <code>rosa@example.com</code></span>
     <span class="s sub">An example of a valid value — never an instruction, never the label again.</span></div>
   <div class="slot"><span class="cap">Required field</span>
-    <span class="s"><strong>Project name</strong> (required)</span>
+    <span class="s"><strong data-budget="field-label">Project name</strong> (required)</span>
     <span class="s sub">The word, not an asterisk. See shared/ACCESSIBILITY.md.</span></div>
 </section>
 
 <section id="validation">
   <h2>6. Validation and errors</h2>
   <p class="note">Each says what happened and what to do. A message that only reports the failure has answered half the prompt.</p>
-  <div class="slot"><span class="cap">Required field left empty</span><span class="s">Enter a project name.</span></div>
-  <div class="slot"><span class="cap">Malformed value</span><span class="s">That doesn't look like an email address. Check for a missing @.</span></div>
-  <div class="slot"><span class="cap">Valid but rejected</span><span class="s">You already have a project called “Field interviews”. Pick another name.</span></div>
-  <div class="slot"><span class="cap">Whole-form failure</span><span class="s">We couldn't create the project. Two fields need attention — they're marked below.</span></div>
-  <div class="slot"><span class="cap">Warning, not an error</span><span class="s">This project has no collaborators. You can add them later.</span></div>
+  <div class="slot"><span class="cap">Required field left empty</span><span class="s" data-budget="error">Enter a project name.</span></div>
+  <div class="slot"><span class="cap">Malformed value</span><span class="s" data-budget="error">That doesn't look like an email address. Check for a missing @.</span></div>
+  <div class="slot"><span class="cap">Valid but rejected</span><span class="s" data-budget="error">You already have a project called “Field interviews”. Pick another name.</span></div>
+  <div class="slot"><span class="cap">Whole-form failure</span><span class="s" data-budget="error">We couldn't create the project. Two fields need attention — they're marked below.</span></div>
+  <div class="slot"><span class="cap">Warning, not an error</span><span class="s" data-budget="error">This project has no collaborators. You can add them later.</span></div>
 </section>
 
 <section id="empty">
   <h2>7. Empty states</h2>
   <p class="note">Three different situations. Writing one sentence for all three is the common failure.</p>
   <div class="slot"><span class="cap">First run — nothing has ever existed</span>
-    <span class="s"><strong>No projects yet</strong></span>
-    <span class="s sub">A project holds related notes and the people working on them.</span>
-    <div class="btnrow"><span class="btn">Create a project</span></div></div>
+    <span class="s"><strong data-budget="empty-heading">No projects yet</strong></span>
+    <span class="s sub" data-budget="empty-body">A project holds related notes and the people working on them.</span>
+    <div class="btnrow"><span class="btn" data-budget="button">Create a project</span></div></div>
   <div class="slot"><span class="cap">Filtered to nothing</span>
-    <span class="s"><strong>No notes match “interview”</strong></span>
-    <span class="s sub">Try a shorter search, or clear the date filter.</span>
-    <div class="btnrow"><span class="btn sec">Clear filters</span></div></div>
+    <span class="s"><strong data-budget="empty-heading">No notes match “interview”</strong></span>
+    <span class="s sub" data-budget="empty-body">Try a shorter search, or clear the date filter.</span>
+    <div class="btnrow"><span class="btn sec" data-budget="button">Clear filters</span></div></div>
   <div class="slot"><span class="cap">Cleared by the user — a success, not a void</span>
-    <span class="s"><strong>Archive is empty</strong></span>
-    <span class="s sub">You've cleared everything. Archived notes will show up here.</span></div>
+    <span class="s"><strong data-budget="empty-heading">Archive is empty</strong></span>
+    <span class="s sub" data-budget="empty-body">You've cleared everything. Archived notes will show up here.</span></div>
 </section>
 
 <section id="loading">
@@ -236,22 +236,22 @@
   <p class="note">Heading, one sentence of explanation, one recovery action.</p>
   <div class="slot"><span class="cap">Not found</span>
     <span class="s"><strong>We can't find that project</strong></span>
-    <span class="s sub">It may have been deleted, or the link may be wrong.</span>
-    <div class="btnrow"><span class="btn sec">See all projects</span></div></div>
+    <span class="s sub" data-budget="error">It may have been deleted, or the link may be wrong.</span>
+    <div class="btnrow"><span class="btn sec" data-budget="button">See all projects</span></div></div>
   <div class="slot"><span class="cap">Permission denied</span>
     <span class="s"><strong>You don't have access to this project</strong></span>
-    <span class="s sub">Ask its owner, Rosa Alvarez, to add you.</span>
-    <div class="btnrow"><span class="btn sec">Request access</span></div></div>
+    <span class="s sub" data-budget="error">Ask its owner, Rosa Alvarez, to add you.</span>
+    <div class="btnrow"><span class="btn sec" data-budget="button">Request access</span></div></div>
   <div class="slot"><span class="cap">Server error</span>
     <span class="s"><strong>Something broke on our end</strong></span>
-    <span class="s sub">Your notes are safe. We've been notified and we're looking at it.</span>
-    <div class="btnrow"><span class="btn sec">Try again</span></div></div>
+    <span class="s sub" data-budget="error">Your notes are safe. We've been notified and we're looking at it.</span>
+    <div class="btnrow"><span class="btn sec" data-budget="button">Try again</span></div></div>
   <div class="slot"><span class="cap">Offline</span>
     <span class="s"><strong>You're offline</strong></span>
-    <span class="s sub">Your changes are saved on this device and will sync when you reconnect.</span></div>
+    <span class="s sub" data-budget="error">Your changes are saved on this device and will sync when you reconnect.</span></div>
   <div class="slot"><span class="cap">Rate or quota limit</span>
     <span class="s"><strong>You've hit the export limit</strong></span>
-    <span class="s sub">You can export 10 times an hour. Try again at 3:40 pm.</span></div>
+    <span class="s sub" data-budget="error">You can export 10 times an hour. Try again at 3:40 pm.</span></div>
 </section>
 
 <section id="confirm">
@@ -260,25 +260,25 @@
   <div class="slot"><span class="cap">Destructive and irreversible</span>
     <span class="s"><strong>Delete 3 projects?</strong></span>
     <span class="s sub">This also deletes 412 notes inside them. You can't undo this.</span>
-    <div class="btnrow"><span class="btn sec">Cancel</span><span class="btn">Delete 3 projects</span></div></div>
+    <div class="btnrow"><span class="btn sec" data-budget="button">Cancel</span><span class="btn" data-budget="button">Delete 3 projects</span></div></div>
   <div class="slot"><span class="cap">Destructive but recoverable</span>
     <span class="s"><strong>Archive this project?</strong></span>
     <span class="s sub">Collaborators lose access until you restore it. Nothing is deleted.</span>
-    <div class="btnrow"><span class="btn sec">Cancel</span><span class="btn">Archive project</span></div></div>
+    <div class="btnrow"><span class="btn sec" data-budget="button">Cancel</span><span class="btn" data-budget="button">Archive project</span></div></div>
   <div class="slot"><span class="cap">Benign — and whether this voice would skip it</span>
     <span class="s"><strong>Discard your draft?</strong></span>
     <span class="s sub">You've written 40 words that haven't been saved.</span>
-    <div class="btnrow"><span class="btn sec">Keep editing</span><span class="btn">Discard draft</span></div>
+    <div class="btnrow"><span class="btn sec" data-budget="button">Keep editing</span><span class="btn" data-budget="button">Discard draft</span></div>
     <span class="s sub"><strong>plain-spoken would skip this</strong> if the draft were autosaved. A confirmation
       the product does not need is a sentence the reader did not need.</span></div>
 </section>
 
 <section id="toast">
   <h2>11. Toasts</h2>
-  <div class="slot"><span class="cap">Success</span><span class="s">Project created</span></div>
-  <div class="slot"><span class="cap">Failure</span><span class="s">Couldn't send invitations. Try again.</span></div>
-  <div class="slot"><span class="cap">Undoable</span><span class="s">3 notes deleted &nbsp;·&nbsp; <strong>Undo</strong></span></div>
-  <div class="slot"><span class="cap">Queued or deferred</span><span class="s">Export queued. We'll email you the file.</span></div>
+  <div class="slot"><span class="cap">Success</span><span class="s" data-budget="toast">Project created</span></div>
+  <div class="slot"><span class="cap">Failure</span><span class="s" data-budget="toast">Couldn't send invitations. Try again.</span></div>
+  <div class="slot"><span class="cap">Undoable</span><span class="s" data-budget="toast">3 notes deleted &nbsp;·&nbsp; <strong>Undo</strong></span></div>
+  <div class="slot"><span class="cap">Queued or deferred</span><span class="s" data-budget="toast">Export queued. We'll email you the file.</span></div>
 </section>
 
 <section id="alerts">
@@ -315,16 +315,16 @@
   <h2>14. Transactional messages</h2>
   <p class="note">Subject line, then the first sentence. Subject lines are their own discipline.</p>
   <div class="slot"><span class="cap">Invitation</span>
-    <span class="s"><strong>Rosa added you to Field interviews</strong></span>
+    <span class="s"><strong data-budget="notification-subject">Rosa added you to Field interviews</strong></span>
     <span class="s sub">You can now read and edit the 68 notes in this project.</span></div>
   <div class="slot"><span class="cap">Mention</span>
-    <span class="s"><strong>Rosa mentioned you in a note</strong></span>
+    <span class="s"><strong data-budget="notification-subject">Rosa mentioned you in a note</strong></span>
     <span class="s sub">She asked about the March interview transcripts.</span></div>
   <div class="slot"><span class="cap">Weekly digest</span>
-    <span class="s"><strong>Fieldnote: 24 new notes this week</strong></span>
+    <span class="s"><strong data-budget="notification-subject">Fieldnote: 24 new notes this week</strong></span>
     <span class="s sub">Most of the activity was in Field interviews and Pricing research.</span></div>
   <div class="slot"><span class="cap">Expiry or billing warning</span>
-    <span class="s"><strong>Your trial ends in 3 days</strong></span>
+    <span class="s"><strong data-budget="notification-subject">Your trial ends in 3 days</strong></span>
     <span class="s sub">After that your notes stay safe but become read-only.</span></div>
 </section>
 

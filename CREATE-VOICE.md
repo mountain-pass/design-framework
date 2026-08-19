@@ -82,10 +82,12 @@ recognisable in a draft.
 **Never** — Five to ten prohibitions. The most useful section and the one most
 likely to be skipped.
 
-**Length budgets** — Character budgets per slot. This is the one place a voice
-touches layout: a design sizes its regions around these numbers, and a voice that
-runs long must say so rather than letting a consuming project discover it when the
-buttons wrap.
+**Length budgets** — Character budgets per slot, in a table `check.mjs` parses. This
+is the one place a voice touches layout: a design sizes its regions around these
+numbers, and a voice that runs long must say so rather than letting a consuming
+project discover it when the buttons wrap. Keep the row labels exactly as the
+template has them — they are how the checker maps a budget to a `data-budget` key.
+Name the designs the voice fits, and any it does not.
 
 ### 2. `index.html`
 
@@ -103,6 +105,11 @@ attributes specified there.
   `check.mjs` enforces this.
 - One self-contained file, no local `<link>` or `<script src>`, opens from `file://`.
 - A sticky in-page table of contents linking to every section ID.
+- **Tag your specimens with `data-budget`** so the length budgets are checked rather
+  than merely asserted — see "Marking specimens for the budget check" in
+  `shared/COPY.md`. Every key you declare a budget for needs at least one tagged
+  specimen, and every tagged specimen needs a declared budget; `check.mjs` fails on
+  either gap. Tag the strings themselves, never the commentary about them.
 
 Plain CSS is fine and preferred here — this page has no design to demonstrate, and
 it should stay readable with no network.
@@ -123,6 +130,9 @@ sections exist; they cannot tell you the voice is good. Specifically check that:
 - Every error says what to do next, not just what failed.
 - The zero and one count cases are written, not implied.
 - No confirmation button says `Yes`, `No`, or `OK`.
+- The budgets are honest. `check.mjs` measures the specimens you tagged, so a budget
+  you set generously to make the check pass is a number a design will trust and a
+  string that will overflow it.
 - It reads as one person talking, from the first section to the last.
 - It sounds meaningfully different from the other voices in `voices/`. Open two
   string sinks side by side — if the strings could be swapped without anyone
