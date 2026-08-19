@@ -243,94 +243,95 @@
 <section id="typography" class="ks-section">
   <p class="ks-title">02 · Foundations</p>
   <h2 class="ks-lede">Typography</h2>
-  <p class="ks-note">One rounded face carries everything — headings, body and every button label. The stack is <span class="font-mono">"duolingo-sans", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif</span>, and every entry in it resolves against fonts installed on the device: this design ships no webfont, so a device without one of those rounded faces falls back to its system sans and loses the roundness. See Typography in DESIGN.md.</p>
+  <p class="ks-note">One rounded face carries everything — headings, body and every button label. The stack is <span class="font-mono">"Baloo 2", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif</span>. Baloo 2 is vendored into <span class="font-mono">theme.css</span> as base64 woff2, so the roundness this design leans on is there on every device rather than only on the ones that happen to have a rounded face installed.</p>
   
   <div class="ks-grid">
     <div class="space-y-8">
       <div>
-        <h1 class="text-5xl font-bold tracking-tight sm:text-6xl">
-          Make learning magical
-        </h1>
-        <p class="mt-2 text-sm font-mono text-muted-foreground">h1 · 60px/56px · display 700 · -0.02em</p>
+        <p class="text-5xl font-bold leading-[1.1] tracking-[-0.02em]">Learn something today</p>
+        <p class="mt-2 text-sm font-mono text-muted-foreground">display · 48 / 700 / 1.1 / -0.02em</p>
       </div>
-      
+
       <div>
-        <h2 class="text-4xl font-bold tracking-tight">
-          Features that delight
-        </h2>
-        <p class="mt-2 text-sm font-mono text-muted-foreground">h2 · 36px/40px · display 700 · -0.01em</p>
+        <h1 class="text-4xl font-bold leading-[1.15] tracking-[-0.02em]">Make learning stick</h1>
+        <p class="mt-2 text-sm font-mono text-muted-foreground">h1 · 36 / 700 / 1.15 / -0.02em</p>
       </div>
-      
+
       <div>
-        <h3 class="text-2xl font-bold tracking-tight">
-          Easy to get started
-        </h3>
-        <p class="mt-2 text-sm font-mono text-muted-foreground">h3 · 24px/32px · display 700 · -0.01em</p>
+        <h2 class="text-2xl font-bold leading-[1.25] tracking-[-0.01em]">Your streak, day 14</h2>
+        <p class="mt-2 text-sm font-mono text-muted-foreground">h2 · 24 / 700 / 1.25 / -0.01em</p>
       </div>
-      
+
       <div>
-        <h4 class="text-xl font-semibold tracking-tight">
-          Quick setup guide
-        </h4>
-        <p class="mt-2 text-sm font-mono text-muted-foreground">h4 · 20px/28px · display 600</p>
+        <h3 class="text-xl font-bold leading-[1.35]">Unit 3 · Past tense</h3>
+        <p class="mt-2 text-sm font-mono text-muted-foreground">h3 · 20 / 700 / 1.35 / 0</p>
       </div>
-      
+
       <div>
-        <p class="text-lg leading-relaxed text-foreground">
-          The playful design makes interfaces feel friendly and approachable. Perfect for education, children's products, and consumer apps that want to bring joy to every interaction.
+        <h4 class="text-base font-bold leading-[1.4]">Practice weak skills</h4>
+        <p class="mt-2 text-sm font-mono text-muted-foreground">h4 · 16 / 700 / 1.4 / 0</p>
+      </div>
+
+      <div>
+        <p class="text-lg font-medium leading-[1.6] text-foreground">
+          Short lessons, repeated often, beat long ones done once. This design is built around that
+          rhythm: one clear action per screen, and visible progress after every one of them.
         </p>
-        <p class="mt-2 text-sm font-mono text-muted-foreground">lead · 18px/28px · sans 400</p>
+        <p class="mt-2 text-sm font-mono text-muted-foreground">lead · 18 / 500 / 1.6 / 0</p>
       </div>
-      
+
       <div>
-        <p class="text-base leading-relaxed">
-          Body text uses the same rounded face as the headings, at regular weight. The generous line height and letter spacing ensure comfortable reading for extended periods. <a href="#" class="font-medium text-primary underline decoration-primary/30 underline-offset-4 transition-colors hover:decoration-primary">Links are clearly marked</a> with color and underline for accessibility.
+        <p class="text-sm leading-[1.6]">
+          Body text is compact at 14px, which keeps a lesson screen dense enough to hold a full
+          exercise without scrolling. The rounded face does the softening that the tight size would
+          otherwise cost. <a href="#" class="font-medium text-primary underline decoration-primary/30 underline-offset-4 transition-colors hover:decoration-primary">Links are clearly marked</a> with colour and an underline, never colour alone.
         </p>
-        <p class="mt-2 text-sm font-mono text-muted-foreground">body · 16px/26px · sans 400</p>
+        <p class="mt-2 text-sm font-mono text-muted-foreground">body · 14 / 400 / 1.6 / 0 — the default</p>
       </div>
-      
+
       <div>
-        <p class="text-sm text-muted-foreground">
-          Small text for captions, help text, and secondary information. Still highly legible.
+        <p class="text-[0.8125rem] leading-[1.5] text-muted-foreground">
+          Small text for hints, streak counts, and the line under a lesson title. Still fully legible.
         </p>
-        <p class="mt-2 text-sm font-mono text-muted-foreground">small · 14px/20px · sans 400</p>
+        <p class="mt-2 text-sm font-mono text-muted-foreground">small · 13 / 400 / 1.5 / 0</p>
       </div>
-      
+
       <div>
         <blockquote class="border-l-4 border-primary bg-secondary/30 py-4 pl-6 pr-4 italic">
-          "This design brings so much energy and positivity to our product. Users love it!"
+          "Fifteen minutes a day for a year beats a weekend of cramming. The interface should make
+          the fifteen minutes the easy thing to do."
         </blockquote>
-        <p class="mt-2 text-sm font-mono text-muted-foreground">blockquote · 16px/26px · italic · primary border</p>
+        <p class="mt-2 text-sm font-mono text-muted-foreground">blockquote · italic · primary border</p>
       </div>
-      
+
       <div>
-        <p>Install the package with <code class="rounded-md bg-muted px-2 py-1 font-mono text-sm text-foreground">npm install @playful/ui</code> and get started immediately.</p>
-        <p class="mt-2 text-sm font-mono text-muted-foreground">inline code · 14px · mono · muted background</p>
+        <p class="text-sm">Install the package with <code class="rounded-md bg-muted px-2 py-1 font-mono text-sm text-foreground">npm install @learn/ui</code> and get started immediately.</p>
+        <p class="mt-2 text-sm font-mono text-muted-foreground">inline code · mono · muted background</p>
       </div>
-      
+
       <div>
-        <ul class="space-y-2 text-base">
+        <ul class="space-y-2 text-sm">
           <li class="flex gap-3">
-            <svg class="mt-1 h-5 w-5 shrink-0 text-chart-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span>Vibrant color palette that energizes interfaces</span>
+            <svg class="mt-0.5 h-5 w-5 shrink-0 text-chart-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>One clear action per screen, sized for a thumb</span>
           </li>
           <li class="flex gap-3">
-            <svg class="mt-1 h-5 w-5 shrink-0 text-chart-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span>Generous rounded corners for friendly appearance</span>
+            <svg class="mt-0.5 h-5 w-5 shrink-0 text-chart-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Progress is visible after every completed step</span>
           </li>
           <li class="flex gap-3">
-            <svg class="mt-1 h-5 w-5 shrink-0 text-chart-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span>A rounded display face adds friendly personality</span>
+            <svg class="mt-0.5 h-5 w-5 shrink-0 text-chart-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>A rounded display face keeps the density friendly</span>
           </li>
         </ul>
         <p class="mt-2 text-sm font-mono text-muted-foreground">ul · check icon markers</p>
       </div>
-      
+
       <div>
-        <ol class="list-decimal space-y-2 pl-6 text-base">
-          <li>Choose your color theme from our vibrant palette</li>
-          <li>Configure components to match your brand</li>
-          <li>Deploy and watch engagement soar</li>
+        <ol class="list-decimal space-y-2 pl-6 text-sm">
+          <li>Pick a track and set a daily goal you will actually hit</li>
+          <li>Work one unit at a time; the app decides what to review</li>
+          <li>Come back tomorrow — the streak is the whole mechanic</li>
         </ol>
         <p class="mt-2 text-sm font-mono text-muted-foreground">ol · standard numbering</p>
       </div>
@@ -416,7 +417,7 @@
 <section id="buttons" class="ks-section">
   <p class="ks-title">04 · Primitives</p>
   <h2 class="ks-lede">Buttons</h2>
-  <p class="ks-note">Friendly, rounded buttons with generous padding. Vibrant colors and soft shadows make interactions feel delightful.</p>
+  <p class="ks-note">Rounded, generously padded, and sitting on a solid slab <span class="font-mono">--button-lift</span> (4px) deep. On <span class="font-mono">:active</span> the button travels down onto the slab and the slab collapses beneath it, so only the top edge moves — pressed into the page rather than squashed.</p>
   
   <div class="ks-grid">
     <div>
@@ -1874,7 +1875,7 @@
 <section id="hero" class="ks-section">
   <p class="ks-title">23 · Composed</p>
   <h2 class="ks-lede">Marketing hero</h2>
-  <p class="ks-note">Marketing bands use generous vertical spacing. Backgrounds can use gradients or solid colors — playful embraces vibrant treatments.</p>
+  <p class="ks-note">Marketing bands use generous vertical spacing. Backgrounds are flat token fills — this design gets its energy from the green and the lift, not from gradients.</p>
 
   <div class="mt-8 overflow-hidden rounded-xl border-2 border-border bg-card">
     <div class="grid items-center gap-10 px-6 py-16 lg:grid-cols-2 lg:px-12">

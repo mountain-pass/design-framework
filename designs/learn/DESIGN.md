@@ -104,7 +104,7 @@ this waiver travels with the tokens into your project.
 
 ## Typography
 
-**Sans:** `"duolingo-sans", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif`
+**Sans:** `"Baloo 2", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif`
 **Display:** same stack as sans — the rounded face carries headings and every button label
 **Mono:** `ui-monospace, SFMono-Regular, Menlo, monospace`
 **Serif:** not used
@@ -114,28 +114,26 @@ green: it is what stops a dense grid of controls from reading as a dashboard.
 Buttons, headings and navigation are all set in it at weight 800, uppercase, with
 `0.04em` tracking.
 
-### This stack ships no webfont, and that has a cost
+### Why Baloo 2, and not the reference product's own face
 
-Every other design in this repo vendors its typeface into `theme.css` as base64
-woff2, so it renders identically everywhere. This one cannot: all three named
-families are proprietary and not redistributable. Duolingo Sans is the reference
-product's own font; Arial Rounded MT Bold is Monotype's and ships with macOS;
-Trebuchet MS is Microsoft's and ships with Windows and macOS. The `@font-face`
-rule in `theme.css` is `local()`-only for the same reason — it resolves against
-fonts already installed on the device and downloads nothing.
+The face this design is drawn from is Duolingo Sans, which is proprietary. So was
+the fallback the stack used to lean on: Arial Rounded MT Bold is Monotype's and
+ships with macOS, Trebuchet MS is Microsoft's and ships with Windows and macOS.
+Naming them was not a licence problem — a font stack may name anything — but it
+made the design's identity conditional on the reader's operating system. Nothing
+was ever downloaded, because `local()` only ever resolves against fonts already
+installed, so the roundness this section calls load-bearing was present on a Mac
+and simply absent on iOS, Android and most Linux.
 
-So the roundness that this section calls load-bearing is present on a Mac or a
-Windows desktop and absent on iOS, Android and most Linux, where the stack falls
-through to the system sans. The design still works — it is still green, still
-rounded in its shapes, still lifted in its buttons — but on a phone it is missing
-the part of its identity that the type was carrying.
+Baloo 2 replaces it: openly licensed (SIL OFL 1.1), rounded in the same way, and
+— the reason it wins over Nunito or Fredoka — it carries weight 800, which this
+design needs for buttons and navigation. Fredoka stops at 700. It is vendored
+into `theme.css` as base64 woff2 like every other design here, so the type is now
+a property of the commit rather than of the device.
 
-If you are shipping this to devices you do not control, substitute an
-openly-licensed rounded face and vendor it the way the other designs do. Nunito
-is the closest match to the stack above and reaches weight 800 as this design
-requires; Baloo 2 is a heavier alternative. Change `--font-sans` and
-`--font-display` together — they are deliberately the same stack — and run
-`node scripts/vendor-fonts.mjs` after adding the design to its `FONTS` table.
+Arial Rounded MT Bold and Trebuchet MS stay in the stack behind it. They are no
+longer load-bearing — they cover the moment before the face is decoded, and the
+case where a consumer strips the `@font-face` block out.
 
 | Level | Size | Weight | Line height | Tracking |
 |---|---|---|---|---|
@@ -247,36 +245,103 @@ so they stay flat and do not travel. See prohibition 7.
 
 ## Accessibility
 
-**Focus ring.** The focus ring uses `--ring` and is offset from the element so it remains visible against the dark app shell. The measured contrast is above AA for the ring against the page background.
+Baseline is `shared/ACCESSIBILITY.md` — WCAG 2.2 AA. This section covers only what
+`learn` decides for itself.
 
-**Target sizes.** Buttons and inputs sit at 44px or above for touch use, matching the app's strong preference for easy taps. This is above the SC 2.5.8 minimum and is intentional in a learning product.
+**Focus ring.** `ring-2 ring-ring ring-offset-2` on `:focus-visible`, instant, no
+transition. `--ring` is the green primary, which measures 2.09:1 light and 8.05:1
+dark against the page. Dark mode is comfortably past the 3:1 WCAG 1.4.11 asks of
+an indicator; light mode is not, and is one of the shortfalls the waiver above
+covers — the ring is the same green as the primary, so it cannot clear 3:1 on
+white while the primary stays the brand colour. In light mode the offset and the
+2px width are doing the work the contrast cannot. The offset matters
+more here than in the other designs, because `rounded-xl` corners and `shadow-md`
+already soften the button edge — without the offset the ring merges into the shadow.
 
-**State is never colour alone.** Progress, success, and errors carry text labels, weight changes, and iconography. The green button is supported by an instant feedback treatment instead of colour alone.
+**Target sizes are this design's biggest accessibility advantage.** Everything is
+generous, and that is worth protecting:
 
-**Charts.** Multi-series charts are kept to low saturation plus shape variation to preserve legibility without relying on hue alone.
+| Control | Size | Notes |
+|---|---|---|
+| Button, input, select | 44px (`h-11`) | Meets the touch minimum everywhere, not just on mobile |
+| Icon button | 44×44 (`h-11 w-11`) | Squares, aligned with text buttons in toolbars |
+| Table row | 44px (`h-11`) | Rows are comfortably selectable by touch |
+| Top nav bar | 64px (`h-16`) | — |
 
-**Reduced motion.** The `prefers-reduced-motion` rule is in `theme.css`; any transition should drop to near-instant for a user who prefers less movement.
+`learn` is the only design here that clears the 44px touch target by default. Do
+not "tighten it up" for a desktop build — the size is part of the aesthetic *and*
+the accessibility story, and shrinking it costs both.
+
+**`border-2` on form controls is aesthetic, not an accessibility mitigation.**
+It was previously doing duty for a low-contrast `--input`, which it could not
+actually do — WCAG 1.4.11 measures colour, not stroke width. `--input` now carries
+its own 3:1, and `border-2` stays because the design wants it.
+
+**State is never colour alone.** Status pills carry text alongside the fill. Alerts
+carry an icon and a title, not just a tinted background. Because this palette leans
+on two saturated hues that sit close in lightness (green L=0.75, gold L=0.86 in dark), a
+greyscale check matters more here than in a neutral design — run one.
+
+**Charts.** The chart ramp is green/blue/gold/purple/red at similar chroma, which is close to
+worst-case for red-green colour blindness. Any chart with more than two series
+needs direct labels, or shape and dash variation in the legend.
+
+**Motion.** No transforms on hover — targets do not move — and
+`prefers-reduced-motion` is handled in `theme.css`. The shadow-deepening hover is
+a colour transition and is safe to keep under reduced motion.
 
 ### Known gaps
 
-None.
+Light mode does not meet AA. Ten pairs fall short, every one of them a consequence
+of holding the reference palette unmodified — see the waiver under Colour, which
+sets out what it costs and who should not ship it. `node scripts/check.mjs` still
+measures and prints all ten on every run; the marker suppresses the build
+failure, not the finding.
+
+Dark mode clears every pair. It is the accessible theme in this design, and that
+is a deliberate asymmetry rather than an oversight.
 
 ---
 
 ## Never
 
-1. **Never use a pale or cool-blue primary on a dark background.**
-2. **Never make the primary button feel decorative; it must read as the action.**
-3. **Never allow the app shell to become overly glossy or metallic.**
-4. **Never introduce a second dominant accent colour.**
-5. **Never shrink touch targets below 44px in learning flows.**
-6. **Never rely on pure shadow for hierarchy; use borders and structure first.**
+1. **Never use sharp corners.** This design's personality lives in its rounded shapes. A 90° corner on a button or card breaks the aesthetic instantly. Minimum radius is `rounded-lg` (12px). For interactive elements, use `rounded-xl` (16px).
+
+2. **Never use more than two accent colours on a single screen.** Green and one of blue or gold — that is the palette. The chart ramp (green, blue, gold, purple, red) exists for data visualisation; UI chrome stays green plus a single supporting hue. A third accent in the chrome just creates noise.
+
+3. **Never reduce card padding below 24px (`p-6`).** This design is roomy. Cramming content into tight cards undoes the friendly breathing room that makes it work. If something doesn't fit comfortably at `p-8`, rethink the content, don't shrink the padding.
+
+4. **Never use hard black or pure white for text.** Foreground in dark mode is `#F1F7FB` and in light mode `#4B4B4B` — never `#000` or `#FFF` for body copy. Pure white appears only as a foreground on the light theme's saturated fills. Absolute black on a near-black ground reads as a hole rather than as text.
+
+5. **Never use drop shadows on flat surfaces.** Shadows are for elevation — cards, buttons, dialogs. Page backgrounds, section dividers, and inline elements stay flat. A shadow on a `<p>` tag is a mistake.
+
+6. **Never stack headings without content between them.** If an h2 is immediately followed by an h3, one of them is wrong. Headings introduce content; they aren't decoration. This matters more here because the rounded display face is visually distinctive — stacked headings look like a type specimen, not a hierarchy.
+
+7. **Never animate anything that causes reflow.** Colour, opacity, shadow, and transform can transition. Height, width, padding, margin, and border width cannot — animating those relays out the page around them. Buttons don't scale on hover and panels don't slide open. The exceptions are purpose-built animation components (carousels, drawers) where movement is the point, and the button press described under Motion, which moves a `transform` and a `box-shadow` and so touches no other pixel on the page.
+
+8. **Never let gold or blue outrank the green.** Green is the action colour: the primary button, the progress fill, the completed state. Gold belongs to rewards and streaks, blue to navigation and secondary actions. A screen whose main call to action is gold has inverted the hierarchy — the learner should always be able to find "the green one".
+
+9. **Never use thin font weights (300 or lighter).** The stack starts at 400 Regular and goes up. Thin weights on colored backgrounds become illegible, and they undermine the friendly, approachable tone. Headings are bold (700); UI text is regular (400) or semibold (600). That's the range.
+
+10. **Never use this design for high-density data dashboards.** The roomy padding, large radii, and tall components make it terrible for applications that need to show 50 rows of data above the fold. This design optimizes for momentum and repetition, not information density. If the product is a data table with occasional UI around it, use slate.
 
 ---
 
 ## Extensions
 
-None.
+Two additions beyond the standard set in `shared/TOKENS.md`:
+
+```css
+--font-display: "Baloo 2", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;
+--button-lift: 4px;
+```
+
+`--font-display` is used in the theme block as `font-family: var(--font-display)`
+for h1–h4. If a consumer ignores it, headings fall back to `--font-sans` — the
+same stack — and the design still works.
+
+`--button-lift` is how far a button's bottom edge protrudes, and therefore how far
+it travels when pressed. Every button collapses by exactly this much; see Motion.
 
 ### Navigation
 Top nav bar is `h-16` (64px) vs slate's h-14 (56px). The extra height accommodates the more prominent logo typography (the rounded face at 18px bold) and makes touch targets more comfortable.
@@ -307,91 +372,3 @@ Progress bars have a `rounded-full` track (full pill shape) filled with `bg-prim
 
 Skeletons use `bg-muted animate-pulse`, with `rounded-lg` to match the shapes they're standing in for (avatar skeletons are `rounded-full`).
 
----
-
-## Accessibility
-
-Baseline is `shared/ACCESSIBILITY.md` — WCAG 2.2 AA. This section covers only what
-`playful` decides for itself.
-
-**Focus ring.** `ring-2 ring-ring ring-offset-2` on `:focus-visible`, instant, no
-transition. `--ring` is the green primary: 4.65:1 light and 8.05:1 dark against the
-page, both well past the 3:1 WCAG 1.4.11 asks of an indicator. The offset matters
-more here than in the other designs, because `rounded-xl` corners and `shadow-md`
-already soften the button edge — without the offset the ring merges into the shadow.
-
-**Target sizes are this design's biggest accessibility advantage.** Everything is
-generous, and that is worth protecting:
-
-| Control | Size | Notes |
-|---|---|---|
-| Button, input, select | 44px (`h-11`) | Meets the touch minimum everywhere, not just on mobile |
-| Icon button | 44×44 (`h-11 w-11`) | Squares, aligned with text buttons in toolbars |
-| Table row | 44px (`h-11`) | Rows are comfortably selectable by touch |
-| Top nav bar | 64px (`h-16`) | — |
-
-`playful` is the only design here that clears the 44px touch target by default. Do
-not "tighten it up" for a desktop build — the size is part of the aesthetic *and*
-the accessibility story, and shrinking it costs both.
-
-**`border-2` on form controls is aesthetic, not an accessibility mitigation.**
-It was previously doing duty for a low-contrast `--input`, which it could not
-actually do — WCAG 1.4.11 measures colour, not stroke width. `--input` now carries
-its own 3:1, and `border-2` stays because the design wants it.
-
-**State is never colour alone.** Status pills carry text alongside the fill. Alerts
-carry an icon and a title, not just a tinted background. Because this palette leans
-on two saturated hues that sit close in lightness (green L=0.75, gold L=0.86 in dark), a
-greyscale check matters more here than in a neutral design — run one.
-
-**Charts.** The chart ramp is green/blue/gold/purple/red at similar chroma, which is close to
-worst-case for red-green colour blindness. Any chart with more than two series
-needs direct labels, or shape and dash variation in the legend.
-
-**Motion.** No transforms on hover — targets do not move — and
-`prefers-reduced-motion` is handled in `theme.css`. The shadow-deepening hover is
-a colour transition and is safe to keep under reduced motion.
-
-### Known gaps
-
-None. Every pair in `CONTRAST_PAIRS` clears its minimum in both themes, verified by
-`node scripts/check.mjs`, which treats a shortfall as a build failure.
-
-The margins here are the thinnest in the repo, though — see "What this design is
-tight on" under Colour. Re-run the check after any palette change, however small.
-
----
-
-## Never
-
-1. **Never use sharp corners.** This design's personality lives in its rounded shapes. A 90° corner on a button or card breaks the aesthetic instantly. Minimum radius is `rounded-lg` (12px). For interactive elements, use `rounded-xl` (16px).
-
-2. **Never use more than two accent colours on a single screen.** Green and one of blue or gold — that is the palette. The chart ramp (green, blue, gold, purple, red) exists for data visualisation; UI chrome stays green plus a single supporting hue. A third accent in the chrome just creates noise.
-
-3. **Never reduce card padding below 24px (`p-6`).** This design is roomy. Cramming content into tight cards undoes the friendly breathing room that makes it work. If something doesn't fit comfortably at `p-8`, rethink the content, don't shrink the padding.
-
-4. **Never use hard black or pure white for text.** Foreground in dark mode is `#F1F7FB` and in light mode `#4B4B4B` — never `#000` or `#FFF` for body copy. Pure white appears only as a foreground on the light theme's saturated fills. Absolute black on a near-black ground reads as a hole rather than as text.
-
-5. **Never use drop shadows on flat surfaces.** Shadows are for elevation — cards, buttons, dialogs. Page backgrounds, section dividers, and inline elements stay flat. A shadow on a `<p>` tag is a mistake.
-
-6. **Never stack headings without content between them.** If an h2 is immediately followed by an h3, one of them is wrong. Headings introduce content; they aren't decoration. This matters more here because the rounded display face is visually distinctive — stacked headings look like a type specimen, not a hierarchy.
-
-7. **Never animate anything that causes reflow.** Colour, opacity, shadow, and transform can transition. Height, width, padding, margin, and border width cannot — animating those relays out the page around them. Buttons don't scale on hover and panels don't slide open. The exceptions are purpose-built animation components (carousels, drawers) where movement is the point, and the button press described under Motion, which moves a `transform` and a `box-shadow` and so touches no other pixel on the page.
-
-8. **Never let gold or blue outrank the green.** Green is the action colour: the primary button, the progress fill, the completed state. Gold belongs to rewards and streaks, blue to navigation and secondary actions. A screen whose main call to action is gold has inverted the hierarchy — the learner should always be able to find "the green one".
-
-9. **Never use thin font weights (300 or lighter).** The stack starts at 400 Regular and goes up. Thin weights on colored backgrounds become illegible, and they undermine the friendly, approachable tone. Headings are bold (700); UI text is regular (400) or semibold (600). That's the range.
-
-10. **Never use this design for high-density data dashboards.** The roomy padding, large radii, and tall components make it terrible for applications that need to show 50 rows of data above the fold. Playful optimizes for delight, not information density. If the product is a data table with occasional UI around it, use slate.
-
----
-
-## Extensions
-
-No custom tokens beyond the standard set. Everything this design needs exists in `shared/TOKENS.md`. The only addition is a CSS custom property for the display font:
-
-```css
---font-display: "duolingo-sans", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;
-```
-
-Used in the theme block as `font-family: var(--font-display)` for h1–h4. If a consumer ignores `--font-display`, headings fall back to `--font-sans` and the design still works — it just loses some personality.
