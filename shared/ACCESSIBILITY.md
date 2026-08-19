@@ -267,7 +267,11 @@ node scripts/check.mjs        # tokens, sections, and computed contrast ratios
 
 `check.mjs` parses each `theme.css`, converts every `oklch()` value to sRGB, and
 computes real WCAG contrast ratios for the standard pairs in both light and dark.
-A shortfall fails the build. The demo and the paste-ready file can no longer
+A shortfall fails the build, unless that design declares
+`<!-- check:contrast=waived -->` in its `DESIGN.md` — see the rules in
+`CLAUDE.md`. A waiver downgrades the failure to a warning and never hides it: the
+ratios are printed on every run, and the design has to state in the same section
+what the shortfall costs and what to do instead if AA is required. The demo and the paste-ready file can no longer
 disagree — the kitchen sink renders by fetching `theme.css` — so the ratios
 `check.mjs` measures are the ratios a consumer gets. `check.mjs` enforces that
 wiring too, failing any `index.html` that declares its own theme tokens.

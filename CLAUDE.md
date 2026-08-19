@@ -145,6 +145,21 @@ propagates into every consuming project. `check.mjs` computes real contrast rati
 from each `theme.css` — never record an estimated ratio in a `DESIGN.md`, and never
 ship a contrast failure as a known issue when the fix is a token value.
 
+A design whose identity genuinely depends on colours that cannot reach AA may
+waive the contrast gate, and only by declaring it in its own `DESIGN.md`:
+
+```
+<!-- check:contrast=waived -->
+```
+
+`check.mjs` then reports each shortfall as a warning instead of failing. It
+suppresses the build failure, not the finding — the ratios are still measured and
+still printed on every run. A waiver is not a way to defer the work: take it only
+when the palette *is* the design and darkening it would produce a different
+design, and write down in the same section what the shortfall costs a user and
+what someone who needs AA should do instead. `designs/learn` is the worked
+example. Never add the marker to silence a design you have not finished tuning.
+
 **Every design ships light and dark.** Both are part of the deliverable. The
 kitchen sink's dark-mode toggle must produce a dark theme that someone actually
 chose, not one that happens to fall out of inverting the light theme.

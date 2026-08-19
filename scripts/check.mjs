@@ -314,7 +314,16 @@ for (const name of designs) {
   }
 
   // --- computed contrast, light and dark (shared/ACCESSIBILITY.md)
-  const report = CONTRAST_LEVEL === "fail" ? fail : warn;
+  //
+  // A design may waive the contrast gate by declaring it in its own DESIGN.md,
+  // which is where the reason belongs and where an implementer will read it.
+  // The shortfalls are still measured and still reported — waiving suppresses
+  // the build failure, not the finding.
+  const waived = /<!--\s*check:contrast=waived[\s\S]*?-->/.test(md);
+  const shortfalls = [];
+  const report = waived
+    ? (_l, m) => shortfalls.push(m)
+    : CONTRAST_LEVEL === "fail" ? fail : warn;
   for (const [mode, body] of [["light", light], ["dark", dark]]) {
     if (!body) continue;
     const vars = customProperties(body);
@@ -357,6 +366,15 @@ for (const name of designs) {
         label,
         `index.html redeclares ${copied.length} ${mode} token(s) (${copied.slice(0, 3).join(", ")}…) — they would shadow theme.css and drift from it`
       );
+    }
+  }
+
+  if (waived) {
+    if (shortfalls.length) {
+      warn(label, `contrast gate waived in DESIGN.md — ${shortfalls.length} pair(s) below the WCAG minimum:`);
+      for (const m of shortfalls) warn(label, `  ${m.replace(/^theme\.css /, "")}`);
+    } else {
+      warn(label, "contrast gate waived in DESIGN.md, but nothing is below the minimum — remove the waiver");
     }
   }
 
