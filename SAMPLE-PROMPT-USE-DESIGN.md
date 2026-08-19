@@ -3,9 +3,8 @@
 A worked example of a **Mode 1** prompt — consuming this repo from somewhere
 else. Run it in a Claude Code session in your *own* project, not in this one.
 
-The session has no local copy of this repository, so the prompt has to say how
-to get one. Cloning is the reliable route: it lets the agent open the kitchen
-sink HTML directly instead of reading a description of it.
+The prompt references files directly from the GitHub repository using raw URLs,
+which return plain file content that AI agents can read directly.
 
 > This example uses `warm-paper`, which is created by
 > [`SAMPLE-PROMPT-CREATE-DESIGN.md`](SAMPLE-PROMPT-CREATE-DESIGN.md). Substitute
@@ -17,31 +16,26 @@ sink HTML directly instead of reading a description of it.
 I want you to build this using a shared design system that lives in a public
 repo: https://github.com/mountain-pass/design-framework
 
-First, fetch it so you can read it properly:
+Before writing any code, fetch and read these five files in full from the repo:
 
-  git clone --depth 1 https://github.com/mountain-pass/design-framework /tmp/design-framework
+  https://raw.githubusercontent.com/mountain-pass/design-framework/main/CLAUDE.md
+  https://raw.githubusercontent.com/mountain-pass/design-framework/main/shared/TOKENS.md
+  https://raw.githubusercontent.com/mountain-pass/design-framework/main/shared/COMPONENTS.md
+  https://raw.githubusercontent.com/mountain-pass/design-framework/main/designs/warm-paper/DESIGN.md
+  https://raw.githubusercontent.com/mountain-pass/design-framework/main/layouts/app-shell/LAYOUT.md
 
-(If you can't clone, read the files over HTTPS instead — raw file URLs look like
-https://raw.githubusercontent.com/mountain-pass/design-framework/main/<path>,
-e.g. .../main/designs/warm-paper/DESIGN.md)
+Also fetch and open this HTML file:
+  https://raw.githubusercontent.com/mountain-pass/design-framework/main/designs/warm-paper/index.html
 
-Then, before writing any code, read these five files in full:
-
-  /tmp/design-framework/CLAUDE.md                    (how to use the repo)
-  /tmp/design-framework/shared/TOKENS.md             (the token contract)
-  /tmp/design-framework/shared/COMPONENTS.md         (the component contract)
-  /tmp/design-framework/designs/warm-paper/DESIGN.md (the design I want)
-  /tmp/design-framework/layouts/app-shell/LAYOUT.md  (the layout I want)
-
-Also open /tmp/design-framework/designs/warm-paper/index.html — that is the
-rendered answer to "what does this component look like in this design". When
-you're unsure how to style something, find it there and copy the class list
-rather than inventing a treatment.
+That kitchen sink demo is the rendered answer to "what does this component look 
+like in this design". When you're unsure how to style something, find it there 
+and copy the class list rather than inventing a treatment.
 
 Now build a reading-list app with Next.js, Tailwind v4 and shadcn/ui, using the
 `warm-paper` design and the `app-shell` layout:
 
-- Copy designs/warm-paper/theme.css into app/globals.css verbatim.
+- Fetch and copy the theme into app/globals.css verbatim from:
+  https://raw.githubusercontent.com/mountain-pass/design-framework/main/designs/warm-paper/theme.css
 - Build the app-shell exactly as LAYOUT.md specifies it — including the
   viewport-locked scroll model and the min-w-0 rules. Don't let the page scroll
   as a whole.
@@ -70,9 +64,13 @@ the instructions were vague. That feedback is what I'm actually testing.
 
 ## Why the prompt is built this way
 
+**It uses raw GitHub URLs for direct file access.** Raw URLs (from 
+`raw.githubusercontent.com`) return plain file content without GitHub's HTML 
+wrapper, making them ideal for AI agents to fetch and read programmatically.
+
 **It names the files to read, in order.** An agent that skims `DESIGN.md` will
 produce something that looks approximately right and violates three rules in the
-"Never" list. Listing the paths explicitly, and saying *in full*, is what gets
+"Never" list. Listing the URLs explicitly, and saying *in full*, is what gets
 the specifics applied.
 
 **It points at the kitchen sink as a rendered artefact.** This is the part most

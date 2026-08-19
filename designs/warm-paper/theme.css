@@ -1,0 +1,223 @@
+/* ============================================================================
+   warm-paper — theme tokens
+   ----------------------------------------------------------------------------
+   Editorial and reading-first. Warm off-white paper backgrounds, soft
+   near-black ink, serif for content, sans for UI chrome. One muted
+   oxblood accent drawn from the paper's warmth. Generous rhythm, minimal
+   chrome, hairline rules. Body text at 16px. Dark mode reads as lamplight
+   on a page: warm low light, not cool grey inversion.
+
+   Read shared/TOKENS.md for what each token is for, and CREATE-DESIGN.md for
+   the rules (oklch values, deliberate dark theme, measured contrast).
+
+   Paste this into your project's global stylesheet (app/globals.css in a
+   Next.js + shadcn/ui project), below `@import "tailwindcss";`.
+
+   KEEP IN SYNC with the <style type="text/tailwindcss"> block in index.html.
+   This file is the source of truth.
+   ========================================================================= */
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --radius: 0.375rem;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Crimson Pro", ui-serif, Georgia, Cambria, "Times New Roman", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Warm off-white paper, never pure white */
+  --background: oklch(0.975 0.012 55);
+  --foreground: oklch(0.26 0.015 30);
+
+  /* Raised surfaces slightly lighter */
+  --card: oklch(0.985 0.010 55);
+  --card-foreground: oklch(0.26 0.015 30);
+
+  /* Floating surfaces lighter still */
+  --popover: oklch(0.99 0.008 55);
+  --popover-foreground: oklch(0.26 0.015 30);
+
+  /* Muted oxblood accent, drawn from paper warmth */
+  --primary: oklch(0.46 0.095 25);
+  --primary-foreground: oklch(0.98 0.008 55);
+
+  /* Low-emphasis surfaces */
+  --secondary: oklch(0.94 0.010 50);
+  --secondary-foreground: oklch(0.28 0.018 30);
+
+  /* Subdued fills and text */
+  --muted: oklch(0.94 0.010 50);
+  --muted-foreground: oklch(0.52 0.020 35);
+
+  /* Hover state */
+  --accent: oklch(0.92 0.012 50);
+  --accent-foreground: oklch(0.28 0.018 30);
+
+  /* Warm danger state */
+  --destructive: oklch(0.52 0.15 25);
+  --destructive-foreground: oklch(0.98 0.008 55);
+
+  /* Hairline borders */
+  --border: oklch(0.88 0.012 50);
+  --input: oklch(0.88 0.012 50);
+  --ring: oklch(0.46 0.095 25);
+
+  /* Chart colors with warm palette */
+  --chart-1: oklch(0.46 0.095 25);
+  --chart-2: oklch(0.52 0.085 195);
+  --chart-3: oklch(0.58 0.095 145);
+  --chart-4: oklch(0.62 0.11 65);
+  --chart-5: oklch(0.54 0.10 280);
+
+  /* Sidebar tokens */
+  --sidebar: oklch(0.96 0.012 50);
+  --sidebar-foreground: oklch(0.26 0.015 30);
+  --sidebar-primary: oklch(0.46 0.095 25);
+  --sidebar-primary-foreground: oklch(0.98 0.008 55);
+  --sidebar-accent: oklch(0.92 0.012 50);
+  --sidebar-accent-foreground: oklch(0.28 0.018 30);
+  --sidebar-border: oklch(0.88 0.012 50);
+  --sidebar-ring: oklch(0.46 0.095 25);
+}
+
+.dark {
+  /* Lamplight on a page: warm low light, not cool grey */
+  --background: oklch(0.22 0.018 40);
+  --foreground: oklch(0.90 0.010 50);
+
+  /* Raised surfaces in warm darkness */
+  --card: oklch(0.26 0.020 40);
+  --card-foreground: oklch(0.90 0.010 50);
+
+  /* Floating surfaces */
+  --popover: oklch(0.28 0.020 40);
+  --popover-foreground: oklch(0.90 0.010 50);
+
+  /* Accent lighter and less saturated in dark */
+  --primary: oklch(0.60 0.075 25);
+  --primary-foreground: oklch(0.18 0.022 35);
+
+  /* Subdued surfaces */
+  --secondary: oklch(0.32 0.018 40);
+  --secondary-foreground: oklch(0.90 0.010 50);
+
+  --muted: oklch(0.32 0.018 40);
+  --muted-foreground: oklch(0.66 0.015 45);
+
+  /* Hover state in warm darkness */
+  --accent: oklch(0.35 0.020 40);
+  --accent-foreground: oklch(0.90 0.010 50);
+
+  /* Danger state with reduced chroma */
+  --destructive: oklch(0.62 0.12 25);
+  --destructive-foreground: oklch(0.96 0.008 50);
+
+  /* Borders in lamplight */
+  --border: oklch(0.35 0.018 40);
+  --input: oklch(0.37 0.018 40);
+  --ring: oklch(0.60 0.075 25);
+
+  /* Chart colors adjusted for dark */
+  --chart-1: oklch(0.60 0.075 25);
+  --chart-2: oklch(0.62 0.070 195);
+  --chart-3: oklch(0.68 0.085 145);
+  --chart-4: oklch(0.72 0.095 65);
+  --chart-5: oklch(0.64 0.085 280);
+
+  /* Sidebar in warm darkness */
+  --sidebar: oklch(0.24 0.020 40);
+  --sidebar-foreground: oklch(0.90 0.010 50);
+  --sidebar-primary: oklch(0.60 0.075 25);
+  --sidebar-primary-foreground: oklch(0.18 0.022 35);
+  --sidebar-accent: oklch(0.33 0.020 40);
+  --sidebar-accent-foreground: oklch(0.90 0.010 50);
+  --sidebar-border: oklch(0.35 0.018 40);
+  --sidebar-ring: oklch(0.60 0.075 25);
+}
+
+/* Maps the semantic tokens above onto Tailwind's utility namespaces, so that
+   `bg-background`, `text-muted-foreground`, `border-border`, `rounded-lg` and
+   friends resolve. `inline` means the values are substituted at build time. */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Very subtle shadows — warm-paper prefers hairline rules over depth */
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.03);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.04), 0 1px 1px -1px rgb(0 0 0 / 0.04);
+  --shadow-md: 0 2px 4px -1px rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+  --shadow-lg: 0 4px 8px -2px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.06);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

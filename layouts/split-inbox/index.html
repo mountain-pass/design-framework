@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>split-inbox — wireframe</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+<style type="text/tailwindcss">
+:root {
+  --wire-bg:     oklch(0.985 0 0);
+  --wire-panel:  oklch(0.955 0 0);
+  --wire-line:   oklch(0.80 0 0);
+  --wire-ink:    oklch(0.32 0 0);
+  --wire-dim:    oklch(0.56 0 0);
+  --wire-mark:   oklch(0.90 0 0);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --wire-bg:    oklch(0.19 0 0);
+    --wire-panel: oklch(0.24 0 0);
+    --wire-line:  oklch(0.42 0 0);
+    --wire-ink:   oklch(0.88 0 0);
+    --wire-dim:   oklch(0.62 0 0);
+    --wire-mark:  oklch(0.30 0 0);
+  }
+}
+
+@theme inline {
+  --color-wire-bg: var(--wire-bg);
+  --color-wire-panel: var(--wire-panel);
+  --color-wire-line: var(--wire-line);
+  --color-wire-ink: var(--wire-ink);
+  --color-wire-dim: var(--wire-dim);
+  --color-wire-mark: var(--wire-mark);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@layer base {
+  body {
+    background-color: var(--wire-bg);
+    color: var(--wire-ink);
+    font-family: var(--font-mono);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer components {
+  /* A wireframe region: dashed outline, no fill. */
+  .rgn   { @apply rounded border border-dashed border-wire-line; }
+  /* A filled region, for chrome that is structurally distinct. */
+  .rgn-f { @apply rounded border border-dashed border-wire-line bg-wire-panel; }
+  /* The placeholder text inside a region. */
+  .slot  { @apply text-[0.6875rem] leading-tight text-wire-ink; }
+  /* The sizing annotation on a region. */
+  .dim   { @apply text-[0.625rem] leading-tight text-wire-dim; }
+  /* A solid content-stand-in bar. */
+  .bar   { @apply rounded-sm bg-wire-mark; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="mx-auto max-w-[1400px] px-4 py-8 sm:px-6">
+
+  <header class="mb-8">
+    <p class="text-[0.6875rem] uppercase tracking-widest text-wire-dim">Layout wireframe</p>
+    <h1 class="mt-1.5 text-2xl font-medium tracking-tight">split-inbox</h1>
+    <p class="mt-2 max-w-[75ch] text-xs leading-relaxed text-wire-dim">
+      Three-pane list-detail layout. Left folder rail, middle item list, right detail pane. All scroll independently.
+      <span class="text-wire-ink">On mobile, the panes become a navigation stack — not just responsive CSS, actual routing.</span>
+      See LAYOUT.md for why that matters.
+    </p>
+  </header>
+
+  <!-- ======================================================================
+       DESKTOP — the layout at its real proportions
+       =================================================================== -->
+  <p class="mb-2 text-[0.6875rem] uppercase tracking-widest text-wire-dim">Desktop · ≥ lg (1024px+)</p>
+
+  <div class="rgn flex h-[42rem] overflow-hidden">
+
+    <!-- ---------- LEFT RAIL — folders / filters ---------- -->
+    <aside class="hidden w-56 shrink-0 flex-col border-r border-dashed border-wire-line bg-wire-panel md:flex">
+      
+      <!-- Rail header -->
+      <div class="flex h-14 shrink-0 items-center border-b border-dashed border-wire-line px-3">
+        <div class="rgn flex h-8 w-full items-center justify-center">
+          <span class="slot">&lt;workspace / account switcher&gt;</span>
+        </div>
+      </div>
+
+      <!-- Rail navigation — scrolls independently -->
+      <nav class="flex-1 space-y-2 overflow-y-auto p-3">
+        <p class="dim">overflow-y-auto — own scroll</p>
+        <div class="rgn space-y-1.5 p-2">
+          <span class="slot block">&lt;folder tree&gt;</span>
+          <span class="dim block">Inbox, Sent, Drafts, Archive, labels, filters</span>
+          <div class="mt-2 space-y-1">
+            <div class="bar h-6 w-full opacity-90"></div>
+            <div class="bar h-6 w-full opacity-40"></div>
+            <div class="bar h-6 w-full opacity-40"></div>
+            <div class="bar h-6 w-full opacity-40"></div>
+            <div class="ml-3 mt-1.5 space-y-1 border-l border-dashed border-wire-line pl-2">
+              <div class="bar h-5 w-full opacity-30"></div>
+              <div class="bar h-5 w-full opacity-30"></div>
+            </div>
+            <div class="bar h-6 w-full opacity-40"></div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Rail footer -->
+      <div class="shrink-0 border-t border-dashed border-wire-line p-3">
+        <div class="rgn flex h-8 items-center justify-center">
+          <span class="slot text-[0.5625rem]">&lt;storage quota / settings&gt;</span>
+        </div>
+      </div>
+
+      <div class="border-t border-dashed border-wire-line px-3 py-2">
+        <p class="dim">aside · w-56 shrink-0</p>
+      </div>
+    </aside>
+
+    <!-- ---------- MIDDLE — list pane ---------- -->
+    <div class="flex w-full flex-col border-r border-dashed border-wire-line md:w-80 lg:w-96">
+      
+      <!-- List header — sticky within list scroll -->
+      <div class="flex h-14 shrink-0 items-center gap-2 border-b border-dashed border-wire-line bg-wire-panel px-3">
+        <div class="rgn flex h-8 flex-1 items-center px-2">
+          <span class="slot text-[0.625rem]">&lt;search input&gt;</span>
+        </div>
+        <div class="rgn flex h-8 w-20 shrink-0 items-center justify-center">
+          <span class="slot text-[0.5625rem]">&lt;sort&gt;</span>
+        </div>
+      </div>
+
+      <!-- List scroll region -->
+      <div class="flex-1 overflow-y-auto">
+        <p class="border-b border-dashed border-wire-line bg-wire-panel/60 px-3 py-1.5">
+          <span class="dim">overflow-y-auto — independent scroll. Items are multi-line rows.</span>
+        </p>
+
+        <!-- Example list items -->
+        <!-- Item 1 — selected state -->
+        <div class="border-l-4 border-wire-ink border-b border-dashed border-wire-line bg-wire-panel px-3 py-3">
+          <div class="flex items-start justify-between gap-2">
+            <div class="bar h-3.5 w-32 opacity-90"></div>
+            <div class="bar h-3 w-12 opacity-50"></div>
+          </div>
+          <div class="bar mt-1.5 h-3.5 w-48 opacity-90"></div>
+          <div class="mt-1.5 space-y-1">
+            <div class="bar h-3 w-full opacity-40"></div>
+            <div class="bar h-3 w-4/5 opacity-40"></div>
+          </div>
+          <p class="dim mt-2">← selected · border-l-4 · bg-accent/10</p>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="border-b border-dashed border-wire-line px-3 py-3 hover:bg-wire-panel">
+          <div class="flex items-start justify-between gap-2">
+            <div class="bar h-3.5 w-28 opacity-60"></div>
+            <div class="bar h-3 w-10 opacity-40"></div>
+          </div>
+          <div class="bar mt-1.5 h-3.5 w-44 opacity-60"></div>
+          <div class="mt-1.5 space-y-1">
+            <div class="bar h-3 w-full opacity-30"></div>
+            <div class="bar h-3 w-3/4 opacity-30"></div>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="border-b border-dashed border-wire-line px-3 py-3">
+          <div class="flex items-start justify-between gap-2">
+            <div class="bar h-3.5 w-36 opacity-60"></div>
+            <div class="bar h-3 w-14 opacity-40"></div>
+          </div>
+          <div class="bar mt-1.5 h-3.5 w-40 opacity-60"></div>
+          <div class="mt-1.5 space-y-1">
+            <div class="bar h-3 w-full opacity-30"></div>
+            <div class="bar h-3 w-5/6 opacity-30"></div>
+          </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="border-b border-dashed border-wire-line px-3 py-3">
+          <div class="flex items-start justify-between gap-2">
+            <div class="bar h-3.5 w-24 opacity-60"></div>
+            <div class="bar h-3 w-16 opacity-40"></div>
+          </div>
+          <div class="bar mt-1.5 h-3.5 w-52 opacity-60"></div>
+          <div class="mt-1.5 space-y-1">
+            <div class="bar h-3 w-full opacity-30"></div>
+            <div class="bar h-3 w-11/12 opacity-30"></div>
+          </div>
+        </div>
+
+        <!-- Item 5 -->
+        <div class="border-b border-dashed border-wire-line px-3 py-3">
+          <div class="flex items-start justify-between gap-2">
+            <div class="bar h-3.5 w-32 opacity-60"></div>
+            <div class="bar h-3 w-8 opacity-40"></div>
+          </div>
+          <div class="bar mt-1.5 h-3.5 w-36 opacity-60"></div>
+          <div class="mt-1.5 space-y-1">
+            <div class="bar h-3 w-full opacity-30"></div>
+            <div class="bar h-3 w-2/3 opacity-30"></div>
+          </div>
+        </div>
+
+        <div class="rgn m-3 flex h-32 items-center justify-center">
+          <span class="dim">scroll to confirm: rail and list header stay put</span>
+        </div>
+
+        <div class="border-t border-dashed border-wire-line px-3 py-2">
+          <p class="dim">w-80 (md), w-96 (lg) · shrink-0</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- RIGHT — detail pane ---------- -->
+    <main class="hidden flex-1 flex-col md:flex">
+      
+      <!-- Detail header — sticky within detail scroll -->
+      <header class="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-dashed border-wire-line bg-wire-panel px-4">
+        <div class="flex gap-1.5">
+          <div class="rgn flex h-8 w-16 items-center justify-center">
+            <span class="slot text-[0.5625rem]">Archive</span>
+          </div>
+          <div class="rgn flex h-8 w-16 items-center justify-center">
+            <span class="slot text-[0.5625rem]">Delete</span>
+          </div>
+          <div class="rgn flex h-8 w-12 items-center justify-center">
+            <span class="slot text-[0.5625rem]">Move</span>
+          </div>
+        </div>
+        <div class="flex gap-1.5">
+          <div class="rgn flex h-8 w-16 items-center justify-center">
+            <span class="slot text-[0.5625rem]">Reply</span>
+          </div>
+          <div class="rgn flex h-8 w-20 items-center justify-center">
+            <span class="slot text-[0.5625rem]">Forward</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Detail scroll region -->
+      <div class="flex-1 overflow-y-auto">
+        <p class="border-b border-dashed border-wire-line bg-wire-panel/60 px-4 py-1.5">
+          <span class="dim">overflow-y-auto — independent scroll. Sticky header is top-0 (resolves against this pane, not viewport).</span>
+        </p>
+
+        <div class="mx-auto max-w-4xl space-y-4 px-6 py-6">
+          
+          <!-- Item metadata -->
+          <div class="rgn space-y-2 p-3">
+            <span class="slot block">&lt;item metadata&gt;</span>
+            <span class="dim block">from · to · subject · timestamp · labels</span>
+            <div class="mt-2 flex items-start gap-3">
+              <div class="bar h-10 w-10 rounded-full opacity-60"></div>
+              <div class="flex-1 space-y-1.5">
+                <div class="bar h-4 w-40 opacity-90"></div>
+                <div class="bar h-3 w-56 opacity-50"></div>
+              </div>
+              <div class="bar h-3 w-16 opacity-40"></div>
+            </div>
+            <div class="bar mt-3 h-5 w-64 opacity-90"></div>
+          </div>
+
+          <!-- Item body -->
+          <div class="rgn space-y-2 p-4">
+            <span class="slot block">&lt;item body&gt;</span>
+            <span class="dim block">message content, formatted with typography styles</span>
+            <div class="mt-3 space-y-2">
+              <div class="bar h-3.5 w-full opacity-40"></div>
+              <div class="bar h-3.5 w-full opacity-40"></div>
+              <div class="bar h-3.5 w-11/12 opacity-40"></div>
+              <div class="mt-4 bar h-3.5 w-full opacity-40"></div>
+              <div class="bar h-3.5 w-full opacity-40"></div>
+              <div class="bar h-3.5 w-4/5 opacity-40"></div>
+              <div class="mt-4 bar h-3.5 w-full opacity-40"></div>
+              <div class="bar h-3.5 w-5/6 opacity-40"></div>
+            </div>
+          </div>
+
+          <!-- Attachments -->
+          <div class="rgn space-y-2 p-3">
+            <span class="slot block">&lt;attachments&gt;</span>
+            <div class="mt-2 flex gap-2">
+              <div class="rgn flex h-16 w-32 items-center justify-center">
+                <span class="dim text-[0.5625rem]">file.pdf</span>
+              </div>
+              <div class="rgn flex h-16 w-32 items-center justify-center">
+                <span class="dim text-[0.5625rem]">image.png</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="rgn flex h-32 items-center justify-center">
+            <span class="dim">scroll to confirm: detail header stays at top of this pane</span>
+          </div>
+
+        </div>
+
+        <div class="border-t border-dashed border-wire-line px-4 py-2">
+          <p class="dim">main · flex-1 min-w-0</p>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- ======================================================================
+       SCROLL MODEL TABLE
+       =================================================================== -->
+  <p class="mb-2 mt-8 text-[0.6875rem] uppercase tracking-widest text-wire-dim">Scroll regions</p>
+  <div class="rgn p-4">
+    <table class="w-full text-xs">
+      <thead>
+        <tr class="border-b border-dashed border-wire-line">
+          <th class="pb-2 pr-4 text-left font-medium">Region</th>
+          <th class="pb-2 text-left font-medium">Behaviour</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-dashed divide-wire-line">
+        <tr>
+          <td class="py-2 pr-4"><code class="text-[0.6875rem]">html, body</code></td>
+          <td class="py-2 text-wire-dim">Never scroll. Root is <code class="text-[0.6875rem]">h-screen overflow-hidden</code>.</td>
+        </tr>
+        <tr>
+          <td class="py-2 pr-4"><code class="text-[0.6875rem]">Left rail nav</code></td>
+          <td class="py-2"><span class="text-wire-ink">overflow-y-auto</span> — scrolls when folder tree exceeds viewport height.</td>
+        </tr>
+        <tr>
+          <td class="py-2 pr-4"><code class="text-[0.6875rem]">List pane</code></td>
+          <td class="py-2"><span class="text-wire-ink">overflow-y-auto</span> — <strong>primary list scroll region</strong>. Header is sticky top-0 within this pane.</td>
+        </tr>
+        <tr>
+          <td class="py-2 pr-4"><code class="text-[0.6875rem]">Detail pane</code></td>
+          <td class="py-2"><span class="text-wire-ink">overflow-y-auto</span> — <strong>primary detail scroll region</strong>. Header is sticky top-0 within this pane.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="mt-3 text-xs text-wire-dim">
+      Each pane scrolls independently. Sticky elements use <code class="text-[0.6875rem]">top-0</code> because they resolve against their scroll container, not the viewport.
+    </p>
+  </div>
+
+  <!-- ======================================================================
+       BREAKPOINT STRIP
+       =================================================================== -->
+  <p class="mb-2 mt-12 text-[0.6875rem] uppercase tracking-widest text-wire-dim">Breakpoint behaviour</p>
+  <p class="mb-4 max-w-[75ch] text-xs leading-relaxed text-wire-dim">
+    <span class="text-wire-ink">Critical:</span> On mobile, the panes do not just collapse — they become a navigation stack with actual routing.
+    The list is the landing view. Tapping an item navigates to the detail view with a back button. List scroll position is preserved.
+    This requires view routing, not just responsive CSS. Resize from ~360px to full width to verify.
+  </p>
+
+  <div class="grid gap-4 lg:grid-cols-3">
+
+    <!-- MOBILE -->
+    <div class="rgn p-3">
+      <p class="text-[0.6875rem] font-medium">&lt; md · under 768px</p>
+      <p class="dim mt-1"><span class="text-wire-ink">Navigation stack model.</span> Rail hidden (☰ overlay). List is the landing view. Detail slides in when item is tapped.</p>
+      
+      <!-- List view -->
+      <div class="mt-3 space-y-2">
+        <p class="text-[0.625rem] text-wire-ink">List view (landing):</p>
+        <div class="rgn-f flex h-48 flex-col overflow-hidden">
+          <div class="flex h-9 shrink-0 items-center gap-1.5 border-b border-dashed border-wire-line px-2">
+            <div class="bar h-5 w-5"></div>
+            <span class="dim text-[0.5625rem]">☰</span>
+            <div class="bar ml-2 h-5 flex-1"></div>
+            <span class="dim text-[0.5625rem]">search</span>
+          </div>
+          <div class="flex-1 space-y-0.5 overflow-hidden p-1.5">
+            <div class="rgn-f h-12 p-1.5">
+              <div class="bar h-2 w-20 opacity-60"></div>
+              <div class="bar mt-1 h-2 w-28 opacity-60"></div>
+              <div class="bar mt-1 h-2 w-full opacity-30"></div>
+            </div>
+            <div class="rgn-f h-12 border-wire-ink border-l-2 bg-wire-panel p-1.5">
+              <div class="bar h-2 w-24 opacity-90"></div>
+              <div class="bar mt-1 h-2 w-32 opacity-90"></div>
+              <div class="bar mt-1 h-2 w-full opacity-50"></div>
+              <span class="dim mt-1 block text-[0.5rem]">← tapping opens detail →</span>
+            </div>
+            <div class="rgn-f h-12 p-1.5">
+              <div class="bar h-2 w-16 opacity-60"></div>
+              <div class="bar mt-1 h-2 w-24 opacity-60"></div>
+              <div class="bar mt-1 h-2 w-full opacity-30"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detail view -->
+      <div class="mt-3 space-y-2">
+        <p class="text-[0.625rem] text-wire-ink">Detail view (navigated):</p>
+        <div class="rgn-f flex h-48 flex-col overflow-hidden">
+          <div class="flex h-9 shrink-0 items-center gap-2 border-b border-dashed border-wire-line px-2">
+            <div class="bar h-5 w-5"></div>
+            <span class="dim text-[0.5625rem]">← back</span>
+            <div class="ml-auto flex gap-1">
+              <div class="bar h-5 w-10"></div>
+              <div class="bar h-5 w-12"></div>
+            </div>
+          </div>
+          <div class="flex-1 space-y-1.5 overflow-hidden p-2">
+            <div class="rgn h-10 p-1">
+              <span class="dim text-[0.5rem]">metadata</span>
+            </div>
+            <div class="rgn flex-1 p-1">
+              <span class="dim text-[0.5rem]">body content</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="dim mt-2">Back button returns to list with scroll position preserved. Requires actual routing, not just CSS.</p>
+    </div>
+
+    <!-- TABLET -->
+    <div class="rgn p-3">
+      <p class="text-[0.6875rem] font-medium">md – lg · 768–1024px</p>
+      <p class="dim mt-1">Rail hidden (or w-14 icon-only). List w-80 + detail visible. Standard three-pane selection model.</p>
+      <div class="rgn-f mt-3 flex h-52 overflow-hidden">
+        <div class="flex w-20 shrink-0 flex-col border-r border-dashed border-wire-line">
+          <div class="h-7 shrink-0 border-b border-dashed border-wire-line"></div>
+          <div class="flex-1 space-y-1 p-1">
+            <div class="rgn-f h-10 border-l-2 border-wire-ink p-1">
+              <div class="bar h-2 w-full opacity-90"></div>
+              <div class="bar mt-1 h-2 w-3/4 opacity-50"></div>
+            </div>
+            <div class="rgn-f h-10 p-1">
+              <div class="bar h-2 w-full opacity-50"></div>
+              <div class="bar mt-1 h-2 w-2/3 opacity-30"></div>
+            </div>
+          </div>
+        </div>
+        <div class="flex min-w-0 flex-1 flex-col">
+          <div class="h-7 shrink-0 border-b border-dashed border-wire-line"></div>
+          <div class="flex-1 space-y-1.5 p-1.5">
+            <div class="rgn h-8"></div>
+            <div class="rgn flex-1"></div>
+          </div>
+        </div>
+      </div>
+      <p class="dim mt-2">Clicking item in list updates detail in place. Empty state when nothing selected.</p>
+    </div>
+
+    <!-- DESKTOP -->
+    <div class="rgn p-3">
+      <p class="text-[0.6875rem] font-medium">≥ lg · 1024px+</p>
+      <p class="dim mt-1">All three panes visible. Rail w-56, list w-96, detail flex-1. Full three-pane layout.</p>
+      <div class="rgn-f mt-3 flex h-52 overflow-hidden">
+        <div class="w-12 shrink-0 space-y-1 border-r border-dashed border-wire-line p-1">
+          <div class="bar h-3 w-full"></div>
+          <div class="bar h-3 w-full opacity-40"></div>
+          <div class="bar h-3 w-full opacity-40"></div>
+        </div>
+        <div class="flex w-20 shrink-0 flex-col border-r border-dashed border-wire-line">
+          <div class="h-6 shrink-0 border-b border-dashed border-wire-line"></div>
+          <div class="flex-1 space-y-1 p-1">
+            <div class="rgn-f h-9 border-l-2 border-wire-ink p-1">
+              <div class="bar h-2 w-full opacity-90"></div>
+              <div class="bar mt-0.5 h-2 w-3/4 opacity-50"></div>
+            </div>
+            <div class="rgn-f h-9 p-1">
+              <div class="bar h-2 w-full opacity-50"></div>
+              <div class="bar mt-0.5 h-2 w-2/3 opacity-30"></div>
+            </div>
+          </div>
+        </div>
+        <div class="flex min-w-0 flex-1 flex-col">
+          <div class="h-6 shrink-0 border-b border-dashed border-wire-line"></div>
+          <div class="flex-1 space-y-1.5 p-1.5">
+            <div class="rgn h-6"></div>
+            <div class="rgn flex-1"></div>
+          </div>
+        </div>
+      </div>
+      <p class="dim mt-2">Three independent scroll regions. Each pane gets its own scrollbar when content exceeds viewport.</p>
+    </div>
+
+  </div>
+
+  <!-- ======================================================================
+       EMPTY & MULTI-SELECT STATES
+       =================================================================== -->
+  <p class="mb-2 mt-12 text-[0.6875rem] uppercase tracking-widest text-wire-dim">Special states</p>
+
+  <div class="grid gap-4 lg:grid-cols-2">
+    
+    <!-- Empty state -->
+    <div class="rgn p-4">
+      <p class="text-[0.6875rem] font-medium">No selection (md and up)</p>
+      <p class="dim mt-1">Detail pane shows centered empty state when nothing is selected.</p>
+      <div class="rgn-f mt-3 flex h-40 flex-col items-center justify-center p-6">
+        <div class="bar h-12 w-12 rounded-full opacity-30"></div>
+        <div class="bar mt-3 h-4 w-40 opacity-60"></div>
+        <div class="bar mt-2 h-3 w-48 opacity-30"></div>
+        <p class="dim mt-3 text-center text-[0.5625rem]">"Select a message to read"</p>
+      </div>
+    </div>
+
+    <!-- Multi-select state -->
+    <div class="rgn p-4">
+      <p class="text-[0.6875rem] font-medium">Multi-select</p>
+      <p class="dim mt-1">Detail pane replaced by bulk actions toolbar. Mobile: sticky footer bar.</p>
+      <div class="rgn-f mt-3 flex h-40 flex-col">
+        <div class="flex items-center justify-between border-b border-dashed border-wire-line bg-wire-panel p-3">
+          <div class="bar h-3 w-24 opacity-60"></div>
+          <div class="flex gap-1.5">
+            <div class="bar h-6 w-16"></div>
+            <div class="bar h-6 w-16"></div>
+            <div class="bar h-6 w-14"></div>
+          </div>
+        </div>
+        <div class="flex flex-1 items-center justify-center">
+          <p class="dim text-center text-[0.5625rem]">"3 items selected"<br>Archive · Delete · Mark read · Move to…</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>
