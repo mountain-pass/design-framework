@@ -21,6 +21,17 @@ const SECTIONS = [
   "icons", "motion",
 ];
 
+// The string sink contract — shared/COPY.md. Order matters.
+const SLOTS = [
+  "attributes", "mechanics",
+  "buttons", "menu",
+  "labels", "validation",
+  "empty", "loading", "errors",
+  "confirm", "toast", "alerts",
+  "onboarding", "notifications", "microcopy",
+  "vocabulary", "antipatterns", "examples",
+];
+
 // The token contract — shared/TOKENS.md.
 const TOKENS = [
   "radius",
@@ -369,11 +380,90 @@ for (const name of layouts) {
   }
 }
 
+// ----------------------------------------------------------------- voices ---
+
+const voices = folders("voices");
+
+for (const name of voices) {
+  const label = `voices/${name}`;
+
+  for (const file of ["VOICE.md", "index.html"]) {
+    if (!existsSync(join(ROOT, "voices", name, file))) {
+      fail(label, `missing ${file}`);
+    }
+  }
+  if (problems.some((p) => p.folder === label && p.level === "error")) continue;
+
+  const html = read("voices", name, "index.html");
+  const md = read("voices", name, "VOICE.md");
+
+  // --- string sink slots, present and in order
+  const found = [...html.matchAll(/<section[^>]*\sid="([^"]+)"/g)].map((m) => m[1]);
+  const missing = SLOTS.filter((slot) => !found.includes(slot));
+  if (missing.length) {
+    fail(label, `index.html is missing slot(s): ${missing.join(", ")}`);
+  }
+  const ordered = found.filter((slot) => SLOTS.includes(slot));
+  const expected = SLOTS.filter((slot) => ordered.includes(slot));
+  if (ordered.join(",") !== expected.join(",")) {
+    fail(label, "index.html slots are out of order — see shared/COPY.md");
+  }
+
+  // --- required VOICE.md sections
+  for (const [heading, why] of [
+    ["Attributes", "the load-bearing part — an agent reading only this must still write in voice"],
+    ["Mechanics", "the decidable rules: case, tense, person, punctuation"],
+    ["Vocabulary", "preferred terms and the strike-on-sight list"],
+    ["Patterns", "one rule per element, from page title to list item"],
+    ["Antipatterns", "the constructions this voice never uses"],
+    ["Never", "the prohibitions that keep this voice itself"],
+    ["Length budgets", "the one place a voice touches layout — a design sizes regions around these"],
+  ]) {
+    if (!new RegExp(`^##\\s*.*${heading}`, "im").test(md)) {
+      fail(label, `VOICE.md has no "## ${heading}" section — ${why}`);
+    }
+  }
+
+  // --- a string sink is greyscale, like a layout wireframe: a voice must combine
+  //     with any design, so it cannot carry one of its own
+  const themeEnd = html.indexOf("</style>");
+  const body = themeEnd === -1 ? html : html.slice(themeEnd);
+  const colour = body.match(
+    /\b(?:bg|text|border|ring|fill|stroke|from|to|via)-(?:red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-\d{2,3}\b/g
+  );
+  if (colour) {
+    fail(label, `index.html uses colour: ${[...new Set(colour)].join(", ")} — string sinks are greyscale so they combine with any design`);
+  }
+  const hex = body.match(/(?:class|style)="[^"]*#[0-9a-fA-F]{3,8}\b/g);
+  if (hex) {
+    fail(label, `index.html hard-codes ${hex.length} hex colour(s) outside the style block`);
+  }
+
+  // --- self-contained: no local subresources (file:// cannot fetch them)
+  const localLink = body.match(/<(?:link|script|img)[^>]*(?:href|src)="(?!https?:|data:|#|mailto:)[^"]+\.(?:css|js|png|jpe?g|svg|webp)"/g);
+  if (localLink) {
+    fail(label, `index.html references ${localLink.length} local file(s) — a file:// page cannot fetch them; inline instead`);
+  }
+
+  // --- the shared example product keeps voices comparable
+  if (!/Fieldnote/i.test(html)) {
+    warn(label, "index.html does not mention Fieldnote — every voice writes for the same example product so string sinks differ by voice alone");
+  }
+
+  // --- scaffold left behind
+  if (md.includes("<!-- Copy this folder") || /^\s*<One or two lines/m.test(md)) {
+    fail(label, "VOICE.md still contains scaffold placeholders");
+  }
+  if (/\bTODO\b/.test(html)) {
+    warn(label, "index.html still contains TODO markers");
+  }
+}
+
 // ----------------------------------------------------------------- report ---
 
 const RED = "\x1b[31m", YEL = "\x1b[33m", GRN = "\x1b[32m", DIM = "\x1b[2m", OFF = "\x1b[0m";
 
-console.log(`\nChecked ${designs.length} design(s) and ${layouts.length} layout(s).\n`);
+console.log(`\nChecked ${designs.length} design(s), ${layouts.length} layout(s) and ${voices.length} voice(s).\n`);
 
 if (problems.length) {
   let current = null;

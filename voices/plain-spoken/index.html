@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>plain-spoken — string sink</title>
+<!-- Greyscale on purpose. A string sink shows words, not styling, so that a voice
+     can be read against any design. See shared/COPY.md.
+     Plain CSS rather than the Tailwind CDN: this page has no design opinions to
+     demonstrate, and it must stay readable with no network. -->
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a1a; --dim: #6b6b6b; --line: #e0e0e0;
+    --panel: #f7f7f7; --strike: #8a8a8a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #111; --fg: #ededed; --dim: #a0a0a0; --line: #2c2c2c;
+            --panel: #191919; --strike: #7d7d7d; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+    font: 400 15px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .wrap { max-width: 62rem; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
+  header.top { border-bottom: 1px solid var(--line); padding-bottom: 1.5rem; margin-bottom: 1rem; }
+  h1 { margin: 0; font-size: 1.75rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .lede { margin: .5rem 0 0; color: var(--dim); max-width: 60ch; }
+  nav.toc { position: sticky; top: 0; background: var(--bg); border-bottom: 1px solid var(--line);
+    padding: .6rem 0; margin-bottom: 2.5rem; font-size: .78rem; z-index: 5;
+    overflow-x: auto; white-space: nowrap; }
+  nav.toc a { color: var(--dim); text-decoration: none; margin-right: .85rem; white-space: nowrap; }
+  nav.toc a:hover, nav.toc a:focus-visible { color: var(--fg); text-decoration: underline; }
+  section { margin: 3rem 0; scroll-margin-top: 3.5rem; }
+  h2 { font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; color: var(--dim);
+    margin: 0 0 .35rem; font-weight: 600; }
+  h3 { font-size: 1.05rem; margin: 1.6rem 0 .5rem; }
+  .note { color: var(--dim); font-size: .85rem; margin: 0 0 1.25rem; max-width: 68ch; }
+  .slot { border: 1px solid var(--line); border-radius: 6px; padding: 1rem 1.15rem; margin-bottom: .7rem; }
+  .slot .cap { font-size: .7rem; text-transform: uppercase; letter-spacing: .07em;
+    color: var(--dim); display: block; margin-bottom: .4rem; }
+  .s { display: block; }
+  .s + .s { margin-top: .3rem; }
+  .sub { color: var(--dim); }
+  .btnrow { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .2rem; }
+  .btn { border: 1px solid var(--fg); border-radius: 5px; padding: .35rem .8rem; font-size: .875rem; }
+  .btn.sec { border-color: var(--line); color: var(--dim); }
+  table { border-collapse: collapse; width: 100%; font-size: .875rem; margin: .5rem 0 1rem; }
+  th, td { text-align: left; padding: .45rem .6rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: .7rem; text-transform: uppercase; letter-spacing: .07em; color: var(--dim); font-weight: 600; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .85em;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 3px; padding: .05em .3em; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; margin-bottom: .7rem; }
+  @media (max-width: 40rem) { .pair { grid-template-columns: 1fr; } }
+  .do, .dont { border: 1px solid var(--line); border-radius: 6px; padding: .8rem 1rem; }
+  .do .tag, .dont .tag { font-size: .68rem; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--dim); display: block; margin-bottom: .3rem; }
+  .dont .txt { text-decoration: line-through; color: var(--strike); }
+  ul.tight { margin: .3rem 0 1rem; padding-left: 1.1rem; }
+  ul.tight li { margin-bottom: .3rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: .35rem; margin: .5rem 0 1rem; }
+  .chip { border: 1px solid var(--line); border-radius: 999px; padding: .2rem .6rem;
+    font-size: .78rem; color: var(--strike); text-decoration: line-through; }
+  .budget { font-size: .78rem; color: var(--dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>plain-spoken</h1>
+  <p class="lede">Warm but direct. An expert peer explaining something clearly and then stopping.
+    Every string below is written for <strong>Fieldnote</strong>, the shared example product, so
+    voices can be compared line for line.</p>
+</header>
+
+<nav class="toc" aria-label="Sections">
+  <a href="#attributes">attributes</a><a href="#mechanics">mechanics</a><a href="#buttons">buttons</a><a href="#menu">menu</a><a href="#labels">labels</a><a href="#validation">validation</a><a href="#empty">empty</a><a href="#loading">loading</a><a href="#errors">errors</a><a href="#confirm">confirm</a><a href="#toast">toast</a><a href="#alerts">alerts</a><a href="#onboarding">onboarding</a><a href="#notifications">notifications</a><a href="#microcopy">microcopy</a><a href="#vocabulary">vocabulary</a><a href="#antipatterns">antipatterns</a><a href="#examples">examples</a>
+</nav>
+
+<section id="attributes">
+  <h2>1. Voice attributes</h2>
+  <p class="note">Five attributes, each with the same idea written in voice and out of voice.</p>
+
+  <h3>Warm but direct</h3>
+  <p class="note">Care about the reader, but do not pad sentences to seem kind. Directness is the warmth.</p>
+  <div class="pair">
+    <div class="do"><span class="tag">In voice</span><span class="txt">This will delete 3 projects and everything in them.</span></div>
+    <div class="dont"><span class="tag">Out of voice</span><span class="txt">We're really sorry, but we just wanted to make sure you know this action might unfortunately remove some of your content!</span></div>
+  </div>
+
+  <h3>Substantive over stylish</h3>
+  <p class="note">Say the thing, then stop. The second sentence usually serves the writer.</p>
+  <div class="pair">
+    <div class="do"><span class="tag">In voice</span><span class="txt">Saved.</span></div>
+    <div class="dont"><span class="tag">Out of voice</span><span class="txt">Success! Your changes have been saved successfully.</span></div>
+  </div>
+
+  <h3>Plain words for ordinary things</h3>
+  <p class="note">Use the word the reader would use, unless a longer one is genuinely more precise.</p>
+  <div class="pair">
+    <div class="do"><span class="tag">In voice</span><span class="txt">You can't undo this.</span></div>
+    <div class="dont"><span class="tag">Out of voice</span><span class="txt">This operation is non-reversible.</span></div>
+  </div>
+
+  <h3>Never prescriptive without cause</h3>
+  <p class="note">Instruct only when there is exactly one correct next step. Otherwise name the options.</p>
+  <div class="pair">
+    <div class="do"><span class="tag">In voice</span><span class="txt">Two projects have the same name. Rename one, or merge them.</span></div>
+    <div class="dont"><span class="tag">Out of voice</span><span class="txt">You should rename your project to avoid confusion.</span></div>
+  </div>
+
+  <h3>Honest about failure</h3>
+  <p class="note">Say what broke, whose fault it was, and what happens next.</p>
+  <div class="pair">
+    <div class="do"><span class="tag">In voice</span><span class="txt">We couldn't save your note. It's still here — try again in a moment.</span></div>
+    <div class="dont"><span class="tag">Out of voice</span><span class="txt">Something went wrong.</span></div>
+  </div>
+</section>
+
+<section id="mechanics">
+  <h2>2. Style rules</h2>
+  <p class="note">Decidable without judgement. A rule you have to interpret is a preference.</p>
+  <table>
+    <thead><tr><th>Rule</th><th>Decision</th></tr></thead>
+    <tbody>
+      <tr><td>Headings, buttons, labels, nav</td><td>Sentence case. Only proper nouns and acronyms capitalised.</td></tr>
+      <tr><td>Voice</td><td>Active. <code>We couldn't save your note</code>, not <code>your note could not be saved</code>.</td></tr>
+      <tr><td>Tense</td><td>Present.</td></tr>
+      <tr><td>Person</td><td><code>You</code> for the reader. <code>We</code> only when the product acted or failed. Never <code>I</code>.</td></tr>
+      <tr><td>Contractions</td><td>Yes — can't, don't, we'll.</td></tr>
+      <tr><td>Serial comma</td><td>Always.</td></tr>
+      <tr><td>Numbers</td><td>Numerals everywhere, including 1–9. UI is scanned, not read.</td></tr>
+      <tr><td>Dashes</td><td>Em dash, unspaced. Never <code>--</code>, never a spaced hyphen.</td></tr>
+      <tr><td>Quotation marks</td><td>Curly. Commas and periods inside, US English.</td></tr>
+      <tr><td>Terminal punctuation</td><td>Sentences take a period. Fragments, labels, buttons and list items do not.</td></tr>
+      <tr><td>Exclamation marks</td><td>None. Not one.</td></tr>
+      <tr><td>Emoji</td><td>None in product UI.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="buttons">
+  <h2>3. Buttons and calls to action</h2>
+  <div class="slot"><span class="cap">Primary action</span>
+    <div class="btnrow"><span class="btn">Create project</span><span class="btn">Save changes</span><span class="btn">Send invitations</span></div></div>
+  <div class="slot"><span class="cap">In progress, then done</span>
+    <div class="btnrow"><span class="btn">Saving</span><span class="btn">Saved</span></div>
+    <span class="s sub">No ellipsis on the in-progress label — the spinner already says it is working.</span></div>
+  <div class="slot"><span class="cap">Cancel and dismiss</span>
+    <div class="btnrow"><span class="btn sec">Cancel</span><span class="btn sec">Not now</span><span class="btn sec">Close</span></div>
+    <span class="s sub"><code>Cancel</code> is the one button allowed to have no object.</span></div>
+  <div class="slot"><span class="cap">Destructive</span>
+    <div class="btnrow"><span class="btn">Delete project</span><span class="btn">Delete 3 notes</span><span class="btn">Remove collaborator</span></div>
+    <span class="s sub">The count goes in the label. A reader should never have to look elsewhere to know the scope.</span></div>
+  <div class="slot"><span class="cap">Navigational CTA</span>
+    <div class="btnrow"><span class="btn">Read the setup guide</span><span class="btn">See all projects</span></div>
+    <span class="s sub">Never <code>Click here</code>, never <code>Learn more</code> on its own.</span></div>
+  <div class="slot"><span class="cap">Disabled, with its tooltip</span>
+    <div class="btnrow"><span class="btn sec">Send invitations</span></div>
+    <span class="s sub">Tooltip: <code>Add at least one email address first</code></span></div>
+</section>
+
+<section id="menu">
+  <h2>4. Menu items, nav labels, page titles</h2>
+  <div class="slot"><span class="cap">Nav labels</span>
+    <span class="s">Projects &nbsp;·&nbsp; Notes &nbsp;·&nbsp; Collaborators &nbsp;·&nbsp; Activity &nbsp;·&nbsp; Settings</span></div>
+  <div class="slot"><span class="cap">Menu items, including a destructive one</span>
+    <span class="s">Duplicate project</span>
+    <span class="s">Move to workspace</span>
+    <span class="s">Delete project</span></div>
+  <div class="slot"><span class="cap">Page titles</span>
+    <span class="s">List: <code>Projects</code></span>
+    <span class="s">Detail: <code>Field interviews, March</code></span>
+    <span class="s">Settings: <code>Project settings</code></span>
+    <span class="s sub">Noun phrases. The detail title is the thing's own name, not <code>Project detail</code>.</span></div>
+</section>
+
+<section id="labels">
+  <h2>5. Labels, help text, placeholders</h2>
+  <p class="note">The label names the field. The help text explains format or consequence. Neither repeats the other.</p>
+  <div class="slot"><span class="cap">Field with help text</span>
+    <span class="s"><strong>Project name</strong></span>
+    <span class="s sub">Collaborators see this name</span></div>
+  <div class="slot"><span class="cap">Field with format help</span>
+    <span class="s"><strong>Retention period</strong></span>
+    <span class="s sub">Notes are deleted after this many days. Leave empty to keep them indefinitely</span></div>
+  <div class="slot"><span class="cap">Field with a consequence</span>
+    <span class="s"><strong>Workspace URL</strong></span>
+    <span class="s sub">Changing this breaks existing links</span></div>
+  <div class="slot"><span class="cap">Placeholder used correctly</span>
+    <span class="s"><strong>Email address</strong></span>
+    <span class="s sub">Placeholder: <code>rosa@example.com</code></span>
+    <span class="s sub">An example of a valid value — never an instruction, never the label again.</span></div>
+  <div class="slot"><span class="cap">Required field</span>
+    <span class="s"><strong>Project name</strong> (required)</span>
+    <span class="s sub">The word, not an asterisk. See shared/ACCESSIBILITY.md.</span></div>
+</section>
+
+<section id="validation">
+  <h2>6. Validation and errors</h2>
+  <p class="note">Each says what happened and what to do. A message that only reports the failure has answered half the prompt.</p>
+  <div class="slot"><span class="cap">Required field left empty</span><span class="s">Enter a project name.</span></div>
+  <div class="slot"><span class="cap">Malformed value</span><span class="s">That doesn't look like an email address. Check for a missing @.</span></div>
+  <div class="slot"><span class="cap">Valid but rejected</span><span class="s">You already have a project called “Field interviews”. Pick another name.</span></div>
+  <div class="slot"><span class="cap">Whole-form failure</span><span class="s">We couldn't create the project. Two fields need attention — they're marked below.</span></div>
+  <div class="slot"><span class="cap">Warning, not an error</span><span class="s">This project has no collaborators. You can add them later.</span></div>
+</section>
+
+<section id="empty">
+  <h2>7. Empty states</h2>
+  <p class="note">Three different situations. Writing one sentence for all three is the common failure.</p>
+  <div class="slot"><span class="cap">First run — nothing has ever existed</span>
+    <span class="s"><strong>No projects yet</strong></span>
+    <span class="s sub">A project holds related notes and the people working on them.</span>
+    <div class="btnrow"><span class="btn">Create your first project</span></div></div>
+  <div class="slot"><span class="cap">Filtered to nothing</span>
+    <span class="s"><strong>No notes match “interview”</strong></span>
+    <span class="s sub">Try a shorter search, or clear the date filter.</span>
+    <div class="btnrow"><span class="btn sec">Clear filters</span></div></div>
+  <div class="slot"><span class="cap">Cleared by the user — a success, not a void</span>
+    <span class="s"><strong>Archive is empty</strong></span>
+    <span class="s sub">You've cleared everything. Archived notes will show up here.</span></div>
+</section>
+
+<section id="loading">
+  <h2>8. Loading, saving, progress</h2>
+  <div class="slot"><span class="cap">Initial load</span><span class="s">Loading projects</span></div>
+  <div class="slot"><span class="cap">Save in progress</span><span class="s">Saving</span></div>
+  <div class="slot"><span class="cap">Long operation with an estimate</span>
+    <span class="s">Exporting 1,240 notes. About 2 minutes.</span></div>
+  <div class="slot"><span class="cap">Background job the user can leave</span>
+    <span class="s">We're importing your notes. You can close this — we'll email you when it's done.</span></div>
+</section>
+
+<section id="errors">
+  <h2>9. Page-level failures</h2>
+  <p class="note">Heading, one sentence of explanation, one recovery action.</p>
+  <div class="slot"><span class="cap">Not found</span>
+    <span class="s"><strong>We can't find that project</strong></span>
+    <span class="s sub">It may have been deleted, or the link may be wrong.</span>
+    <div class="btnrow"><span class="btn sec">See all projects</span></div></div>
+  <div class="slot"><span class="cap">Permission denied</span>
+    <span class="s"><strong>You don't have access to this project</strong></span>
+    <span class="s sub">Ask its owner, Rosa Alvarez, to add you.</span>
+    <div class="btnrow"><span class="btn sec">Request access</span></div></div>
+  <div class="slot"><span class="cap">Server error</span>
+    <span class="s"><strong>Something broke on our end</strong></span>
+    <span class="s sub">Your notes are safe. We've been notified and we're looking at it.</span>
+    <div class="btnrow"><span class="btn sec">Try again</span></div></div>
+  <div class="slot"><span class="cap">Offline</span>
+    <span class="s"><strong>You're offline</strong></span>
+    <span class="s sub">Your changes are saved on this device and will sync when you reconnect.</span></div>
+  <div class="slot"><span class="cap">Rate or quota limit</span>
+    <span class="s"><strong>You've hit the export limit</strong></span>
+    <span class="s sub">You can export 10 times an hour. Try again at 3:40 pm.</span></div>
+</section>
+
+<section id="confirm">
+  <h2>10. Confirmation dialogs</h2>
+  <p class="note">The title names the consequence. Buttons restate the verb — never Yes/No, never OK.</p>
+  <div class="slot"><span class="cap">Destructive and irreversible</span>
+    <span class="s"><strong>Delete 3 projects?</strong></span>
+    <span class="s sub">This also deletes 412 notes inside them. You can't undo this.</span>
+    <div class="btnrow"><span class="btn sec">Cancel</span><span class="btn">Delete 3 projects</span></div></div>
+  <div class="slot"><span class="cap">Destructive but recoverable</span>
+    <span class="s"><strong>Archive this project?</strong></span>
+    <span class="s sub">Collaborators lose access until you restore it. Nothing is deleted.</span>
+    <div class="btnrow"><span class="btn sec">Cancel</span><span class="btn">Archive project</span></div></div>
+  <div class="slot"><span class="cap">Benign — and whether this voice would skip it</span>
+    <span class="s"><strong>Discard your draft?</strong></span>
+    <span class="s sub">You've written 40 words that haven't been saved.</span>
+    <div class="btnrow"><span class="btn sec">Keep editing</span><span class="btn">Discard draft</span></div>
+    <span class="s sub"><strong>plain-spoken would skip this</strong> if the draft were autosaved. A confirmation
+      the product does not need is a sentence the reader did not need.</span></div>
+</section>
+
+<section id="toast">
+  <h2>11. Toasts</h2>
+  <div class="slot"><span class="cap">Success</span><span class="s">Project created</span></div>
+  <div class="slot"><span class="cap">Failure</span><span class="s">Couldn't send invitations. Try again.</span></div>
+  <div class="slot"><span class="cap">Undoable</span><span class="s">3 notes deleted &nbsp;·&nbsp; <strong>Undo</strong></span></div>
+  <div class="slot"><span class="cap">Queued or deferred</span><span class="s">Export queued. We'll email you the file.</span></div>
+</section>
+
+<section id="alerts">
+  <h2>12. Callouts and inline notices</h2>
+  <div class="slot"><span class="cap">Informational</span>
+    <span class="s"><strong>Notes sync every few seconds</strong></span>
+    <span class="s sub">You don't need to save.</span></div>
+  <div class="slot"><span class="cap">Cautionary</span>
+    <span class="s"><strong>This workspace is nearly full</strong></span>
+    <span class="s sub">You're using 9.2 GB of 10 GB. New notes will stop saving at the limit.</span></div>
+  <div class="slot"><span class="cap">Blocking</span>
+    <span class="s"><strong>Your trial ended yesterday</strong></span>
+    <span class="s sub">Your notes are safe and read-only. Add a payment method to start editing again.</span></div>
+</section>
+
+<section id="onboarding">
+  <h2>13. First run and feature introduction</h2>
+  <div class="slot"><span class="cap">Welcome</span>
+    <span class="s"><strong>Welcome to Fieldnote</strong></span>
+    <span class="s sub">Collect research notes, group them into projects, and share them with your team.</span></div>
+  <div class="slot"><span class="cap">Three-step setup</span>
+    <span class="s">1 &nbsp; Name your workspace</span>
+    <span class="s">2 &nbsp; Create your first project</span>
+    <span class="s">3 &nbsp; Invite the people you work with</span></div>
+  <div class="slot"><span class="cap">Empty workspace prompt</span>
+    <span class="s"><strong>Your workspace is ready</strong></span>
+    <span class="s sub">Start with a project — it's where notes live.</span>
+    <div class="btnrow"><span class="btn">Create project</span></div></div>
+  <div class="slot"><span class="cap">Introducing an unused feature</span>
+    <span class="s">Tags let you pull notes across projects. Add one from any note's menu.</span></div>
+</section>
+
+<section id="notifications">
+  <h2>14. Transactional messages</h2>
+  <p class="note">Subject line, then the first sentence. Subject lines are their own discipline.</p>
+  <div class="slot"><span class="cap">Invitation</span>
+    <span class="s"><strong>Rosa added you to Field interviews</strong></span>
+    <span class="s sub">You can now read and edit the 68 notes in this project.</span></div>
+  <div class="slot"><span class="cap">Mention</span>
+    <span class="s"><strong>Rosa mentioned you in a note</strong></span>
+    <span class="s sub">She asked about the March interview transcripts.</span></div>
+  <div class="slot"><span class="cap">Weekly digest</span>
+    <span class="s"><strong>Fieldnote: 24 new notes this week</strong></span>
+    <span class="s sub">Most of the activity was in Field interviews and Pricing research.</span></div>
+  <div class="slot"><span class="cap">Expiry or billing warning</span>
+    <span class="s"><strong>Your trial ends in 3 days</strong></span>
+    <span class="s sub">After that your notes stay safe but become read-only.</span></div>
+</section>
+
+<section id="microcopy">
+  <h2>15. Microcopy</h2>
+  <p class="note">The zero and one cases are where voices quietly break, so they are written out here.</p>
+  <table>
+    <thead><tr><th>Situation</th><th>String</th></tr></thead>
+    <tbody>
+      <tr><td>Just now</td><td>Just now</td></tr>
+      <tr><td>Recent</td><td>12 minutes ago</td></tr>
+      <tr><td>Yesterday</td><td>Yesterday at 4:15 pm</td></tr>
+      <tr><td>Older</td><td>14 March 2026</td></tr>
+      <tr><td>Count — zero</td><td>No notes</td></tr>
+      <tr><td>Count — one</td><td>1 note</td></tr>
+      <tr><td>Count — many</td><td>412 notes</td></tr>
+      <tr><td>File size</td><td>2.4 MB</td></tr>
+      <tr><td>Overflow</td><td>Rosa, Amir, and 3 more</td></tr>
+      <tr><td>Truncation</td><td>+3 more</td></tr>
+      <tr><td>Consent line</td><td>By creating an account you agree to our terms and privacy notice.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="vocabulary">
+  <h2>16. Preferred and forbidden terms</h2>
+  <table>
+    <thead><tr><th>Use</th><th>Not</th></tr></thead>
+    <tbody>
+      <tr><td>delete</td><td>remove, trash, discard, destroy</td></tr>
+      <tr><td>sign in / sign out</td><td>log in, login, logout</td></tr>
+      <tr><td>settings</td><td>preferences, options, configuration</td></tr>
+      <tr><td>note, project, collaborator</td><td>item, entity, resource, asset</td></tr>
+      <tr><td>workspace</td><td>organisation, tenant, account</td></tr>
+      <tr><td>can't</td><td>cannot, is unable to</td></tr>
+      <tr><td>try again</td><td>retry, re-attempt</td></tr>
+      <tr><td>turn on / turn off</td><td>enable, disable, activate</td></tr>
+      <tr><td>use</td><td>utilise, leverage</td></tr>
+    </tbody>
+  </table>
+  <h3>Strike on sight</h3>
+  <p class="note">Delete on sight and say the thing plainly. No exceptions clause.</p>
+  <div class="chips">
+    <span class="chip">leverage</span><span class="chip">utilise</span><span class="chip">seamless</span>
+    <span class="chip">delightful</span><span class="chip">robust</span><span class="chip">powerful</span>
+    <span class="chip">intuitive</span><span class="chip">effortless</span><span class="chip">simply</span>
+    <span class="chip">just</span><span class="chip">easy</span><span class="chip">unlock</span>
+    <span class="chip">empower</span><span class="chip">streamline</span><span class="chip">optimise</span>
+    <span class="chip">elevate</span><span class="chip">journey</span><span class="chip">ecosystem</span>
+    <span class="chip">solution</span><span class="chip">best-in-class</span><span class="chip">world-class</span>
+    <span class="chip">cutting-edge</span><span class="chip">next-generation</span><span class="chip">game-changer</span>
+  </div>
+  <p class="note"><strong>simply</strong> and <strong>just</strong> tell readers that what they are
+    struggling with is trivial. <strong>easy</strong> promises an experience you cannot guarantee —
+    say what it takes instead: “two steps”, “about a minute”.</p>
+</section>
+
+<section id="antipatterns">
+  <h2>17. Writing antipatterns</h2>
+  <ul class="tight">
+    <li>“Oops!” or “Uh oh!” — cutesy framing of a failure the reader did not find cute</li>
+    <li>“Something went wrong.” — true and useless; name the thing</li>
+    <li>“Please note that…” — always deletable, as is “Please be aware that”</li>
+    <li>“Simply click…” / “Just add…” — see the strike list</li>
+    <li>“We're excited to announce…” — spends the reader's attention on your feelings</li>
+    <li>“Are you sure?” as a dialog title — asks about their state of mind, not the consequence</li>
+    <li>“Success!” standing alone — say what succeeded</li>
+    <li>“Invalid input” — names the verdict, not the problem or the fix</li>
+    <li>Hedging stacks — “you may want to consider possibly”</li>
+    <li>Rhetorical questions as headings — “Ready to get started?”</li>
+  </ul>
+</section>
+
+<section id="examples">
+  <h2>18. Do and don't</h2>
+  <div class="pair">
+    <div class="do"><span class="tag">Do</span><span class="txt">Delete 3 projects?</span></div>
+    <div class="dont"><span class="tag">Don't</span><span class="txt">Are you sure?</span></div>
+  </div>
+  <div class="pair">
+    <div class="do"><span class="tag">Do</span><span class="txt">That doesn't look like an email address. Check for a missing @.</span></div>
+    <div class="dont"><span class="tag">Don't</span><span class="txt">Invalid input.</span></div>
+  </div>
+  <div class="pair">
+    <div class="do"><span class="tag">Do</span><span class="txt">We couldn't save your note. It's still here — try again in a moment.</span></div>
+    <div class="dont"><span class="tag">Don't</span><span class="txt">Oops! Something went wrong.</span></div>
+  </div>
+  <div class="pair">
+    <div class="do"><span class="tag">Do</span><span class="txt">Create your first project</span></div>
+    <div class="dont"><span class="tag">Don't</span><span class="txt">Ready to get started? Simply click here to begin your journey!</span></div>
+  </div>
+  <div class="pair">
+    <div class="do"><span class="tag">Do</span><span class="txt">You're using 9.2 GB of 10 GB. New notes will stop saving at the limit.</span></div>
+    <div class="dont"><span class="tag">Don't</span><span class="txt">Your workspace is approaching capacity. Please consider upgrading to unlock more storage.</span></div>
+  </div>
+  <div class="pair">
+    <div class="do"><span class="tag">Do</span><span class="txt">Project created</span></div>
+    <div class="dont"><span class="tag">Don't</span><span class="txt">Success! Your new project has been created successfully.</span></div>
+  </div>
+</section>
+
+<section id="budgets-note">
+  <h2>Length budgets</h2>
+  <p class="budget">A design can rely on these when sizing a region: button ≤ 20 characters,
+    field label ≤ 30, toast ≤ 40, page title ≤ 40, empty-state heading ≤ 40, tooltip ≤ 60,
+    notification subject ≤ 60, help text ≤ 90, error ≤ 120, empty-state body ≤ 140.
+    <code>plain-spoken</code> runs short, which makes it safe in dense designs. The full table is in
+    <code>VOICE.md</code>.</p>
+</section>
+
+</div>
+</body>
+</html>

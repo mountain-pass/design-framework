@@ -10,16 +10,18 @@ The trigger looks like:
 
 > "Use the styling and components from the `slate` design."
 > "Build this with the `app-shell` layout and the `slate` design."
-> "Make it look like `warm-paper`."
+> "Make it look like `warm-paper`, and write it in the `plain-spoken` voice."
 
 ### What to do
 
-1. **Read the whole instruction file.** `designs/<name>/DESIGN.md` or
-   `layouts/<name>/LAYOUT.md`. Not a skim — these files contain specific numbers
-   and specific prohibitions, and the value of the design is in those specifics.
+1. **Read the whole instruction file.** `designs/<name>/DESIGN.md`,
+   `layouts/<name>/LAYOUT.md`, or `voices/<name>/VOICE.md`. Not a skim — these files
+   contain specific numbers and specific prohibitions, and the value of the design
+   is in those specifics.
 
 2. **Read the shared contracts** if you have not already in this session:
-   `shared/TOKENS.md`, `shared/COMPONENTS.md`, and `shared/ACCESSIBILITY.md`.
+   `shared/TOKENS.md`, `shared/COMPONENTS.md`, `shared/ACCESSIBILITY.md`, and
+   `shared/COPY.md` if a voice is named.
 
 3. **Open the demo HTML.** `designs/<name>/index.html` is a rendered answer to
    "what does a button look like in this design". When you are unsure how to style
@@ -40,13 +42,14 @@ The trigger looks like:
    Those are the rules that make one design distinguishable from another, and they
    are the first thing to erode when an agent is working quickly.
 
-### Combining a design with a layout
+### Combining a design, a layout, and a voice
 
 They compose without negotiation, because they own disjoint things:
 
 - The **layout** decides the regions, their nesting, their sizes, and how they
   reflow at each breakpoint.
 - The **design** decides what everything inside those regions looks like.
+- The **voice** decides what the words in them say.
 
 Where a layout wireframe says `<navigation goes here>`, put the navigation
 component from the design's kitchen sink. Where it says `<document controls go
@@ -55,6 +58,11 @@ here>`, put a toolbar built from the design's buttons and segmented controls.
 If a layout and a design appear to conflict, the layout wins on structure and the
 design wins on appearance. If they genuinely conflict on something else, say so to
 the user rather than silently picking one.
+
+A voice conflicts with the other two at exactly one point: **string length**. Each
+`VOICE.md` carries character budgets per slot, and each design sizes its regions
+around them. If a voice's budgets exceed what a design's components can hold, say
+so — do not quietly truncate the copy or let the buttons wrap.
 
 ---
 
@@ -65,7 +73,8 @@ The trigger looks like:
 > "Add a design called `warm-paper`."
 > "Create a new layout for a three-pane email client."
 
-Follow `CREATE-DESIGN.md` or `CREATE-LAYOUT.md` in the repo root. They are written
+Follow `CREATE-DESIGN.md`, `CREATE-LAYOUT.md`, or `CREATE-VOICE.md` in the repo
+root. They are written
 as complete prompts — read the relevant one and do what it says.
 
 Before you report the work finished, run:
@@ -87,6 +96,12 @@ nobody will find.
 **Designs never contain layout.** A design's kitchen sink is a single-column scroll
 of component sections. It must not have a sidebar, a routing structure, or an
 opinion about where a page's navigation lives.
+
+**Voices never contain design or layout.** A voice's string sink is greyscale and
+structureless, for the same reason a wireframe is: a voice has to combine with any
+design. It ships words, and the specimens exist to be compared line for line against
+another voice — which is why every voice writes for the same example product,
+Fieldnote.
 
 **Layouts never contain design.** A layout's wireframe uses greys, dashed borders,
 and literal `<placeholder text>`. If you catch yourself picking a brand colour for
