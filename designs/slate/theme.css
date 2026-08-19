@@ -181,6 +181,9 @@
     font-feature-settings: "cv11", "ss01";
     -webkit-font-smoothing: antialiased;
   }
+  button {
+    cursor: pointer;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
