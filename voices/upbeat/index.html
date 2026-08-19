@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>upbeat — string sink</title>
+<!-- Greyscale on purpose. A string sink shows words, not styling, so that a voice
+     can be read against any design. See shared/COPY.md.
+     Plain CSS rather than the Tailwind CDN: this page has no design opinions to
+     demonstrate, and it must stay readable with no network. -->
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a1a; --dim: #6b6b6b; --line: #e0e0e0;
+    --panel: #f7f7f7; --strike: #8a8a8a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #111; --fg: #ededed; --dim: #a0a0a0; --line: #2c2c2c;
+            --panel: #191919; --strike: #7d7d7d; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+    font: 400 15px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .wrap { max-width: 62rem; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
+  header.top { border-bottom: 1px solid var(--line); padding-bottom: 1.5rem; margin-bottom: 1rem; }
+  h1 { margin: 0; font-size: 1.75rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .lede { margin: .5rem 0 0; color: var(--dim); max-width: 60ch; }
+  nav.toc { position: sticky; top: 0; background: var(--bg); border-bottom: 1px solid var(--line);
+    padding: .6rem 0; margin-bottom: 2.5rem; font-size: .78rem; z-index: 5;
+    overflow-x: auto; white-space: nowrap; }
+  nav.toc a { color: var(--dim); text-decoration: none; margin-right: .85rem; white-space: nowrap; }
+  nav.toc a:hover, nav.toc a:focus-visible { color: var(--fg); text-decoration: underline; }
+  section { margin: 3rem 0; scroll-margin-top: 3.5rem; }
+  h2 { font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; color: var(--dim);
+    margin: 0 0 .35rem; font-weight: 600; }
+  h3 { font-size: 1.05rem; margin: 1.6rem 0 .5rem; }
+  .note { color: var(--dim); font-size: .85rem; margin: 0 0 1.25rem; max-width: 68ch; }
+  .slot { border: 1px solid var(--line); border-radius: 6px; padding: 1rem 1.15rem; margin-bottom: .7rem; }
+  .slot .cap { font-size: .7rem; text-transform: uppercase; letter-spacing: .07em;
+    color: var(--dim); display: block; margin-bottom: .4rem; }
+  .s { display: block; }
+  .s + .s { margin-top: .3rem; }
+  .sub { color: var(--dim); }
+  .btnrow { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .2rem; }
+  .btn { border: 1px solid var(--fg); border-radius: 5px; padding: .35rem .8rem; font-size: .875rem; }
+  .btn.sec { border-color: var(--line); color: var(--dim); }
+  table { border-collapse: collapse; width: 100%; font-size: .875rem; margin: .5rem 0 1rem; }
+  th, td { text-align: left; padding: .45rem .6rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: .7rem; text-transform: uppercase; letter-spacing: .07em; color: var(--dim); font-weight: 600; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .85em;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 3px; padding: .05em .3em; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; margin-bottom: .7rem; }
+  @media (max-width: 40rem) { .pair { grid-template-columns: 1fr; } }
+  .do, .dont { border: 1px solid var(--line); border-radius: 6px; padding: .8rem 1rem; }
+  .do .tag, .dont .tag { font-size: .68rem; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--dim); display: block; margin-bottom: .3rem; }
+  .dont .txt { text-decoration: line-through; color: var(--strike); }
+  ul.tight { margin: .3rem 0 1rem; padding-left: 1.1rem; }
+  ul.tight li { margin-bottom: .3rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: .35rem; margin: .5rem 0 1rem; }
+  .chip { border: 1px solid var(--line); border-radius: 999px; padding: .2rem .6rem;
+    font-size: .78rem; color: var(--strike); text-decoration: line-through; }
+  .budget { font-size: .78rem; color: var(--dim); }
+  .flag { border-left: 3px solid var(--line); padding: .1rem 0 .1rem .8rem; margin: .8rem 0;
+    color: var(--dim); font-size: .85rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>upbeat</h1>
+  <p class="lede">Warm and encouraging. Notices when something goes well, softens it when something
+    doesn't. Every string below is written for <strong>Fieldnote</strong>, the shared example
+    product, so this can be read line for line against <code>plain-spoken</code>.</p>
+</header>
+
+<nav class="toc" aria-label="Sections">
+  <a href="#attributes">attributes</a><a href="#mechanics">mechanics</a><a href="#buttons">buttons</a><a href="#menu">menu</a><a href="#labels">labels</a><a href="#validation">validation</a><a href="#empty">empty</a><a href="#loading">loading</a><a href="#errors">errors</a><a href="#confirm">confirm</a><a href="#toast">toast</a><a href="#alerts">alerts</a><a href="#onboarding">onboarding</a><a href="#notifications">notifications</a><a href="#microcopy">microcopy</a><a href="#vocabulary">vocabulary</a><a href="#antipatterns">antipatterns</a><a href="#examples">examples</a>
+</nav>
+
+<section id="attributes">
+  <h2>1. Voice attributes</h2>
+  <p class="note">Five attributes, each with the same idea written in voice and out of voice.</p>
+
+  <h3>Warmth carries the message</h3>
+  <p class="note">Lead with warmth and let the information ride along. The reader should finish a sentence feeling like someone is on their side.</p>
+  <div class="pair">
+    <div class="do"><span class="tag">In voice</span><span class="txt">Nice — your project's ready.</span></div>
+    <div class="dont"><span class="tag">Out of voice</span><span class="txt">Project created.</span></div>
+  </div>
+
+  <h3>Celebrate real progress, not routine</h3>
+  <p class="note">A first project or a finished import earns a celebration. Autosaving does not.</p>
+  <div class="pair">
+    <div class="do"><span class="tag">In voice</span><span class="txt">That's your first project set up. Nice start.</span></div>
+    <div class="dont"><span class="tag">Out of voice</span><span class="txt">Great job! Your text has been autosaved successfully!</span></div>
+  </div>
+
+  <h3>Failure is never the reader's fault</h3>
+  <p class="note">Take the weight off them first, then explain. Nobody should finish an error message feeling stupid.</p>
+  <div class="pair">
+    <div class="do"><span class="tag">In voice</span><span class="txt">That didn't save, but your note is safe. Give it another go.</span></div>
+    <div class="dont"><span class="tag">Out of voice</span><span class="txt">Your request could not be completed. Please check your input.</span></div>
+  </div>
+
+  <h3>Encouraging, never condescending</h3>
+  <p class="note">The test: would you say this out loud to a competent adult?</p>
+  <div class="pair">
+    <div class="do"><span class="tag">In voice</span><span class="txt">Two steps to go.</span></div>
+    <div class="dont"><span class="tag">Out of voice</span><span class="txt">Almost there — you're doing great!</span></div>
+  </div>
+
+  <h3>Say the whole thing anyway</h3>
+  <p class="note">Warmth is not a licence to be vague. A friendly message that leaves the reader stuck has failed.</p>
+  <div class="pair">
+    <div class="do"><span class="tag">In voice</span><span class="txt">That's a lot of exporting! You get 10 an hour — you're back in at 3:40.</span></div>
+    <div class="dont"><span class="tag">Out of voice</span><span class="txt">Oops, slow down there! Try again later.</span></div>
+  </div>
+</section>
+
+<section id="mechanics">
+  <h2>2. Style rules</h2>
+  <table>
+    <thead><tr><th>Rule</th><th>Decision</th></tr></thead>
+    <tbody>
+      <tr><td>Headings, buttons, labels, nav</td><td>Sentence case.</td></tr>
+      <tr><td>Voice</td><td>Active.</td></tr>
+      <tr><td>Tense</td><td>Present.</td></tr>
+      <tr><td>Person</td><td><code>You</code> for the reader, <code>we</code> for the product — used more freely than in <code>plain-spoken</code>, because a named actor is warmer than a passive one.</td></tr>
+      <tr><td>Contractions</td><td>Yes, always. Uncontracted forms read as stern here.</td></tr>
+      <tr><td>Serial comma</td><td>Always.</td></tr>
+      <tr><td>Numbers</td><td>Numerals for counts and data. Spell out one to nine inside a running sentence.</td></tr>
+      <tr><td>Dashes</td><td>Em dash, unspaced.</td></tr>
+      <tr><td>Quotation marks</td><td>Curly. Commas and periods inside, US English.</td></tr>
+      <tr><td>Terminal punctuation</td><td>Sentences take a period. Fragments, labels, buttons and list items do not.</td></tr>
+      <tr><td>Exclamation marks</td><td>At most one per message, never more than one on screen. Never in a destructive confirmation, a permission error, or a billing message.</td></tr>
+      <tr><td>Emoji</td><td>Onboarding and celebration only, at most one, never in a button, never carrying meaning alone.</td></tr>
+      <tr><td>Interjections</td><td><code>Nice</code>, <code>Great</code>, <code>All set</code>. Never <code>Oops</code>, <code>Uh oh</code>, <code>Whoops</code>.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="buttons">
+  <h2>3. Buttons and calls to action</h2>
+  <p class="note">Buttons stay plain. Warmth lives in the copy around them — a button is a control, and a control should be predictable.</p>
+  <div class="slot"><span class="cap">Primary action</span>
+    <div class="btnrow"><span class="btn">Create project</span><span class="btn">Save changes</span><span class="btn">Send invitations</span></div></div>
+  <div class="slot"><span class="cap">In progress, then done</span>
+    <div class="btnrow"><span class="btn">Saving</span><span class="btn">Saved</span></div></div>
+  <div class="slot"><span class="cap">Cancel and dismiss</span>
+    <div class="btnrow"><span class="btn sec">Cancel</span><span class="btn sec">Maybe later</span><span class="btn sec">Close</span></div></div>
+  <div class="slot"><span class="cap">Destructive</span>
+    <div class="btnrow"><span class="btn">Delete project</span><span class="btn">Delete 3 notes</span><span class="btn">Remove collaborator</span></div>
+    <span class="s sub">Identical to <code>plain-spoken</code>. Destructive controls are not where a voice expresses itself.</span></div>
+  <div class="slot"><span class="cap">Navigational CTA</span>
+    <div class="btnrow"><span class="btn">Read the setup guide</span><span class="btn">See all projects</span></div></div>
+  <div class="slot"><span class="cap">Disabled, with its tooltip</span>
+    <div class="btnrow"><span class="btn sec">Send invitations</span></div>
+    <span class="s sub">Tooltip: <code>Add an email address and this will light up</code></span></div>
+</section>
+
+<section id="menu">
+  <h2>4. Menu items, nav labels, page titles</h2>
+  <div class="slot"><span class="cap">Nav labels</span>
+    <span class="s">Projects &nbsp;·&nbsp; Notes &nbsp;·&nbsp; Collaborators &nbsp;·&nbsp; Activity &nbsp;·&nbsp; Settings</span>
+    <span class="s sub">Unchanged. Navigation is scanned dozens of times a day — warmth here becomes friction.</span></div>
+  <div class="slot"><span class="cap">Menu items, including a destructive one</span>
+    <span class="s">Duplicate project</span>
+    <span class="s">Move to workspace</span>
+    <span class="s">Delete project</span></div>
+  <div class="slot"><span class="cap">Page titles</span>
+    <span class="s">List: <code>Your projects</code></span>
+    <span class="s">Detail: <code>Field interviews, March</code></span>
+    <span class="s">Settings: <code>Project settings</code></span>
+    <span class="s sub">The one difference from <code>plain-spoken</code>: <code>Your projects</code> rather than <code>Projects</code>.</span></div>
+</section>
+
+<section id="labels">
+  <h2>5. Labels, help text, placeholders</h2>
+  <p class="note">Labels stay plain — they are scanned, not read. Help text is where this voice does its work.</p>
+  <div class="slot"><span class="cap">Field with help text</span>
+    <span class="s"><strong>Project name</strong></span>
+    <span class="s sub">Something you'll recognise later — you can always change it</span></div>
+  <div class="slot"><span class="cap">Field with format help</span>
+    <span class="s"><strong>Retention period</strong></span>
+    <span class="s sub">Notes are deleted after this many days. Leave it empty and we'll keep them for as long as you like</span></div>
+  <div class="slot"><span class="cap">Field with a consequence</span>
+    <span class="s"><strong>Workspace URL</strong></span>
+    <span class="s sub">Changing this breaks existing links, so it's worth telling your team first</span></div>
+  <div class="slot"><span class="cap">Placeholder used correctly</span>
+    <span class="s"><strong>Email address</strong></span>
+    <span class="s sub">Placeholder: <code>rosa@example.com</code></span></div>
+  <div class="slot"><span class="cap">Required field</span>
+    <span class="s"><strong>Project name</strong> (required)</span>
+    <span class="s sub">The word, not an asterisk. See shared/ACCESSIBILITY.md.</span></div>
+</section>
+
+<section id="validation">
+  <h2>6. Validation and errors</h2>
+  <p class="note">Reassurance, then what happened, then what to do. Every one still names the next step.</p>
+  <div class="slot"><span class="cap">Required field left empty</span><span class="s">Your project needs a name — anything you'll recognise later.</span></div>
+  <div class="slot"><span class="cap">Malformed value</span><span class="s">That doesn't look quite like an email address. Have a look for a missing @.</span></div>
+  <div class="slot"><span class="cap">Valid but rejected</span><span class="s">You've already got a project called “Field interviews”. Pick another name and you're good to go.</span></div>
+  <div class="slot"><span class="cap">Whole-form failure</span><span class="s">Nearly there — two fields need a second look. We've marked them below.</span></div>
+  <div class="slot"><span class="cap">Warning, not an error</span><span class="s">No collaborators yet — that's fine, you can add people whenever you're ready.</span></div>
+</section>
+
+<section id="empty">
+  <h2>7. Empty states</h2>
+  <p class="note">Three different situations. This is where <code>upbeat</code> differs most from <code>plain-spoken</code>, and where the longer budget earns its keep.</p>
+  <div class="slot"><span class="cap">First run — nothing has ever existed</span>
+    <span class="s"><strong>Ready when you are</strong></span>
+    <span class="s sub">A project keeps related notes together, along with the people working on them. Making one takes about a minute.</span>
+    <div class="btnrow"><span class="btn">Create a project</span></div></div>
+  <div class="slot"><span class="cap">Filtered to nothing</span>
+    <span class="s"><strong>Nothing matches “interview”</strong></span>
+    <span class="s sub">A shorter search might do it, or try clearing the date filter.</span>
+    <div class="btnrow"><span class="btn sec">Clear filters</span></div></div>
+  <div class="slot"><span class="cap">Cleared by the user — a success, not a void</span>
+    <span class="s"><strong>All caught up</strong></span>
+    <span class="s sub">Your archive is empty. Anything you archive from here on will land in this spot.</span></div>
+</section>
+
+<section id="loading">
+  <h2>8. Loading, saving, progress</h2>
+  <div class="slot"><span class="cap">Initial load</span><span class="s">Getting your projects</span></div>
+  <div class="slot"><span class="cap">Save in progress</span><span class="s">Saving</span></div>
+  <div class="slot"><span class="cap">Long operation with an estimate</span>
+    <span class="s">Exporting 1,240 notes. About two minutes — feel free to carry on elsewhere.</span></div>
+  <div class="slot"><span class="cap">Background job the user can leave</span>
+    <span class="s">We're importing your notes now. Close this whenever you like and we'll email you the moment it's done.</span></div>
+</section>
+
+<section id="errors">
+  <h2>9. Page-level failures</h2>
+  <div class="slot"><span class="cap">Not found</span>
+    <span class="s"><strong>We can't find that project</strong></span>
+    <span class="s sub">It might have been deleted, or the link might have a typo in it. Your other projects are all still here.</span>
+    <div class="btnrow"><span class="btn sec">See all projects</span></div></div>
+  <div class="slot"><span class="cap">Permission denied</span>
+    <span class="s"><strong>This one's not shared with you yet</strong></span>
+    <span class="s sub">Rosa Alvarez owns this project. Ask her for access and she can add you in a couple of clicks.</span>
+    <div class="btnrow"><span class="btn sec">Request access</span></div>
+    <span class="s sub">No exclamation mark. A reader who has just been locked out does not want cheerfulness.</span></div>
+  <div class="slot"><span class="cap">Server error</span>
+    <span class="s"><strong>That one's on us</strong></span>
+    <span class="s sub">Something broke on our end. Your notes are safe, we've been told about it, and we're already looking.</span>
+    <div class="btnrow"><span class="btn sec">Try again</span></div></div>
+  <div class="slot"><span class="cap">Offline</span>
+    <span class="s"><strong>You're offline right now</strong></span>
+    <span class="s sub">Keep working — everything's saved on this device and it'll sync the moment you're back.</span></div>
+  <div class="slot"><span class="cap">Rate or quota limit</span>
+    <span class="s"><strong>That's a lot of exporting</strong></span>
+    <span class="s sub">You get 10 exports an hour, and you've used them all. You're back in at 3:40 pm.</span></div>
+</section>
+
+<section id="confirm">
+  <h2>10. Confirmation dialogs</h2>
+  <p class="flag">This section is deliberately almost identical to <code>plain-spoken</code>.
+    <code>upbeat</code> drops its warmth entirely when a reader is about to lose something —
+    see <code>Never</code> #1. Softening a deletion is how people lose work.</p>
+  <div class="slot"><span class="cap">Destructive and irreversible</span>
+    <span class="s"><strong>Delete 3 projects?</strong></span>
+    <span class="s sub">This also deletes 412 notes inside them. You can't undo this.</span>
+    <div class="btnrow"><span class="btn sec">Cancel</span><span class="btn">Delete 3 projects</span></div></div>
+  <div class="slot"><span class="cap">Destructive but recoverable</span>
+    <span class="s"><strong>Archive this project?</strong></span>
+    <span class="s sub">Collaborators lose access until you restore it. Nothing is deleted, and you can bring it back any time.</span>
+    <div class="btnrow"><span class="btn sec">Cancel</span><span class="btn">Archive project</span></div>
+    <span class="s sub">One clause of reassurance is allowed here, because the action really is recoverable.</span></div>
+  <div class="slot"><span class="cap">Benign — and whether this voice would skip it</span>
+    <span class="s"><strong>Discard your draft?</strong></span>
+    <span class="s sub">You've written 40 words that haven't been saved yet.</span>
+    <div class="btnrow"><span class="btn sec">Keep editing</span><span class="btn">Discard draft</span></div>
+    <span class="s sub"><strong>upbeat would also skip this</strong> if the draft were autosaved — for the same
+      reason as <code>plain-spoken</code>. A warm voice does not get to interrupt more often.</span></div>
+</section>
+
+<section id="toast">
+  <h2>11. Toasts</h2>
+  <div class="slot"><span class="cap">Success</span><span class="s">Nice — your project's ready</span></div>
+  <div class="slot"><span class="cap">Failure</span><span class="s">Those invitations didn't send. Give it another go.</span></div>
+  <div class="slot"><span class="cap">Undoable</span><span class="s">3 notes deleted &nbsp;·&nbsp; <strong>Undo</strong></span></div>
+  <div class="slot"><span class="cap">Queued or deferred</span><span class="s">Export's queued — we'll email you the file.</span></div>
+</section>
+
+<section id="alerts">
+  <h2>12. Callouts and inline notices</h2>
+  <div class="slot"><span class="cap">Informational</span>
+    <span class="s"><strong>Everything saves itself</strong></span>
+    <span class="s sub">Notes sync every few seconds, so there's no save button to remember.</span></div>
+  <div class="slot"><span class="cap">Cautionary</span>
+    <span class="s"><strong>Your workspace is filling up</strong></span>
+    <span class="s sub">You're using 9.2 GB of 10 GB. New notes stop saving at the limit, so it's worth clearing some space soon.</span></div>
+  <div class="slot"><span class="cap">Blocking</span>
+    <span class="s"><strong>Your trial ended yesterday</strong></span>
+    <span class="s sub">Your notes are all still here and safe to read. Add a payment method whenever you're ready and you can pick up where you left off.</span>
+    <span class="s sub">No exclamation mark — this is a billing message.</span></div>
+</section>
+
+<section id="onboarding">
+  <h2>13. First run and feature introduction</h2>
+  <p class="note">The one place this voice can spend a celebration, and the only place an emoji is allowed.</p>
+  <div class="slot"><span class="cap">Welcome</span>
+    <span class="s"><strong>Welcome to Fieldnote</strong></span>
+    <span class="s sub">Collect your research notes, group them into projects, and share them with the people you work with. Let's set up your first one.</span></div>
+  <div class="slot"><span class="cap">Three-step setup</span>
+    <span class="s">1 &nbsp; Name your workspace</span>
+    <span class="s">2 &nbsp; Create your first project</span>
+    <span class="s">3 &nbsp; Invite the people you work with</span>
+    <span class="s sub">Steps stay plain. A numbered list is scanned, and warmth in it just makes it longer.</span></div>
+  <div class="slot"><span class="cap">Empty workspace prompt</span>
+    <span class="s"><strong>Your workspace is all set</strong></span>
+    <span class="s sub">Start with a project — it's where your notes will live.</span>
+    <div class="btnrow"><span class="btn">Create project</span></div></div>
+  <div class="slot"><span class="cap">Introducing an unused feature</span>
+    <span class="s">Tags are handy for pulling notes together across projects. Add one from any note's menu and see how it feels.</span></div>
+</section>
+
+<section id="notifications">
+  <h2>14. Transactional messages</h2>
+  <p class="note">Subject lines never oversell what's inside — see <code>Never</code> #10.</p>
+  <div class="slot"><span class="cap">Invitation</span>
+    <span class="s"><strong>Rosa added you to Field interviews</strong></span>
+    <span class="s sub">You've got access to all 68 notes in the project, and you can start editing right away.</span></div>
+  <div class="slot"><span class="cap">Mention</span>
+    <span class="s"><strong>Rosa mentioned you in a note</strong></span>
+    <span class="s sub">She's asking about the March interview transcripts when you get a moment.</span></div>
+  <div class="slot"><span class="cap">Weekly digest</span>
+    <span class="s"><strong>24 new notes in Fieldnote this week</strong></span>
+    <span class="s sub">Most of it landed in Field interviews and Pricing research — here's the short version.</span></div>
+  <div class="slot"><span class="cap">Expiry or billing warning</span>
+    <span class="s"><strong>Your trial ends in 3 days</strong></span>
+    <span class="s sub">After that your notes stay safe and become read-only, so nothing goes anywhere.</span></div>
+</section>
+
+<section id="microcopy">
+  <h2>15. Microcopy</h2>
+  <p class="note">Mostly identical to <code>plain-spoken</code>. Small mechanical strings are read hundreds of times, and warmth wears out fastest here.</p>
+  <table>
+    <thead><tr><th>Situation</th><th>String</th></tr></thead>
+    <tbody>
+      <tr><td>Just now</td><td>Just now</td></tr>
+      <tr><td>Recent</td><td>12 minutes ago</td></tr>
+      <tr><td>Yesterday</td><td>Yesterday at 4:15 pm</td></tr>
+      <tr><td>Older</td><td>14 March 2026</td></tr>
+      <tr><td>Count — zero</td><td>No notes yet</td></tr>
+      <tr><td>Count — one</td><td>1 note</td></tr>
+      <tr><td>Count — many</td><td>412 notes</td></tr>
+      <tr><td>File size</td><td>2.4 MB</td></tr>
+      <tr><td>Overflow</td><td>Rosa, Amir, and 3 more</td></tr>
+      <tr><td>Truncation</td><td>+3 more</td></tr>
+      <tr><td>Consent line</td><td>By creating an account you agree to our terms and privacy notice.</td></tr>
+    </tbody>
+  </table>
+  <p class="note">The only change is the zero case: <code>No notes yet</code> rather than
+    <code>No notes</code>. “Yet” implies some are coming, which is the whole difference between
+    these two voices in three letters.</p>
+</section>
+
+<section id="vocabulary">
+  <h2>16. Preferred and forbidden terms</h2>
+  <table>
+    <thead><tr><th>Use</th><th>Not</th></tr></thead>
+    <tbody>
+      <tr><td>delete</td><td>remove, trash, destroy</td></tr>
+      <tr><td>sign in / sign out</td><td>log in, login, logout</td></tr>
+      <tr><td>settings</td><td>preferences, options, configuration</td></tr>
+      <tr><td>note, project, collaborator</td><td>item, entity, resource, asset</td></tr>
+      <tr><td>give it another go</td><td>retry, re-attempt</td></tr>
+      <tr><td>you're all set</td><td>setup complete</td></tr>
+      <tr><td>nice / great / lovely</td><td>awesome, amazing, incredible, epic</td></tr>
+      <tr><td>ready when you are</td><td>get started now</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Strike on sight — hype</h3>
+  <p class="note">Banned exactly as in <code>plain-spoken</code>. Warmth and marketing language are not the same thing, and this is the voice most at risk of confusing them.</p>
+  <div class="chips">
+    <span class="chip">leverage</span><span class="chip">utilise</span><span class="chip">seamless</span>
+    <span class="chip">delightful</span><span class="chip">robust</span><span class="chip">powerful</span>
+    <span class="chip">intuitive</span><span class="chip">effortless</span><span class="chip">unlock</span>
+    <span class="chip">empower</span><span class="chip">streamline</span><span class="chip">optimise</span>
+    <span class="chip">elevate</span><span class="chip">journey</span><span class="chip">ecosystem</span>
+    <span class="chip">solution</span><span class="chip">game-changer</span><span class="chip">supercharge</span>
+    <span class="chip">magical</span><span class="chip">blazing-fast</span>
+  </div>
+
+  <h3>Strike on sight — condescension</h3>
+  <p class="note">A second list this voice needs and <code>plain-spoken</code> does not. These sound warm and land badly.</p>
+  <div class="chips">
+    <span class="chip">simply</span><span class="chip">just</span><span class="chip">easy</span>
+    <span class="chip">obviously</span><span class="chip">of course</span><span class="chip">don't worry</span>
+    <span class="chip">you've got this!</span><span class="chip">no problem at all</span>
+    <span class="chip">super quick</span><span class="chip">in a jiffy</span>
+  </div>
+  <p class="note"><strong>don't worry</strong> instructs the reader about their feelings. Remove the
+    cause instead — “your note is safe” does the work that “don't worry” only gestures at.</p>
+</section>
+
+<section id="antipatterns">
+  <h2>17. Writing antipatterns</h2>
+  <ul class="tight">
+    <li>“Oops!” / “Uh oh!” / “Whoops!” — warmth is not the same as whimsy</li>
+    <li>“You've got this!” — cheerleading at someone who asked for information</li>
+    <li>“Don't worry!” — instructs the reader about their feelings instead of fixing the cause</li>
+    <li>“Great job!” for something routine — spends enthusiasm the voice will need later</li>
+    <li>Two exclamation marks in one message, or several on one screen</li>
+    <li>“Let's get started!” as a heading — the reader is already here</li>
+    <li>Warmth in a destructive confirmation — “Ready to say goodbye to these projects?” is a failure of nerve</li>
+    <li>“Sorry about that!” before something that was not an error</li>
+    <li>Exclamation marks in a billing or permission message — cheerfulness reads as a taunt</li>
+  </ul>
+</section>
+
+<section id="examples">
+  <h2>18. Do and don't</h2>
+  <div class="pair">
+    <div class="do"><span class="tag">Do</span><span class="txt">That didn't save, but your note is safe. Give it another go.</span></div>
+    <div class="dont"><span class="tag">Don't</span><span class="txt">Oops! Something went wrong. Don't worry, just try again!</span></div>
+  </div>
+  <div class="pair">
+    <div class="do"><span class="tag">Do</span><span class="txt">Ready when you are</span></div>
+    <div class="dont"><span class="tag">Don't</span><span class="txt">Let's get started on your amazing journey!</span></div>
+  </div>
+  <div class="pair">
+    <div class="do"><span class="tag">Do</span><span class="txt">Two steps to go.</span></div>
+    <div class="dont"><span class="tag">Don't</span><span class="txt">Almost there — you're doing great! 🎉</span></div>
+  </div>
+  <div class="pair">
+    <div class="do"><span class="tag">Do</span><span class="txt">Delete 3 projects?</span></div>
+    <div class="dont"><span class="tag">Don't</span><span class="txt">Ready to say goodbye to these 3 projects?</span></div>
+  </div>
+  <div class="pair">
+    <div class="do"><span class="tag">Do</span><span class="txt">This one's not shared with you yet</span></div>
+    <div class="dont"><span class="tag">Don't</span><span class="txt">Access denied!</span></div>
+  </div>
+  <div class="pair">
+    <div class="do"><span class="tag">Do</span><span class="txt">That's your first project set up. Nice start.</span></div>
+    <div class="dont"><span class="tag">Don't</span><span class="txt">Woohoo!! You're crushing it!!</span></div>
+  </div>
+</section>
+
+<section id="budgets-note">
+  <h2>Length budgets</h2>
+  <p class="budget">Roughly 1.5–2× <code>plain-spoken</code>: button ≤ 24 characters, field label ≤ 30,
+    toast ≤ 60, page title ≤ 40, empty-state heading ≤ 45, tooltip ≤ 80, notification subject ≤ 70,
+    help text ≤ 130, error ≤ 180, empty-state body ≤ 200.
+    <strong>This fits <code>playful</code> and <code>warm-paper</code>; it does not fit
+    <code>slate</code></strong>, whose <code>h-9</code> controls and 14px body text are built around
+    short strings. The full table and that trade-off are in <code>VOICE.md</code>.</p>
+</section>
+
+</div>
+</body>
+</html>

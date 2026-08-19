@@ -39,6 +39,12 @@ budgets per slot; a design sizes its components around them. That is the only
 negotiation between them, and it is written down rather than discovered when the
 buttons wrap.
 
+There is currently one combination that needs a conversation before you build it:
+`slate` + `upbeat`. `upbeat` runs 1.5–2× longer than `plain-spoken`, and `slate`'s
+`h-9` controls, `px-4 py-3` table cells and 14px body text are built around short
+strings. Both `VOICE.md` files name the designs they fit, so the clash is visible
+before you write any code rather than after the copy is in.
+
 ---
 
 ## Repository structure
