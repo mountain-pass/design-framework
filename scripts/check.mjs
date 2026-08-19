@@ -346,6 +346,45 @@ for (const name of designs) {
     }
   }
 
+  // --- ratios printed in the kitchen sink must be the measured ones
+  //
+  // The tokens section captions some swatches with a contrast ratio. Nothing used
+  // to check them, so three designs shipped the same copied trio of numbers —
+  // none of which matched the palette underneath. A printed ratio describes the
+  // pair the swatch renders: the token's own foreground on the token.
+  const tokensSection = /<section id="tokens"[\s\S]*?<\/section>/.exec(html)?.[0] ?? "";
+  const CAPTION = new RegExp(
+    '--([a-z0-9-]+)</p>\\s*<p class="font-mono text-xs text-muted-foreground">([^<]*)</p>',
+    "g"
+  );
+  for (const [, token, caption] of tokensSection.matchAll(CAPTION)) {
+    const printed = [...caption.matchAll(/(\d+\.?\d*):1/g)].map((m) => m[1]);
+    if (!printed.length) continue;
+    const measured = [["light", light], ["dark", dark]].map(([mode, body]) => {
+      const vars = customProperties(body);
+      const a = parseColour(vars[`${token}-foreground`]);
+      const b = parseColour(vars[token]);
+      return a && b ? { mode, value: contrast(a, b) } : { mode, value: null };
+    });
+    if (printed.length !== measured.length) {
+      fail(
+        label,
+        `index.html #tokens prints ${printed.length} ratio(s) for --${token}; caption both modes, as "N.NN:1 light · N.NN:1 dark"`
+      );
+      continue;
+    }
+    measured.forEach(({ mode, value }, i) => {
+      if (value === null) {
+        warn(label, `index.html #tokens: cannot verify the --${token} ${mode} ratio against theme.css`);
+      } else if (printed[i] !== value.toFixed(2)) {
+        fail(
+          label,
+          `index.html #tokens prints ${printed[i]}:1 for --${token}-foreground on --${token} (${mode}), but theme.css measures ${value.toFixed(2)}:1`
+        );
+      }
+    });
+  }
+
   // --- the kitchen sink must render from theme.css, not from a copy of it
   //
   // The demo used to carry its own <style type="text/tailwindcss"> duplicate of
