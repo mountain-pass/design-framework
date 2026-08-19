@@ -25,6 +25,10 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
   --radius: 0.75rem;
 
+  /* How far a button's bottom edge protrudes, and therefore how far it travels
+     when pressed. Every button collapses by exactly this much. */
+  --button-lift: 4px;
+
   --background: oklch(0.985 0.010 110);
   --foreground: oklch(0.25 0.020 220);
 
@@ -187,71 +191,112 @@
     letter-spacing: 0.04em;
     font-weight: 800;
     border-style: solid;
-    border-width: 0 2px 4px;
+    border-width: 0 2px var(--button-lift);
     border-color: transparent;
   }
 }
 
-/* The pressed-button illusion: a solid bottom border a few shades darker than
-   the face, so every button reads as a physical key. Rules rather than tokens
-   because the shade has to be derived from whichever fill the button carries. */
-@layer components {
-  button.bg-primary,
-  button.bg-secondary,
-  button.bg-accent,
-  button.bg-destructive,
-  [type="button"].bg-primary,
-  [type="button"].bg-secondary,
-  [type="button"].bg-accent,
-  [type="button"].bg-destructive {
-    border-left-width: 0;
-    border-right-width: 0;
-    border-top-width: 0;
-    border-bottom-color: rgba(20, 24, 28, 0.16);
-  }
+/* The pressed-button illusion: a bottom edge thicker than the rest of the frame,
+   in a darker shade of the face, so every button reads as a physical key that
+   travels --button-lift downwards when pressed.
+   -----------------------------------------------------------------------------
+   These rules are deliberately NOT in @layer components.
 
-  button.bg-primary,
-  [type="button"].bg-primary {
-    border-bottom-color: color-mix(in srgb, var(--primary) 72%, black);
-  }
+   Tailwind's utilities land in @layer utilities, and layer order beats
+   specificity outright — a more specific selector in an earlier layer still
+   loses. In @layer components this whole block was being quietly overridden by
+   the utilities the buttons carry in their markup: `border-2` flattened the
+   outline button's bottom edge back to a uniform 2px, and `transition-colors`
+   dropped border-bottom-width from the transition list so the press did not
+   animate. Unlayered declarations outrank every layer, which is what keeps the
+   treatment intact on a button that also carries utilities.
 
-  button.bg-secondary,
-  [type="button"].bg-secondary {
-    border-bottom-color: color-mix(in srgb, var(--secondary) 70%, black);
-  }
+   The cost is that a utility can no longer override these properties on a
+   button. That is the trade this design makes for its signature component: in
+   `learn`, buttons are keys, and a stray `border-b-0` should not be able to
+   flatten one. Only bottom-edge properties are set, so `border-input` still
+   colours the frame and `hover:bg-*` still changes the face. */
 
-  button.bg-accent,
-  [type="button"].bg-accent {
-    border-bottom-color: color-mix(in srgb, var(--accent) 72%, black);
-  }
+button,
+[type="button"],
+[type="submit"] {
+  /* Named explicitly rather than left to `transition-all`, because half these
+     buttons carry `transition-colors`, which does not include border widths. */
+  transition-property: border-bottom-width, border-bottom-color, border-color,
+    background-color, color, box-shadow;
+  transition-duration: 160ms;
+  transition-timing-function: cubic-bezier(0.2, 0, 0.2, 1);
+}
 
-  button.bg-destructive,
-  [type="button"].bg-destructive {
-    border-bottom-color: color-mix(in srgb, var(--destructive) 72%, black);
-  }
+/* --- Solid buttons: no frame, so the whole bottom edge is the lift ---------- */
 
-  button.border-2,
-  button.border,
-  button[class*="border-input"],
-  [type="button"].border-2,
-  [type="button"].border,
-  [type="button"][class*="border-input"] {
-    border-width: 2px 2px 6px;
-    border-color: rgba(15, 23, 42, 0.16);
-    border-bottom-color: rgba(15, 23, 42, 0.22);
-    transition-property: border-bottom-width;
-    transition-duration: 150ms;
-    transition-timing-function: ease-out;
-  }
+button.bg-primary,
+button.bg-secondary,
+button.bg-accent,
+button.bg-destructive,
+[type="button"].bg-primary,
+[type="button"].bg-secondary,
+[type="button"].bg-accent,
+[type="button"].bg-destructive {
+  border-left-width: 0;
+  border-right-width: 0;
+  border-top-width: 0;
+  border-bottom-width: var(--button-lift);
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
 
-  button.border-2:active,
-  button.border:active,
-  button[class*="border-input"]:active,
-  [type="button"].border-2:active,
-  [type="button"].border:active,
-  [type="button"][class*="border-input"]:active {
-    border-bottom-width: 0;
-  }
+button.bg-primary,
+[type="button"].bg-primary {
+  border-bottom-color: color-mix(in srgb, var(--primary) 72%, black);
+}
+
+button.bg-secondary,
+[type="button"].bg-secondary {
+  border-bottom-color: color-mix(in srgb, var(--secondary) 70%, black);
+}
+
+button.bg-accent,
+[type="button"].bg-accent {
+  border-bottom-color: color-mix(in srgb, var(--accent) 72%, black);
+}
+
+button.bg-destructive,
+[type="button"].bg-destructive {
+  border-bottom-color: color-mix(in srgb, var(--destructive) 72%, black);
+}
+
+button.bg-primary:active,
+button.bg-secondary:active,
+button.bg-accent:active,
+button.bg-destructive:active,
+[type="button"].bg-primary:active,
+[type="button"].bg-secondary:active,
+[type="button"].bg-accent:active,
+[type="button"].bg-destructive:active {
+  border-bottom-width: 0;
+}
+
+/* --- Outline buttons: a 2px frame, plus the same lift again underneath ------ */
+
+button.border-2,
+button.border,
+button[class*="border-input"],
+[type="button"].border-2,
+[type="button"].border,
+[type="button"][class*="border-input"] {
+  border-bottom-width: calc(2px + var(--button-lift));
+  border-bottom-color: color-mix(in srgb, var(--input) 72%, black);
+}
+
+/* Pressed, the lift collapses and the bottom edge returns to the width of the
+   rest of the frame — the same 4px of travel as a solid button. */
+button.border-2:active,
+button.border:active,
+button[class*="border-input"]:active,
+[type="button"].border-2:active,
+[type="button"].border:active,
+[type="button"][class*="border-input"]:active {
+  border-bottom-width: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {

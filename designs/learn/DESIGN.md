@@ -140,10 +140,18 @@ shadow-lg  0 16px 28px -18px rgb(0 0 0 / 0.38)
 |---|---|
 | Hover | Slight background shift with no large transform |
 | Focus | Visible ring on `:focus-visible` |
-| Active | Button darkens one step |
+| Active | Button darkens one step, and its bottom edge collapses by `--button-lift` (4px) — the key presses flat |
 | Disabled | `opacity-50` with pointer-events removed |
 
 This design animates mostly at the level of colour and shadow; there is no playful scale effect and no long looped motion. `prefers-reduced-motion` is handled in `theme.css`.
+
+**The pressed button is the one exception.** Every button carries a bottom border
+`--button-lift` thicker than the rest of its frame, in a darker shade of its own
+face, so it reads as a physical key. On `:active` that lift collapses — a solid
+button's 4px bottom edge goes to 0, an outline button's 6px goes back to the 2px
+of its frame — and both transition over the standard 160ms. Because buttons are
+fixed-height (`h-11`) and `border-box`, the face grows into the space the border
+vacates: the press costs no reflow. See the note on prohibition 7.
 
 ---
 
@@ -292,7 +300,7 @@ tight on" under Colour. Re-run the check after any palette change, however small
 
 6. **Never stack headings without content between them.** If an h2 is immediately followed by an h3, one of them is wrong. Headings introduce content; they aren't decoration. This matters more in playful designs because the display font (Fredoka) is visually distinctive — stacked headings look like a type specimen, not a hierarchy.
 
-7. **Never animate layout properties.** Color, opacity, and shadow can transition. Height, width, transform — no. Buttons don't scale on hover, panels don't slide open. This keeps interactions feeling snappy and predictable. The exception is purpose-built animation components (carousels, drawers) where movement is the point.
+7. **Never animate layout properties.** Color, opacity, and shadow can transition. Height, width, transform — no. Buttons don't scale on hover, panels don't slide open. This keeps interactions feeling snappy and predictable. The exception is purpose-built animation components (carousels, drawers) where movement is the point, and the pressed button described under Motion — its bottom border animates, but on a fixed-height `border-box` element, so it moves no other pixel on the page. The rule is really about reflow; an animation that cannot cause one does not break it.
 
 8. **Never let the orange accent dominate the purple primary.** Orange is a garnish, not the main course. It appears on hover states, selected tabs, and occasional CTAs, but the primary action color is always purple. If you find yourself with an orange header and orange buttons, you've inverted the hierarchy.
 
