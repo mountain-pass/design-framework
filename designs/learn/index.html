@@ -147,112 +147,96 @@
 <section id="tokens" class="ks-section border-t-0">
   <p class="ks-title">01 · Foundations</p>
   <h2 class="ks-lede">Colour tokens</h2>
-  <p class="ks-note">Every semantic colour token with its resolved value. The playful design uses vibrant purples, oranges, and greens to create an energetic, joyful interface.</p>
-  
-  <div class="ks-grid">
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      <div class="overflow-hidden rounded-xl border-2 border-border">
-        <div class="h-24 bg-background"></div>
-        <div class="bg-card p-4">
-          <div class="text-xs font-mono text-muted-foreground">--background</div>
-          <div class="mt-1 text-sm font-medium">Page background</div>
-        </div>
-      </div>
-      
-      <div class="overflow-hidden rounded-xl border-2 border-border">
-        <div class="h-24 bg-card"></div>
-        <div class="bg-card p-4">
-          <div class="text-xs font-mono text-muted-foreground">--card</div>
-          <div class="mt-1 text-sm font-medium">Card surface</div>
-        </div>
-      </div>
-      
-      <div class="overflow-hidden rounded-xl border-2 border-border">
-        <div class="h-24 bg-popover"></div>
-        <div class="bg-card p-4">
-          <div class="text-xs font-mono text-muted-foreground">--popover</div>
-          <div class="mt-1 text-sm font-medium">Floating surface</div>
-        </div>
-      </div>
-      
-      <div class="overflow-hidden rounded-xl border-2 border-border">
-        <div class="flex h-24 items-center justify-center bg-primary">
-          <span class="text-lg font-bold text-primary-foreground">Primary</span>
-        </div>
-        <div class="bg-card p-4">
-          <div class="text-xs font-mono text-muted-foreground">--primary</div>
-          <div class="mt-1 text-sm font-medium">Vibrant purple</div>
-        </div>
-      </div>
-      
-      <div class="overflow-hidden rounded-xl border-2 border-border">
-        <div class="flex h-24 items-center justify-center bg-secondary">
-          <span class="text-base font-semibold text-secondary-foreground">Secondary</span>
-        </div>
-        <div class="bg-card p-4">
-          <div class="text-xs font-mono text-muted-foreground">--secondary</div>
-          <div class="mt-1 text-sm font-medium">Soft lavender</div>
-        </div>
-      </div>
-      
-      <div class="overflow-hidden rounded-xl border-2 border-border">
-        <div class="flex h-24 items-center justify-center bg-accent">
-          <span class="text-base font-semibold text-accent-foreground">Accent</span>
-        </div>
-        <div class="bg-card p-4">
-          <div class="text-xs font-mono text-muted-foreground">--accent</div>
-          <div class="mt-1 text-sm font-medium">Bright orange</div>
-        </div>
-      </div>
-      
-      <div class="overflow-hidden rounded-xl border-2 border-border">
-        <div class="flex h-24 items-center justify-center bg-muted">
-          <span class="text-sm font-medium text-muted-foreground">Muted</span>
-        </div>
-        <div class="bg-card p-4">
-          <div class="text-xs font-mono text-muted-foreground">--muted</div>
-          <div class="mt-1 text-sm font-medium">Warm grey fill</div>
-        </div>
-      </div>
-      
-      <div class="overflow-hidden rounded-xl border-2 border-border">
-        <div class="flex h-24 items-center justify-center bg-destructive">
-          <span class="text-base font-semibold text-destructive-foreground">Destructive</span>
-        </div>
-        <div class="bg-card p-4">
-          <div class="text-xs font-mono text-muted-foreground">--destructive</div>
-          <div class="mt-1 text-sm font-medium">Warm red</div>
-        </div>
-      </div>
-      
-      <div class="overflow-hidden rounded-xl border-2 border-border bg-card">
-        <div class="flex h-24 items-center justify-center">
-          <div class="h-12 w-12 rounded-lg border-2 border-border"></div>
-        </div>
-        <div class="p-4">
-          <div class="text-xs font-mono text-muted-foreground">--border</div>
-          <div class="mt-1 text-sm font-medium">Default border</div>
-        </div>
-      </div>
-    </div>
-    
+  <p class="ks-note">Every colour in this design comes from one of these. Nothing below hard-codes a value. The green, blue, gold and red are the reference product's own values, held exactly — which is why three of the ratios printed here fall short in light mode; see the contrast waiver in DESIGN.md. Toggle dark mode in the header to see each token's dark counterpart.</p>
+
+  <div class="ks-grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
     <div>
-      <p class="ks-label">Chart colors</p>
-      <div class="flex h-16 overflow-hidden rounded-xl border-2 border-border">
-        <div class="flex-1 bg-chart-1"></div>
-        <div class="flex-1 bg-chart-2"></div>
-        <div class="flex-1 bg-chart-3"></div>
-        <div class="flex-1 bg-chart-4"></div>
-        <div class="flex-1 bg-chart-5"></div>
+      <div class="flex h-16 items-end rounded-xl border-2 border-border bg-background p-2">
+        <span class="text-xs font-medium text-foreground">Aa</span>
       </div>
-      <div class="mt-3 flex gap-4 text-xs">
-        <div class="font-mono text-muted-foreground">--chart-1 purple</div>
-        <div class="font-mono text-muted-foreground">--chart-2 orange</div>
-        <div class="font-mono text-muted-foreground">--chart-3 green</div>
-        <div class="font-mono text-muted-foreground">--chart-4 cyan</div>
-        <div class="font-mono text-muted-foreground">--chart-5 pink</div>
-      </div>
+      <p class="mt-2 font-mono text-xs font-medium">--background</p>
+      <p class="font-mono text-xs text-muted-foreground">page surface</p>
     </div>
+    <div>
+      <div class="flex h-16 items-end rounded-xl border-2 border-border bg-card p-2">
+        <span class="text-xs font-medium text-card-foreground">Aa</span>
+      </div>
+      <p class="mt-2 font-mono text-xs font-medium">--card</p>
+      <p class="font-mono text-xs text-muted-foreground">raised surface</p>
+    </div>
+    <div>
+      <div class="flex h-16 items-end rounded-xl border-2 border-border bg-popover p-2 shadow-sm">
+        <span class="text-xs font-medium text-popover-foreground">Aa</span>
+      </div>
+      <p class="mt-2 font-mono text-xs font-medium">--popover</p>
+      <p class="font-mono text-xs text-muted-foreground">floating surface</p>
+    </div>
+    <div>
+      <div class="flex h-16 items-end rounded-xl bg-primary p-2">
+        <span class="text-xs font-medium text-primary-foreground">Aa</span>
+      </div>
+      <p class="mt-2 font-mono text-xs font-medium">--primary</p>
+      <p class="font-mono text-xs text-muted-foreground">2.09:1 light · 8.05:1 dark</p>
+    </div>
+    <div>
+      <div class="flex h-16 items-end rounded-xl bg-secondary p-2">
+        <span class="text-xs font-medium text-secondary-foreground">Aa</span>
+      </div>
+      <p class="mt-2 font-mono text-xs font-medium">--secondary</p>
+      <p class="font-mono text-xs text-muted-foreground">low-emphasis fill</p>
+    </div>
+    <div>
+      <div class="flex h-16 items-end rounded-xl bg-muted p-2">
+        <span class="text-xs font-medium text-muted-foreground">Aa</span>
+      </div>
+      <p class="mt-2 font-mono text-xs font-medium">--muted</p>
+      <p class="font-mono text-xs text-muted-foreground">4.48:1</p>
+    </div>
+    <div>
+      <div class="flex h-16 items-end rounded-xl bg-accent p-2">
+        <span class="text-xs font-medium text-accent-foreground">Aa</span>
+      </div>
+      <p class="mt-2 font-mono text-xs font-medium">--accent</p>
+      <p class="font-mono text-xs text-muted-foreground">hover surface</p>
+    </div>
+    <div>
+      <div class="flex h-16 items-end rounded-xl bg-destructive p-2">
+        <span class="text-xs font-medium text-destructive-foreground">Aa</span>
+      </div>
+      <p class="mt-2 font-mono text-xs font-medium">--destructive</p>
+      <p class="font-mono text-xs text-muted-foreground">3.30:1 light · 5.09:1 dark</p>
+    </div>
+    <div>
+      <div class="h-16 rounded-xl border-2 border-border bg-background"></div>
+      <p class="mt-2 font-mono text-xs font-medium">--border</p>
+      <p class="font-mono text-xs text-muted-foreground">2px edges</p>
+    </div>
+    <div>
+      <div class="h-16 rounded-xl border-2 border-input bg-background"></div>
+      <p class="mt-2 font-mono text-xs font-medium">--input</p>
+      <p class="font-mono text-xs text-muted-foreground">control border</p>
+    </div>
+    <div>
+      <div class="h-16 rounded-xl border-2 border-border bg-background ring-2 ring-ring ring-offset-2 ring-offset-background"></div>
+      <p class="mt-2 font-mono text-xs font-medium">--ring</p>
+      <p class="font-mono text-xs text-muted-foreground">focus ring</p>
+    </div>
+    <div>
+      <div class="flex h-16 items-end rounded-xl border-2 border-sidebar-border bg-sidebar p-2">
+        <span class="text-xs font-medium text-sidebar-foreground">Aa</span>
+      </div>
+      <p class="mt-2 font-mono text-xs font-medium">--sidebar</p>
+      <p class="font-mono text-xs text-muted-foreground">nav surface</p>
+    </div>
+  </div>
+
+  <p class="ks-label mt-10">Chart series — use in order</p>
+  <div class="grid grid-cols-5 gap-3">
+    <div><div class="h-12 rounded-xl bg-chart-1"></div><p class="mt-1.5 font-mono text-xs text-muted-foreground">chart-1</p></div>
+    <div><div class="h-12 rounded-xl bg-chart-2"></div><p class="mt-1.5 font-mono text-xs text-muted-foreground">chart-2</p></div>
+    <div><div class="h-12 rounded-xl bg-chart-3"></div><p class="mt-1.5 font-mono text-xs text-muted-foreground">chart-3</p></div>
+    <div><div class="h-12 rounded-xl bg-chart-4"></div><p class="mt-1.5 font-mono text-xs text-muted-foreground">chart-4</p></div>
+    <div><div class="h-12 rounded-xl bg-chart-5"></div><p class="mt-1.5 font-mono text-xs text-muted-foreground">chart-5</p></div>
   </div>
 </section>
 
@@ -1097,15 +1081,15 @@
       <p class="ks-label">Sizes</p>
       <div class="flex items-center gap-3">
         <span class="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-[0.6875rem] font-medium text-muted-foreground">RK</span>
-        <span class="flex h-9 w-8 items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground">RK</span>
-        <span class="flex h-12 w-10 items-center justify-center rounded-full bg-muted text-sm font-medium text-muted-foreground">RK</span>
+        <span class="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground">RK</span>
+        <span class="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-sm font-medium text-muted-foreground">RK</span>
         <span class="flex h-14 w-14 items-center justify-center rounded-full bg-muted text-base font-medium text-muted-foreground">RK</span>
       </div>
     </div>
     <div>
       <p class="ks-label">With image</p>
       <div class="flex items-center gap-3">
-        <span class="flex h-12 w-10 items-center justify-center overflow-hidden rounded-full bg-muted text-muted-foreground">
+        <span class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-muted text-muted-foreground">
           <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
         </span>
         <span class="text-[0.8125rem] text-muted-foreground">Image slot, icon fallback</span>
@@ -1115,11 +1099,11 @@
       <p class="ks-label">With status</p>
       <div class="flex items-center gap-4">
         <span class="relative inline-flex">
-          <span class="flex h-12 w-10 items-center justify-center rounded-full bg-muted text-sm font-medium text-muted-foreground">JW</span>
+          <span class="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-sm font-medium text-muted-foreground">JW</span>
           <span class="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-chart-3"></span>
         </span>
         <span class="relative inline-flex">
-          <span class="flex h-12 w-10 items-center justify-center rounded-full bg-muted text-sm font-medium text-muted-foreground">TO</span>
+          <span class="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-sm font-medium text-muted-foreground">TO</span>
           <span class="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-muted-foreground"></span>
         </span>
       </div>
@@ -1127,10 +1111,10 @@
     <div>
       <p class="ks-label">Group</p>
       <div class="flex -space-x-2">
-        <span class="flex h-9 w-8 items-center justify-center rounded-full border-2 border-background bg-muted text-xs font-medium text-muted-foreground">RK</span>
-        <span class="flex h-9 w-8 items-center justify-center rounded-full border-2 border-background bg-muted text-xs font-medium text-muted-foreground">TO</span>
-        <span class="flex h-9 w-8 items-center justify-center rounded-full border-2 border-background bg-muted text-xs font-medium text-muted-foreground">JW</span>
-        <span class="flex h-9 w-8 items-center justify-center rounded-full border-2 border-background bg-secondary text-xs font-medium tabular-nums text-secondary-foreground">+3</span>
+        <span class="flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-muted text-xs font-medium text-muted-foreground">RK</span>
+        <span class="flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-muted text-xs font-medium text-muted-foreground">TO</span>
+        <span class="flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-muted text-xs font-medium text-muted-foreground">JW</span>
+        <span class="flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-secondary text-xs font-medium tabular-nums text-secondary-foreground">+3</span>
       </div>
     </div>
   </div>
@@ -1257,7 +1241,7 @@
           <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
           <span class="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-destructive"></span>
         </button>
-        <span class="flex h-9 w-8 items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground">RK</span>
+        <span class="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground">RK</span>
       </div>
     </div>
   </div>
@@ -1619,7 +1603,7 @@
         <p class="ks-label">Alert dialog — destructive</p>
         <div class="max-w-md rounded-xl border-2 border-border bg-popover p-6 text-popover-foreground shadow-lg">
           <div class="flex gap-4">
-            <span class="flex h-11 w-9 shrink-0 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-destructive/10 text-destructive">
               <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><path d="M12 9v4m0 4h.01"/></svg>
             </span>
             <div class="min-w-0">
@@ -1738,7 +1722,7 @@
       <p class="ks-label">Skeleton</p>
       <div class="space-y-3">
         <div class="flex items-center gap-3">
-          <div class="h-11 w-9 shrink-0 animate-pulse rounded-full bg-muted"></div>
+          <div class="h-9 w-9 shrink-0 animate-pulse rounded-full bg-muted"></div>
           <div class="flex-1 space-y-2">
             <div class="h-3 w-2/3 animate-pulse rounded bg-muted"></div>
             <div class="h-3 w-1/3 animate-pulse rounded bg-muted"></div>
@@ -2041,7 +2025,7 @@
         We moved eleven services across in an afternoon. The part I did not expect was that our review cycle got faster — every PR having a real URL removed an entire round of “can you screenshot it”.
       </blockquote>
       <figcaption class="mt-6 flex items-center gap-3">
-        <span class="flex h-12 w-10 items-center justify-center rounded-full bg-muted text-sm font-medium text-muted-foreground">JW</span>
+        <span class="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-sm font-medium text-muted-foreground">JW</span>
         <span class="text-sm">
           <span class="block font-medium">Joan Weller</span>
           <span class="block text-muted-foreground">Staff Engineer, Northbound</span>
@@ -2053,14 +2037,14 @@
       <figure class="rounded-xl border-2 border-border bg-card p-6">
         <blockquote class="text-sm leading-relaxed text-muted-foreground">“Rollback used to be a meeting. Now it is a button, and I have stopped dreading Friday releases.”</blockquote>
         <figcaption class="mt-4 flex items-center gap-2.5 text-[0.8125rem]">
-          <span class="flex h-9 w-8 items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground">TO</span>
+          <span class="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground">TO</span>
           <span><span class="font-medium text-foreground">Tomás Ortiz</span> · Platform Lead, Kestrel</span>
         </figcaption>
       </figure>
       <figure class="rounded-xl border-2 border-border bg-card p-6">
         <blockquote class="text-sm leading-relaxed text-muted-foreground">“The audit log alone got it through our security review. That never happens.”</blockquote>
         <figcaption class="mt-4 flex items-center gap-2.5 text-[0.8125rem]">
-          <span class="flex h-9 w-8 items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground">RK</span>
+          <span class="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground">RK</span>
           <span><span class="font-medium text-foreground">Rina Kaur</span> · CTO, Vellum Health</span>
         </figcaption>
       </figure>
