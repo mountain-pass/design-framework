@@ -29,93 +29,73 @@
      when pressed. Every button collapses by exactly this much. */
   --button-lift: 4px;
 
-  --background: oklch(0.985 0.010 110);
-  --foreground: oklch(0.25 0.020 220);
-
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.25 0.020 220);
-
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.25 0.020 220);
-
-  --primary: oklch(0.7478 0.2286 137.66);
-  --primary-foreground: oklch(1 0 0);
-
-  --secondary: oklch(0.7599 0.1495 232.1);
-  --secondary-foreground: oklch(1 0 0);
-
-  --muted: oklch(0.97 0.012 110);
-  --muted-foreground: oklch(0.52 0.020 220);
-
-  --accent: oklch(0.92 0.11 84);
-  --accent-foreground: oklch(0.27 0.028 84);
-
-  --destructive: oklch(0.68 0.18 27);
-  --destructive-foreground: oklch(1 0 0);
-
-  --border: oklch(0.88 0.015 220);
-  --input: oklch(0.58 0.022 220);
-  --ring: oklch(0.7478 0.2286 137.66);
-
-  --chart-1: oklch(0.74 0.165 145);
-  --chart-2: oklch(0.78 0.16 235);
-  --chart-3: oklch(0.72 0.12 160);
-  --chart-4: oklch(0.80 0.14 80);
-  --chart-5: oklch(0.76 0.18 330);
-
-  --sidebar: oklch(0.97 0.010 110);
-  --sidebar-foreground: oklch(0.25 0.020 220);
-  --sidebar-primary: oklch(0.77 0.18 145);
-  --sidebar-primary-foreground: oklch(0.20 0.030 145);
-  --sidebar-accent: oklch(0.92 0.060 145);
-  --sidebar-accent-foreground: oklch(0.22 0.032 145);
-  --sidebar-border: oklch(0.88 0.013 220);
-  --sidebar-ring: oklch(0.77 0.18 145);
+  --background: oklch(1 0 89.88);
+  --foreground: oklch(0.4128 0 89.88);
+  --card: oklch(1 0 89.88);
+  --card-foreground: oklch(0.4128 0 89.88);
+  --popover: oklch(1 0 89.88);
+  --popover-foreground: oklch(0.4128 0 89.88);
+  --primary: oklch(0.537 0.2289 137.63);
+  --primary-foreground: oklch(1 0 89.88);
+  --secondary: oklch(0.547 0.1513 237.07);
+  --secondary-foreground: oklch(1 0 89.88);
+  --muted: oklch(0.9761 0 89.88);
+  --muted-foreground: oklch(0.5602 0 89.88);
+  --accent: oklch(0.8575 0.1752 88.49);
+  --accent-foreground: oklch(0.4128 0 89.88);
+  --destructive: oklch(0.5866 0.2165 25.19);
+  --destructive-foreground: oklch(1 0 89.88);
+  --border: oklch(0.9219 0 89.88);
+  --input: oklch(0.6568 0 89.88);
+  --ring: oklch(0.537 0.2289 137.63);
+  --chart-1: oklch(0.7478 0.2289 137.63);
+  --chart-2: oklch(0.7181 0.1513 237.07);
+  --chart-3: oklch(0.8575 0.1752 88.49);
+  --chart-4: oklch(0.7345 0.1876 310.63);
+  --chart-5: oklch(0.6708 0.2165 25.19);
+  --sidebar: oklch(1 0 89.88);
+  --sidebar-foreground: oklch(0.4128 0 89.88);
+  --sidebar-primary: oklch(0.547 0.1513 237.07);
+  --sidebar-primary-foreground: oklch(1 0 89.88);
+  --sidebar-accent: oklch(0.9536 0.0284 228.04);
+  --sidebar-accent-foreground: oklch(0.5149 0.1513 237.07);
+  --sidebar-border: oklch(0.9219 0 89.88);
+  --sidebar-ring: oklch(0.537 0.2289 137.63);
 }
 
 .dark {
-  --background: oklch(0.19 0.020 225);
-  --foreground: oklch(0.97 0.008 225);
-
-  --card: oklch(0.22 0.018 225);
-  --card-foreground: oklch(0.97 0.008 225);
-
-  --popover: oklch(0.25 0.020 225);
-  --popover-foreground: oklch(0.97 0.008 225);
-
-  --primary: oklch(0.80 0.17 145);
-  --primary-foreground: oklch(0.2423 0.0204 223.87);
-
-  --secondary: oklch(0.7648 0.1311 232.94);
-  --secondary-foreground: oklch(0.2423 0.0204 223.87);
-
-  --muted: oklch(0.24 0.018 225);
-  --muted-foreground: oklch(0.72 0.016 225);
-
-  --accent: oklch(0.86 0.12 85);
-  --accent-foreground: oklch(0.18 0.028 85);
-
-  --destructive: oklch(0.70 0.18 28);
-  --destructive-foreground: oklch(0.18 0.024 28);
-
-  --border: oklch(0.33 0.015 225);
-  --input: oklch(0.57 0.018 225);
-  --ring: oklch(0.80 0.17 145);
-
-  --chart-1: oklch(0.76 0.17 145);
-  --chart-2: oklch(0.76 0.16 235);
-  --chart-3: oklch(0.74 0.14 160);
-  --chart-4: oklch(0.82 0.12 85);
-  --chart-5: oklch(0.78 0.18 330);
-
-  --sidebar: oklch(0.20 0.020 225);
-  --sidebar-foreground: oklch(0.95 0.010 225);
-  --sidebar-primary: oklch(0.80 0.17 145);
-  --sidebar-primary-foreground: oklch(0.2423 0.0204 223.87);
-  --sidebar-accent: oklch(0.29 0.020 225);
-  --sidebar-accent-foreground: oklch(0.92 0.010 225);
-  --sidebar-border: oklch(0.32 0.015 225);
-  --sidebar-ring: oklch(0.80 0.17 145);
+  --background: oklch(0.2304 0.0195 225.76);
+  --foreground: oklch(0.9728 0.0083 236.56);
+  --card: oklch(0.2949 0.0237 228.44);
+  --card-foreground: oklch(0.9728 0.0083 236.56);
+  --popover: oklch(0.2949 0.0237 228.44);
+  --popover-foreground: oklch(0.9728 0.0083 236.56);
+  --primary: oklch(0.7478 0.2289 137.63);
+  --primary-foreground: oklch(0.2304 0.0195 225.76);
+  --secondary: oklch(0.7181 0.1513 237.07);
+  --secondary-foreground: oklch(0.2304 0.0195 225.76);
+  --muted: oklch(0.2949 0.0237 228.44);
+  --muted-foreground: oklch(0.7032 0.0269 229.31);
+  --accent: oklch(0.8575 0.1752 88.49);
+  --accent-foreground: oklch(0.2304 0.0195 225.76);
+  --destructive: oklch(0.6708 0.2165 25.19);
+  --destructive-foreground: oklch(0.2304 0.0195 225.76);
+  --border: oklch(0.3847 0.0246 234.61);
+  --input: oklch(0.526 0.0246 234.61);
+  --ring: oklch(0.7478 0.2289 137.63);
+  --chart-1: oklch(0.7478 0.2289 137.63);
+  --chart-2: oklch(0.7181 0.1513 237.07);
+  --chart-3: oklch(0.8575 0.1752 88.49);
+  --chart-4: oklch(0.7345 0.1876 310.63);
+  --chart-5: oklch(0.6708 0.2165 25.19);
+  --sidebar: oklch(0.2304 0.0195 225.76);
+  --sidebar-foreground: oklch(0.9728 0.0083 236.56);
+  --sidebar-primary: oklch(0.7181 0.1513 237.07);
+  --sidebar-primary-foreground: oklch(0.2304 0.0195 225.76);
+  --sidebar-accent: oklch(0.2949 0.0237 228.44);
+  --sidebar-accent-foreground: oklch(0.7181 0.1513 237.07);
+  --sidebar-border: oklch(0.3847 0.0246 234.61);
+  --sidebar-ring: oklch(0.7478 0.2289 137.63);
 }
 
 @theme inline {
@@ -190,114 +170,98 @@
     text-transform: uppercase;
     letter-spacing: 0.04em;
     font-weight: 800;
-    border-style: solid;
-    border-width: 0 2px var(--button-lift);
-    border-color: transparent;
   }
 }
 
-/* The pressed-button illusion: a bottom edge thicker than the rest of the frame,
-   in a darker shade of the face, so every button reads as a physical key that
-   travels --button-lift downwards when pressed.
+/* The pressed key.
    -----------------------------------------------------------------------------
-   These rules are deliberately NOT in @layer components.
+   Buttons sit on a solid slab a few shades darker than their own face. Pressing
+   one drops it onto the slab: the button travels down by --button-lift and the
+   slab disappears underneath it, so the bottom edge stays exactly where it was
+   and only the top edge moves.
 
-   Tailwind's utilities land in @layer utilities, and layer order beats
-   specificity outright — a more specific selector in an earlier layer still
-   loses. In @layer components this whole block was being quietly overridden by
-   the utilities the buttons carry in their markup: `border-2` flattened the
-   outline button's bottom edge back to a uniform 2px, and `transition-colors`
-   dropped border-bottom-width from the transition list so the press did not
-   animate. Unlayered declarations outrank every layer, which is what keeps the
-   treatment intact on a button that also carries utilities.
+   The slab is a box-shadow and the press is a transform, rather than a bottom
+   border that shrinks. Three reasons:
 
-   The cost is that a utility can no longer override these properties on a
-   button. That is the trade this design makes for its signature component: in
-   `learn`, buttons are keys, and a stray `border-b-0` should not be able to
-   flatten one. Only bottom-edge properties are set, so `border-input` still
-   colours the frame and `hover:bg-*` still changes the face. */
+     - A border carries one colour. Pushing the face down by growing a *top*
+       border would draw a visible line across the top of any outlined button,
+       because that border is already visible at 2px. Padding avoids the line
+       but collides with whatever `py-*` the markup sets.
+     - box-shadow and transform are the only properties involved that cost no
+       layout: the press is composited rather than reflowed, at any button size,
+       fixed-height or not.
+     - It is what the slab metaphor actually describes — the slab sits outside
+       the button box, and the button visibly travels down onto it.
+
+   The cost is that box-shadow now belongs to this design; a `shadow-*` utility
+   on a button is overridden. That is the right call here: these buttons carry a
+   hard slab, never a soft drop shadow.
+
+   Unlayered, not @layer components. Tailwind's utilities land in @layer
+   utilities and layer order beats specificity outright, so in a layer these
+   rules lose to the `border-2` and `transition-colors` the markup carries. */
 
 button,
 [type="button"],
 [type="submit"] {
   /* Named explicitly rather than left to `transition-all`, because half these
-     buttons carry `transition-colors`, which does not include border widths. */
-  transition-property: border-bottom-width, border-bottom-color, border-color,
-    background-color, color, box-shadow;
+     buttons carry `transition-colors`, which covers neither transform nor
+     box-shadow. */
+  transition-property: transform, box-shadow, background-color, border-color, color;
   transition-duration: 160ms;
   transition-timing-function: cubic-bezier(0.2, 0, 0.2, 1);
 }
 
-/* --- Solid buttons: no frame, so the whole bottom edge is the lift ---------- */
-
+/* Which buttons read as keys. Ghost and link buttons are deliberately absent:
+   they have no face to drop, so they stay flat. */
 button.bg-primary,
 button.bg-secondary,
 button.bg-accent,
 button.bg-destructive,
+button.border-2,
+button.border,
+button[class*="border-input"],
 [type="button"].bg-primary,
 [type="button"].bg-secondary,
 [type="button"].bg-accent,
-[type="button"].bg-destructive {
-  border-left-width: 0;
-  border-right-width: 0;
-  border-top-width: 0;
-  border-bottom-width: var(--button-lift);
-  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
-}
-
-button.bg-primary,
-[type="button"].bg-primary {
-  border-bottom-color: color-mix(in srgb, var(--primary) 72%, black);
-}
-
-button.bg-secondary,
-[type="button"].bg-secondary {
-  border-bottom-color: color-mix(in srgb, var(--secondary) 70%, black);
-}
-
-button.bg-accent,
-[type="button"].bg-accent {
-  border-bottom-color: color-mix(in srgb, var(--accent) 72%, black);
-}
-
-button.bg-destructive,
-[type="button"].bg-destructive {
-  border-bottom-color: color-mix(in srgb, var(--destructive) 72%, black);
+[type="button"].bg-destructive,
+[type="button"].border-2,
+[type="button"].border,
+[type="button"][class*="border-input"] {
+  box-shadow: 0 var(--button-lift) 0 0 var(--button-edge, var(--border));
 }
 
 button.bg-primary:active,
 button.bg-secondary:active,
 button.bg-accent:active,
 button.bg-destructive:active,
-[type="button"].bg-primary:active,
-[type="button"].bg-secondary:active,
-[type="button"].bg-accent:active,
-[type="button"].bg-destructive:active {
-  border-bottom-width: 0;
-}
-
-/* --- Outline buttons: a 2px frame, plus the same lift again underneath ------ */
-
-button.border-2,
-button.border,
-button[class*="border-input"],
-[type="button"].border-2,
-[type="button"].border,
-[type="button"][class*="border-input"] {
-  border-bottom-width: calc(2px + var(--button-lift));
-  border-bottom-color: color-mix(in srgb, var(--input) 72%, black);
-}
-
-/* Pressed, the lift collapses and the bottom edge returns to the width of the
-   rest of the frame — the same 4px of travel as a solid button. */
 button.border-2:active,
 button.border:active,
 button[class*="border-input"]:active,
+[type="button"].bg-primary:active,
+[type="button"].bg-secondary:active,
+[type="button"].bg-accent:active,
+[type="button"].bg-destructive:active,
 [type="button"].border-2:active,
 [type="button"].border:active,
 [type="button"][class*="border-input"]:active {
-  border-bottom-width: 2px;
+  transform: translateY(var(--button-lift));
+  box-shadow: 0 0 0 0 var(--button-edge, var(--border));
 }
+
+/* The slab shade, derived from whichever fill the button carries so a recoloured
+   button keeps its own slab without a second declaration. */
+button.bg-primary,
+[type="button"].bg-primary { --button-edge: color-mix(in srgb, var(--primary) 70%, black); }
+
+button.bg-secondary,
+[type="button"].bg-secondary { --button-edge: color-mix(in srgb, var(--secondary) 70%, black); }
+
+button.bg-accent,
+[type="button"].bg-accent { --button-edge: color-mix(in srgb, var(--accent) 70%, black); }
+
+button.bg-destructive,
+[type="button"].bg-destructive { --button-edge: color-mix(in srgb, var(--destructive) 70%, black); }
 
 @media (prefers-reduced-motion: reduce) {
   *,

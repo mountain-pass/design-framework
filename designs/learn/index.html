@@ -94,7 +94,7 @@
     <div class="ml-auto flex items-center gap-3">
       <a href="./DESIGN.md" class="hidden h-9 items-center rounded-lg px-4 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:inline-flex">DESIGN.md</a>
       <button id="theme-toggle" type="button" aria-label="Toggle dark mode"
-        class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-input bg-background transition-colors hover:bg-accent hover:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+        class="inline-flex h-9 w-9 items-center justify-center rounded-lg border-2 border-input bg-background transition-colors hover:bg-accent hover:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
         <svg class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
         <svg class="hidden h-5 w-5 dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
       </button>
@@ -151,7 +151,7 @@
   
   <div class="ks-grid">
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      <div class="overflow-hidden rounded-xl border border-border">
+      <div class="overflow-hidden rounded-xl border-2 border-border">
         <div class="h-24 bg-background"></div>
         <div class="bg-card p-4">
           <div class="text-xs font-mono text-muted-foreground">--background</div>
@@ -159,7 +159,7 @@
         </div>
       </div>
       
-      <div class="overflow-hidden rounded-xl border border-border">
+      <div class="overflow-hidden rounded-xl border-2 border-border">
         <div class="h-24 bg-card"></div>
         <div class="bg-card p-4">
           <div class="text-xs font-mono text-muted-foreground">--card</div>
@@ -167,7 +167,7 @@
         </div>
       </div>
       
-      <div class="overflow-hidden rounded-xl border border-border">
+      <div class="overflow-hidden rounded-xl border-2 border-border">
         <div class="h-24 bg-popover"></div>
         <div class="bg-card p-4">
           <div class="text-xs font-mono text-muted-foreground">--popover</div>
@@ -175,7 +175,7 @@
         </div>
       </div>
       
-      <div class="overflow-hidden rounded-xl border border-border">
+      <div class="overflow-hidden rounded-xl border-2 border-border">
         <div class="flex h-24 items-center justify-center bg-primary">
           <span class="text-lg font-bold text-primary-foreground">Primary</span>
         </div>
@@ -185,7 +185,7 @@
         </div>
       </div>
       
-      <div class="overflow-hidden rounded-xl border border-border">
+      <div class="overflow-hidden rounded-xl border-2 border-border">
         <div class="flex h-24 items-center justify-center bg-secondary">
           <span class="text-base font-semibold text-secondary-foreground">Secondary</span>
         </div>
@@ -195,7 +195,7 @@
         </div>
       </div>
       
-      <div class="overflow-hidden rounded-xl border border-border">
+      <div class="overflow-hidden rounded-xl border-2 border-border">
         <div class="flex h-24 items-center justify-center bg-accent">
           <span class="text-base font-semibold text-accent-foreground">Accent</span>
         </div>
@@ -205,7 +205,7 @@
         </div>
       </div>
       
-      <div class="overflow-hidden rounded-xl border border-border">
+      <div class="overflow-hidden rounded-xl border-2 border-border">
         <div class="flex h-24 items-center justify-center bg-muted">
           <span class="text-sm font-medium text-muted-foreground">Muted</span>
         </div>
@@ -215,7 +215,7 @@
         </div>
       </div>
       
-      <div class="overflow-hidden rounded-xl border border-border">
+      <div class="overflow-hidden rounded-xl border-2 border-border">
         <div class="flex h-24 items-center justify-center bg-destructive">
           <span class="text-base font-semibold text-destructive-foreground">Destructive</span>
         </div>
@@ -238,7 +238,7 @@
     
     <div>
       <p class="ks-label">Chart colors</p>
-      <div class="flex h-16 overflow-hidden rounded-xl border border-border">
+      <div class="flex h-16 overflow-hidden rounded-xl border-2 border-border">
         <div class="flex-1 bg-chart-1"></div>
         <div class="flex-1 bg-chart-2"></div>
         <div class="flex-1 bg-chart-3"></div>
@@ -409,14 +409,14 @@
     
     <div>
       <p class="ks-label">Card on background</p>
-      <div class="rounded-xl border border-border bg-card p-8 shadow-md">
+      <div class="rounded-xl border-2 border-border bg-card p-8 shadow-md">
         <h3 class="text-xl font-semibold">Example card</h3>
         <p class="mt-2 text-muted-foreground">Cards use white backgrounds with soft shadows and generous rounded corners. The border adds definition without being harsh.</p>
         <div class="mt-6 flex gap-3">
           <button class="inline-flex h-10 items-center justify-center rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
             Learn more
           </button>
-          <button class="inline-flex h-10 items-center justify-center rounded-lg border border-input bg-background px-5 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground">
+          <button class="inline-flex h-10 items-center justify-center rounded-lg border-2 border-input bg-background px-5 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground">
             Cancel
           </button>
         </div>
@@ -674,7 +674,7 @@
   <p class="ks-note">A realistic form showing spacing, rhythm, validation, and field grouping.</p>
   
   <div class="ks-grid">
-    <div class="max-w-2xl rounded-xl border border-border bg-card p-8 shadow-md">
+    <div class="max-w-2xl rounded-xl border-2 border-border bg-card p-8 shadow-md">
       <div class="border-b border-border pb-6">
         <h3 class="text-xl font-bold">Create your account</h3>
         <p class="mt-2 text-sm text-muted-foreground">Get started with a free account. No credit card required.</p>
@@ -757,7 +757,7 @@
   <p class="ks-note">Border, no shadow — a card sits <em>in</em> the page, not above it. Padding is <span class="font-mono">p-6</span>, or <span class="font-mono">p-4</span> for compact variants.</p>
 
   <div class="ks-grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-    <div class="rounded-xl border border-border bg-card">
+    <div class="rounded-xl border-2 border-border bg-card">
       <div class="p-6 pb-4">
         <h3 class="text-xl font-semibold tracking-[-0.015em]">Basic card</h3>
         <p class="mt-1 text-sm text-muted-foreground">Header, content, footer. The default container for everything.</p>
@@ -771,7 +771,7 @@
       </div>
     </div>
 
-    <div class="rounded-xl border border-border bg-card">
+    <div class="rounded-xl border-2 border-border bg-card">
       <div class="flex items-start justify-between gap-4 p-6 pb-4">
         <div>
           <h3 class="text-xl font-semibold tracking-[-0.015em]">With header action</h3>
@@ -794,7 +794,7 @@
       </div>
     </div>
 
-    <div class="overflow-hidden rounded-xl border border-border bg-card">
+    <div class="overflow-hidden rounded-xl border-2 border-border bg-card">
       <div class="flex h-32 items-center justify-center bg-muted">
         <svg class="h-9 w-8 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.35-4.35a2 2 0 0 0-2.83 0L3 21"/></svg>
       </div>
@@ -807,7 +807,7 @@
 
   <p class="ks-label mt-10">Stat cards</p>
   <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-    <div class="rounded-xl border border-border bg-card p-4">
+    <div class="rounded-xl border-2 border-border bg-card p-4">
       <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">Requests</p>
       <p class="mt-2 text-3xl font-semibold tabular-nums tracking-[-0.025em]">1.28M</p>
       <p class="mt-1.5 flex items-center gap-1 text-[0.8125rem]">
@@ -816,7 +816,7 @@
         <span class="text-muted-foreground">vs last week</span>
       </p>
     </div>
-    <div class="rounded-xl border border-border bg-card p-4">
+    <div class="rounded-xl border-2 border-border bg-card p-4">
       <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">p95 latency</p>
       <p class="mt-2 text-3xl font-semibold tabular-nums tracking-[-0.025em]">184<span class="ml-1 text-lg text-muted-foreground">ms</span></p>
       <p class="mt-1.5 flex items-center gap-1 text-[0.8125rem]">
@@ -825,12 +825,12 @@
         <span class="text-muted-foreground">vs last week</span>
       </p>
     </div>
-    <div class="rounded-xl border border-border bg-card p-4">
+    <div class="rounded-xl border-2 border-border bg-card p-4">
       <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">Error rate</p>
       <p class="mt-2 text-3xl font-semibold tabular-nums tracking-[-0.025em]">0.03<span class="ml-0.5 text-lg text-muted-foreground">%</span></p>
       <p class="mt-1.5 text-[0.8125rem] text-muted-foreground">Within the 0.1% budget</p>
     </div>
-    <div class="rounded-xl border border-border bg-card p-4">
+    <div class="rounded-xl border-2 border-border bg-card p-4">
       <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">Build minutes</p>
       <p class="mt-2 text-3xl font-semibold tabular-nums tracking-[-0.025em]">412</p>
       <div class="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-muted">
@@ -847,17 +847,17 @@
   <h2 class="ks-lede">Table</h2>
   <p class="ks-note">Rows are 44px. Numeric columns are right-aligned with <span class="font-mono">tabular-nums</span> — always. Header is <span class="font-mono">bg-muted/50</span> with uppercase caption type.</p>
 
-  <div class="mt-8 overflow-hidden rounded-xl border border-border bg-card">
+  <div class="mt-8 overflow-hidden rounded-xl border-2 border-border bg-card">
     <div class="flex flex-wrap items-center gap-3 border-b border-border p-4">
       <div class="relative min-w-56 flex-1">
         <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        <input type="search" placeholder="Filter deployments…" class="flex h-11 w-full rounded-xl border border-input bg-background py-1 pl-9 pr-3 text-sm shadow-md placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+        <input type="search" placeholder="Filter deployments…" class="flex h-11 w-full rounded-xl border-2 border-input bg-background py-1 pl-9 pr-3 text-sm shadow-md placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
       </div>
-      <button class="inline-flex h-11 items-center gap-2 rounded-xl border border-input bg-background px-3 text-sm font-medium shadow-md transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+      <button class="inline-flex h-11 items-center gap-2 rounded-xl border-2 border-input bg-background px-3 text-sm font-medium shadow-md transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
         Status
       </button>
-      <button class="inline-flex h-11 items-center gap-2 rounded-xl border border-input bg-background px-3 text-sm font-medium shadow-md transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+      <button class="inline-flex h-11 items-center gap-2 rounded-xl border-2 border-input bg-background px-3 text-sm font-medium shadow-md transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M3 9h18"/></svg>
         Columns
       </button>
@@ -896,7 +896,7 @@
             <td><button aria-label="Row actions" class="inline-flex h-9 w-8 items-center justify-center rounded-lg transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
           </tr>
           <tr class="border-b border-border transition-colors hover:bg-muted/50">
-            <td><span class="flex h-4 w-4 rounded-sm border border-input bg-background"></span></td>
+            <td><span class="flex h-4 w-4 rounded-sm border-2 border-input bg-background"></span></td>
             <td class="font-mono text-[0.8125rem]">acme-web-3c90d17</td>
             <td><span class="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary"><span class="h-1.5 w-1.5 rounded-full bg-primary"></span>Building</span></td>
             <td><span class="flex items-center gap-2"><span class="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-[0.6875rem] font-medium text-muted-foreground">TO</span>Tomás Ortiz</span></td>
@@ -905,7 +905,7 @@
             <td><button aria-label="Row actions" class="inline-flex h-9 w-8 items-center justify-center rounded-lg transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
           </tr>
           <tr class="border-b border-border transition-colors hover:bg-muted/50">
-            <td><span class="flex h-4 w-4 rounded-sm border border-input bg-background"></span></td>
+            <td><span class="flex h-4 w-4 rounded-sm border-2 border-input bg-background"></span></td>
             <td class="font-mono text-[0.8125rem]">acme-web-71b0e42</td>
             <td><span class="inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-2.5 py-0.5 text-xs font-medium text-destructive"><span class="h-1.5 w-1.5 rounded-full bg-destructive"></span>Failed</span></td>
             <td><span class="flex items-center gap-2"><span class="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-[0.6875rem] font-medium text-muted-foreground">RK</span>Rina Kaur</span></td>
@@ -914,7 +914,7 @@
             <td><button aria-label="Row actions" class="inline-flex h-9 w-8 items-center justify-center rounded-lg transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
           </tr>
           <tr class="border-b border-border transition-colors hover:bg-muted/50">
-            <td><span class="flex h-4 w-4 rounded-sm border border-input bg-background"></span></td>
+            <td><span class="flex h-4 w-4 rounded-sm border-2 border-input bg-background"></span></td>
             <td class="font-mono text-[0.8125rem]">acme-web-d4419aa</td>
             <td><span class="inline-flex items-center gap-1.5 rounded-full bg-chart-3/10 px-2.5 py-0.5 text-xs font-medium text-chart-3"><span class="h-1.5 w-1.5 rounded-full bg-chart-3"></span>Ready</span></td>
             <td><span class="flex items-center gap-2"><span class="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-[0.6875rem] font-medium text-muted-foreground">JW</span>Joan Weller</span></td>
@@ -923,7 +923,7 @@
             <td><button aria-label="Row actions" class="inline-flex h-9 w-8 items-center justify-center rounded-lg transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
           </tr>
           <tr class="transition-colors hover:bg-muted/50">
-            <td><span class="flex h-4 w-4 rounded-sm border border-input bg-background"></span></td>
+            <td><span class="flex h-4 w-4 rounded-sm border-2 border-input bg-background"></span></td>
             <td class="font-mono text-[0.8125rem]">acme-web-0ae7c31</td>
             <td><span class="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground"><span class="h-1.5 w-1.5 rounded-full bg-muted-foreground"></span>Cancelled</span></td>
             <td><span class="flex items-center gap-2"><span class="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-[0.6875rem] font-medium text-muted-foreground">TO</span>Tomás Ortiz</span></td>
@@ -938,8 +938,8 @@
     <div class="flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-3">
       <p class="text-[0.8125rem] text-muted-foreground"><span class="tabular-nums">1</span> of <span class="tabular-nums">5</span> rows selected</p>
       <div class="flex items-center gap-1">
-        <button class="inline-flex h-9 items-center rounded-xl border border-input bg-background px-3 text-xs font-medium shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Previous</button>
-        <button class="inline-flex h-9 items-center rounded-xl border border-input bg-background px-3 text-xs font-medium shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Next</button>
+        <button class="inline-flex h-9 items-center rounded-xl border-2 border-input bg-background px-3 text-xs font-medium shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Previous</button>
+        <button class="inline-flex h-9 items-center rounded-xl border-2 border-input bg-background px-3 text-xs font-medium shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Next</button>
       </div>
     </div>
   </div>
@@ -952,7 +952,7 @@
   <p class="ks-note">Three list shapes that carry most of an application: a settings list, an activity feed, and a description list.</p>
 
   <div class="ks-grid grid-cols-1 lg:grid-cols-3">
-    <div class="rounded-xl border border-border bg-card">
+    <div class="rounded-xl border-2 border-border bg-card">
       <div class="border-b border-border px-6 py-4">
         <h3 class="text-base font-semibold tracking-[-0.01em]">Notifications</h3>
       </div>
@@ -981,7 +981,7 @@
       </div>
     </div>
 
-    <div class="rounded-xl border border-border bg-card">
+    <div class="rounded-xl border-2 border-border bg-card">
       <div class="border-b border-border px-6 py-4">
         <h3 class="text-base font-semibold tracking-[-0.01em]">Activity</h3>
       </div>
@@ -1019,7 +1019,7 @@
       </div>
     </div>
 
-    <div class="rounded-xl border border-border bg-card">
+    <div class="rounded-xl border-2 border-border bg-card">
       <div class="border-b border-border px-6 py-4">
         <h3 class="text-base font-semibold tracking-[-0.01em]">Build details</h3>
       </div>
@@ -1057,7 +1057,7 @@
         <span class="inline-flex items-center rounded-full bg-primary px-2.5 py-0.5 text-xs font-medium text-primary-foreground">Default</span>
         <span class="inline-flex items-center rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium text-secondary-foreground">Secondary</span>
         <span class="inline-flex items-center rounded-full bg-destructive px-2.5 py-0.5 text-xs font-medium text-destructive-foreground">Destructive</span>
-        <span class="inline-flex items-center rounded-full border border-border px-2.5 py-0.5 text-xs font-medium">Outline</span>
+        <span class="inline-flex items-center rounded-full border-2 border-border px-2.5 py-0.5 text-xs font-medium">Outline</span>
       </div>
     </div>
 
@@ -1075,7 +1075,7 @@
     <div>
       <p class="ks-label">Counters</p>
       <div class="flex flex-wrap items-center gap-6">
-        <button aria-label="Notifications, 12 unread" class="relative inline-flex h-11 w-9 items-center justify-center rounded-xl border border-input bg-background shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+        <button aria-label="Notifications, 12 unread" class="relative inline-flex h-11 w-9 items-center justify-center rounded-xl border-2 border-input bg-background shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
           <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
           <span class="absolute -right-1.5 -top-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[0.625rem] font-medium tabular-nums text-destructive-foreground">12</span>
         </button>
@@ -1143,7 +1143,7 @@
   <p class="ks-note">Chart series are used in order: a two-series chart uses <span class="font-mono">chart-1</span> and <span class="font-mono">chart-2</span>, never <span class="font-mono">chart-1</span> and <span class="font-mono">chart-4</span>. Gridlines are <span class="font-mono">border</span>, labels are <span class="font-mono">muted-foreground</span>.</p>
 
   <div class="ks-grid grid-cols-1 lg:grid-cols-3">
-    <div class="rounded-xl border border-border bg-card p-6 lg:col-span-2">
+    <div class="rounded-xl border-2 border-border bg-card p-6 lg:col-span-2">
       <div class="flex items-start justify-between gap-4">
         <div>
           <h3 class="text-base font-semibold tracking-[-0.01em]">Requests by region</h3>
@@ -1182,7 +1182,7 @@
     </div>
 
     <div class="space-y-6">
-      <div class="rounded-xl border border-border bg-card p-6">
+      <div class="rounded-xl border-2 border-border bg-card p-6">
         <h3 class="text-base font-semibold tracking-[-0.01em]">p95 latency</h3>
         <p class="mt-0.5 text-[0.8125rem] text-muted-foreground">Area chart, single series</p>
         <svg viewBox="0 0 280 110" class="mt-4 w-full" role="img" aria-label="Area chart of p95 latency">
@@ -1201,7 +1201,7 @@
         </svg>
       </div>
 
-      <div class="rounded-xl border border-border bg-card p-6">
+      <div class="rounded-xl border-2 border-border bg-card p-6">
         <h3 class="text-base font-semibold tracking-[-0.01em]">Sparklines</h3>
         <div class="mt-4 space-y-3">
           <div class="flex items-center gap-3">
@@ -1234,7 +1234,7 @@
   <p class="ks-note">Shown here as components only. <em>Where</em> these go on a page is a layout decision — see <span class="font-mono">layouts/</span>. The sidebar uses the <span class="font-mono">--sidebar-*</span> tokens, which sit one step off the page background.</p>
 
   <p class="ks-label mt-8">Top bar</p>
-  <div class="overflow-hidden rounded-xl border border-border">
+  <div class="overflow-hidden rounded-xl border-2 border-border">
     <div class="flex h-14 items-center gap-4 border-b border-border bg-card px-4">
       <div class="flex items-center gap-2.5">
         <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -1251,7 +1251,7 @@
       <div class="ml-auto flex items-center gap-2">
         <div class="relative hidden sm:block">
           <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          <input type="search" placeholder="Search…" class="h-9 w-48 rounded-xl border border-input bg-background pl-9 pr-3 text-sm shadow-md placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+          <input type="search" placeholder="Search…" class="h-9 w-48 rounded-xl border-2 border-input bg-background pl-9 pr-3 text-sm shadow-md placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
         </div>
         <button aria-label="Notifications" class="relative inline-flex h-9 w-8 items-center justify-center rounded-lg transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
           <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
@@ -1267,7 +1267,7 @@
       <p class="ks-label">Sidebar</p>
       <nav class="w-64 rounded-xl border border-sidebar-border bg-sidebar p-2 text-sidebar-foreground">
         <p class="px-2 py-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">Platform</p>
-        <a href="#nav" class="flex h-9 items-center gap-2.5 rounded-lg bg-sidebar-accent px-2 text-sm font-medium text-sidebar-accent-foreground">
+        <a href="#nav" class="flex h-9 items-center gap-2.5 rounded-xl border-2 border-sidebar-ring/40 bg-sidebar-accent px-2 text-sm font-bold uppercase tracking-wide text-sidebar-accent-foreground">
           <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
           Overview
         </a>
@@ -1323,7 +1323,7 @@
 
         <div class="flex-1">
           <p class="ks-label">Mobile bottom bar</p>
-          <div class="flex items-center justify-around rounded-xl border border-border bg-card px-2 py-2">
+          <div class="flex items-center justify-around rounded-xl border-2 border-border bg-card px-2 py-2">
             <span class="flex flex-col items-center gap-1 rounded-lg px-3 py-1 text-primary">
               <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
               <span class="text-[0.6875rem] font-medium">Home</span>
@@ -1428,7 +1428,7 @@
           Previous
         </button>
         <button class="inline-flex h-11 w-9 items-center justify-center rounded-lg text-sm tabular-nums transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">1</button>
-        <button aria-current="page" class="inline-flex h-11 w-9 items-center justify-center rounded-xl border border-input bg-background text-sm font-medium tabular-nums shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">2</button>
+        <button aria-current="page" class="inline-flex h-11 w-9 items-center justify-center rounded-xl border-2 border-input bg-background text-sm font-medium tabular-nums shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">2</button>
         <button class="inline-flex h-11 w-9 items-center justify-center rounded-lg text-sm tabular-nums transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">3</button>
         <span class="inline-flex h-11 w-9 items-center justify-center text-sm text-muted-foreground">…</span>
         <button class="inline-flex h-11 w-9 items-center justify-center rounded-lg text-sm tabular-nums transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">24</button>
@@ -1451,7 +1451,7 @@
   <div class="ks-grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
     <div>
       <p class="ks-label">Dropdown menu</p>
-      <div class="w-60 rounded-xl border border-border bg-popover p-1 text-popover-foreground shadow-md">
+      <div class="w-60 rounded-xl border-2 border-border bg-popover p-1 text-popover-foreground shadow-md">
         <p class="px-2 py-1.5 text-xs font-medium text-muted-foreground">rina@acme.com</p>
         <div class="my-1 h-px bg-border"></div>
         <button class="flex h-9 w-full items-center gap-2.5 rounded-sm bg-accent px-2 text-sm text-accent-foreground">
@@ -1488,11 +1488,11 @@
 
     <div class="lg:col-span-2">
       <p class="ks-label">Command palette</p>
-      <div class="max-w-xl overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-lg">
+      <div class="max-w-xl overflow-hidden rounded-xl border-2 border-border bg-popover text-popover-foreground shadow-lg">
         <div class="flex items-center gap-2.5 border-b border-border px-3">
           <svg class="h-4 w-4 shrink-0 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           <input type="text" value="deploy" class="h-11 w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground">
-          <kbd class="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[0.6875rem] text-muted-foreground">esc</kbd>
+          <kbd class="rounded border-2 border-border bg-muted px-1.5 py-0.5 font-mono text-[0.6875rem] text-muted-foreground">esc</kbd>
         </div>
         <div class="max-h-72 overflow-y-auto p-1">
           <p class="px-2 py-1.5 text-xs font-medium text-muted-foreground">Actions</p>
@@ -1523,8 +1523,8 @@
           </button>
         </div>
         <div class="flex items-center gap-4 border-t border-border px-3 py-2 text-xs text-muted-foreground">
-          <span class="inline-flex items-center gap-1.5"><kbd class="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[0.6875rem]">↑↓</kbd> navigate</span>
-          <span class="inline-flex items-center gap-1.5"><kbd class="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[0.6875rem]">⏎</kbd> select</span>
+          <span class="inline-flex items-center gap-1.5"><kbd class="rounded border-2 border-border bg-muted px-1.5 py-0.5 font-mono text-[0.6875rem]">↑↓</kbd> navigate</span>
+          <span class="inline-flex items-center gap-1.5"><kbd class="rounded border-2 border-border bg-muted px-1.5 py-0.5 font-mono text-[0.6875rem]">⏎</kbd> select</span>
         </div>
       </div>
     </div>
@@ -1540,7 +1540,7 @@
   <p class="ks-note">Intent is carried by the icon and a <span class="font-mono">/10</span> tinted background — not by a heavy coloured left bar, which fights the card border for the same job.</p>
 
   <div class="ks-grid grid-cols-1 lg:grid-cols-2">
-    <div class="flex gap-3 rounded-xl border border-border bg-muted/40 p-4">
+    <div class="flex gap-3 rounded-xl border-2 border-border bg-muted/40 p-4">
       <svg class="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
       <div class="min-w-0 space-y-1">
         <p class="text-sm font-medium">Preview deployments are enabled</p>
@@ -1585,7 +1585,7 @@
   <div class="ks-grid grid-cols-1 lg:grid-cols-2">
     <div>
       <p class="ks-label">Dialog</p>
-      <div class="max-w-md rounded-xl border border-border bg-popover text-popover-foreground shadow-lg">
+      <div class="max-w-md rounded-xl border-2 border-border bg-popover text-popover-foreground shadow-lg">
         <div class="p-6 pb-4">
           <div class="flex items-start justify-between gap-4">
             <div>
@@ -1600,7 +1600,7 @@
         <div class="space-y-4 px-6 pb-6">
           <div class="space-y-2">
             <label for="d1" class="text-sm font-medium leading-none">Domain</label>
-            <input id="d1" placeholder="app.example.com" class="flex h-11 w-full rounded-xl border border-input bg-background px-3 py-1 text-sm shadow-md placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+            <input id="d1" placeholder="app.example.com" class="flex h-11 w-full rounded-xl border-2 border-input bg-background px-3 py-1 text-sm shadow-md placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
           </div>
           <div class="flex items-center gap-2">
             <span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border border-primary bg-primary text-primary-foreground"><svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
@@ -1617,7 +1617,7 @@
     <div class="space-y-8">
       <div>
         <p class="ks-label">Alert dialog — destructive</p>
-        <div class="max-w-md rounded-xl border border-border bg-popover p-6 text-popover-foreground shadow-lg">
+        <div class="max-w-md rounded-xl border-2 border-border bg-popover p-6 text-popover-foreground shadow-lg">
           <div class="flex gap-4">
             <span class="flex h-11 w-9 shrink-0 items-center justify-center rounded-full bg-destructive/10 text-destructive">
               <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><path d="M12 9v4m0 4h.01"/></svg>
@@ -1628,7 +1628,7 @@
             </div>
           </div>
           <div class="mt-5 flex items-center justify-end gap-3">
-            <button class="inline-flex h-11 items-center rounded-xl border border-input bg-background px-4 text-sm font-medium shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Cancel</button>
+            <button class="inline-flex h-11 items-center rounded-xl border-2 border-input bg-background px-4 text-sm font-medium shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Cancel</button>
             <button class="inline-flex h-11 items-center rounded-lg bg-destructive px-4 text-sm font-medium text-destructive-foreground shadow-md transition-colors hover:bg-destructive/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Delete project</button>
           </div>
         </div>
@@ -1637,7 +1637,7 @@
       <div class="grid gap-6 sm:grid-cols-2">
         <div>
           <p class="ks-label">Popover</p>
-          <div class="w-64 rounded-xl border border-border bg-popover p-4 text-popover-foreground shadow-md">
+          <div class="w-64 rounded-xl border-2 border-border bg-popover p-4 text-popover-foreground shadow-md">
             <p class="text-sm font-medium">Build minutes</p>
             <p class="mt-1 text-sm text-muted-foreground">Time spent compiling, across all projects in this workspace.</p>
             <div class="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-muted"><div class="h-full w-[41%] rounded-full bg-primary"></div></div>
@@ -1647,8 +1647,8 @@
         <div>
           <p class="ks-label">Tooltip</p>
           <div class="inline-flex flex-col items-start gap-1.5">
-            <span class="rounded-xl border border-border bg-popover px-2.5 py-1.5 text-xs text-popover-foreground shadow-md">Copy deployment URL</span>
-            <button aria-label="Copy" class="inline-flex h-11 w-9 items-center justify-center rounded-xl border border-input bg-background shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+            <span class="rounded-xl border-2 border-border bg-popover px-2.5 py-1.5 text-xs text-popover-foreground shadow-md">Copy deployment URL</span>
+            <button aria-label="Copy" class="inline-flex h-11 w-9 items-center justify-center rounded-xl border-2 border-input bg-background shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
               <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             </button>
           </div>
@@ -1658,7 +1658,7 @@
   </div>
 
   <p class="ks-label mt-10">Sheet / drawer</p>
-  <div class="flex max-w-md flex-col rounded-xl border border-border bg-popover text-popover-foreground shadow-lg">
+  <div class="flex max-w-md flex-col rounded-xl border-2 border-border bg-popover text-popover-foreground shadow-lg">
     <div class="flex items-start justify-between gap-4 border-b border-border p-6">
       <div>
         <h3 class="text-lg font-semibold tracking-[-0.015em]">Environment variables</h3>
@@ -1683,7 +1683,7 @@
       </div>
     </div>
     <div class="border-t border-border px-6 py-4">
-      <button class="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-input bg-background text-sm font-medium shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+      <button class="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border-2 border-input bg-background text-sm font-medium shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5v14"/></svg>
         Add variable
       </button>
@@ -1757,7 +1757,7 @@
   <p class="ks-note">Popover surface, <span class="font-mono">shadow-lg</span>, stacked bottom-right in a real application. Every toast is dismissible; destructive ones do not auto-dismiss.</p>
 
   <div class="mt-8 flex max-w-md flex-col gap-3">
-    <div class="flex items-start gap-3 rounded-xl border border-border bg-popover p-4 text-popover-foreground shadow-lg">
+    <div class="flex items-start gap-3 rounded-xl border-2 border-border bg-popover p-4 text-popover-foreground shadow-lg">
       <div class="min-w-0 flex-1 space-y-1">
         <p class="text-sm font-medium">Settings saved</p>
         <p class="text-sm text-muted-foreground">Changes apply to the next deployment.</p>
@@ -1767,7 +1767,7 @@
       </button>
     </div>
 
-    <div class="flex items-start gap-3 rounded-xl border border-border bg-popover p-4 text-popover-foreground shadow-lg">
+    <div class="flex items-start gap-3 rounded-xl border-2 border-border bg-popover p-4 text-popover-foreground shadow-lg">
       <svg class="mt-0.5 h-4 w-4 shrink-0 text-chart-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
       <div class="min-w-0 flex-1 space-y-1">
         <p class="text-sm font-medium">Deployment promoted</p>
@@ -1808,13 +1808,13 @@
       </button>
     </div>
 
-    <div class="flex flex-col items-center justify-center rounded-xl border border-border px-6 py-12 text-center">
+    <div class="flex flex-col items-center justify-center rounded-xl border-2 border-border px-6 py-12 text-center">
       <span class="flex h-11 w-11 items-center justify-center rounded-full bg-muted text-muted-foreground">
         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
       </span>
       <h3 class="mt-4 text-base font-semibold tracking-[-0.01em]">No results for “rollbck”</h3>
       <p class="mt-1.5 max-w-xs text-sm text-muted-foreground">Check the spelling, or search across all workspaces instead.</p>
-      <button class="mt-5 inline-flex h-11 items-center rounded-xl border border-input bg-background px-4 text-sm font-medium shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Clear filters</button>
+      <button class="mt-5 inline-flex h-11 items-center rounded-xl border-2 border-input bg-background px-4 text-sm font-medium shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Clear filters</button>
     </div>
 
     <div class="flex flex-col items-center justify-center rounded-xl border border-destructive/30 bg-destructive/5 px-6 py-12 text-center">
@@ -1823,7 +1823,7 @@
       </span>
       <h3 class="mt-4 text-base font-semibold tracking-[-0.01em]">Could not load deployments</h3>
       <p class="mt-1.5 max-w-xs text-sm text-muted-foreground">The API returned a 503. This is usually temporary.</p>
-      <button class="mt-5 inline-flex h-11 items-center gap-2 rounded-xl border border-input bg-background px-4 text-sm font-medium shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+      <button class="mt-5 inline-flex h-11 items-center gap-2 rounded-xl border-2 border-input bg-background px-4 text-sm font-medium shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
         Try again
       </button>
@@ -1839,7 +1839,7 @@
   <h2 class="ks-lede">Application page header</h2>
   <p class="ks-note">Breadcrumb, title, description, actions, tabs. This is the top of nearly every in-app page, and getting it consistent is most of what makes an application feel coherent.</p>
 
-  <div class="mt-8 rounded-xl border border-border bg-card">
+  <div class="mt-8 rounded-xl border-2 border-border bg-card">
     <div class="p-6 pb-0">
       <nav aria-label="Breadcrumb">
         <ol class="flex flex-wrap items-center gap-1.5 text-sm">
@@ -1859,11 +1859,11 @@
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
-          <button class="inline-flex h-11 items-center gap-2 rounded-xl border border-input bg-background px-3 text-sm font-medium shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          <button class="inline-flex h-11 items-center gap-2 rounded-xl border-2 border-input bg-background px-3 text-sm font-medium shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
             Visit
           </button>
-          <button aria-label="More options" class="inline-flex h-11 w-9 items-center justify-center rounded-xl border border-input bg-background shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          <button aria-label="More options" class="inline-flex h-11 w-9 items-center justify-center rounded-xl border-2 border-input bg-background shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
           </button>
           <button class="inline-flex h-11 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground shadow-md transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
@@ -1892,10 +1892,10 @@
   <h2 class="ks-lede">Marketing hero</h2>
   <p class="ks-note">Marketing bands use generous vertical spacing. Backgrounds can use gradients or solid colors — playful embraces vibrant treatments.</p>
 
-  <div class="mt-8 overflow-hidden rounded-xl border border-border bg-card">
+  <div class="mt-8 overflow-hidden rounded-xl border-2 border-border bg-card">
     <div class="grid items-center gap-10 px-6 py-16 lg:grid-cols-2 lg:px-12">
       <div>
-        <span class="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
+        <span class="inline-flex items-center gap-1.5 rounded-full border-2 border-border bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
           <span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
           v4.0 is now generally available
         </span>
@@ -1906,12 +1906,12 @@
             Start deploying
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
-          <button class="inline-flex h-12 items-center gap-2 rounded-xl border border-input bg-background px-6 text-sm font-medium shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Read the docs</button>
+          <button class="inline-flex h-12 items-center gap-2 rounded-xl border-2 border-input bg-background px-6 text-sm font-medium shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Read the docs</button>
         </div>
         <p class="mt-5 text-[0.8125rem] text-muted-foreground">Free for personal projects. No card required.</p>
       </div>
 
-      <div class="rounded-xl border border-border bg-background p-1 shadow-sm">
+      <div class="rounded-xl border-2 border-border bg-background p-1 shadow-sm">
         <div class="flex items-center gap-1.5 px-3 py-2">
           <span class="h-2.5 w-2.5 rounded-full bg-muted"></span>
           <span class="h-2.5 w-2.5 rounded-full bg-muted"></span>
@@ -1936,42 +1936,42 @@
   <h2 class="ks-lede">Feature grid</h2>
 
   <div class="ks-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-    <div class="rounded-xl border border-border bg-card p-6">
+    <div class="rounded-xl border-2 border-border bg-card p-6">
       <span class="flex h-11 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-11l1-8Z"/></svg>
       </span>
       <h3 class="mt-4 text-base font-semibold tracking-[-0.01em]">Instant previews</h3>
       <p class="mt-1.5 text-sm text-muted-foreground">Every pull request gets a URL before the reviewer opens it.</p>
     </div>
-    <div class="rounded-xl border border-border bg-card p-6">
+    <div class="rounded-xl border-2 border-border bg-card p-6">
       <span class="flex h-11 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       </span>
       <h3 class="mt-4 text-base font-semibold tracking-[-0.01em]">Certificates handled</h3>
       <p class="mt-1.5 text-sm text-muted-foreground">TLS issued and renewed automatically for every domain you add.</p>
     </div>
-    <div class="rounded-xl border border-border bg-card p-6">
+    <div class="rounded-xl border-2 border-border bg-card p-6">
       <span class="flex h-11 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
       </span>
       <h3 class="mt-4 text-base font-semibold tracking-[-0.01em]">One-click rollback</h3>
       <p class="mt-1.5 text-sm text-muted-foreground">Every deployment stays addressable. Promote any of them back to production.</p>
     </div>
-    <div class="rounded-xl border border-border bg-card p-6">
+    <div class="rounded-xl border-2 border-border bg-card p-6">
       <span class="flex h-11 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
       </span>
       <h3 class="mt-4 text-base font-semibold tracking-[-0.01em]">Analytics built in</h3>
       <p class="mt-1.5 text-sm text-muted-foreground">Real user metrics per route, without adding a third-party script.</p>
     </div>
-    <div class="rounded-xl border border-border bg-card p-6">
+    <div class="rounded-xl border-2 border-border bg-card p-6">
       <span class="flex h-11 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20Z"/></svg>
       </span>
       <h3 class="mt-4 text-base font-semibold tracking-[-0.01em]">Edge by default</h3>
       <p class="mt-1.5 text-sm text-muted-foreground">Static assets served from 40 regions with no configuration.</p>
     </div>
-    <div class="rounded-xl border border-border bg-card p-6">
+    <div class="rounded-xl border-2 border-border bg-card p-6">
       <span class="flex h-11 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
       </span>
@@ -1988,7 +1988,7 @@
   <p class="ks-note">The recommended tier is marked with a border and a badge — not with a different background colour, which would introduce a second accent surface.</p>
 
   <div class="ks-grid grid-cols-1 lg:grid-cols-3">
-    <div class="flex flex-col rounded-xl border border-border bg-card p-6">
+    <div class="flex flex-col rounded-xl border-2 border-border bg-card p-6">
       <h3 class="text-base font-semibold tracking-[-0.01em]">Hobby</h3>
       <p class="mt-1.5 text-sm text-muted-foreground">For personal projects and experiments.</p>
       <p class="mt-5"><span class="text-4xl font-semibold tabular-nums tracking-[-0.025em]">$0</span><span class="ml-1.5 text-sm text-muted-foreground">/month</span></p>
@@ -1997,7 +1997,7 @@
         <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-chart-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>100 build minutes</li>
         <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-chart-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Community support</li>
       </ul>
-      <button class="mt-6 inline-flex h-11 w-full items-center justify-center rounded-xl border border-input bg-background text-sm font-medium shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Get started</button>
+      <button class="mt-6 inline-flex h-11 w-full items-center justify-center rounded-xl border-2 border-input bg-background text-sm font-medium shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Get started</button>
     </div>
 
     <div class="relative flex flex-col rounded-xl border-2 border-primary bg-card p-6">
@@ -2014,7 +2014,7 @@
       <button class="mt-6 inline-flex h-11 w-full items-center justify-center rounded-lg bg-primary text-sm font-medium text-primary-foreground shadow-md transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Start free trial</button>
     </div>
 
-    <div class="flex flex-col rounded-xl border border-border bg-card p-6">
+    <div class="flex flex-col rounded-xl border-2 border-border bg-card p-6">
       <h3 class="text-base font-semibold tracking-[-0.01em]">Enterprise</h3>
       <p class="mt-1.5 text-sm text-muted-foreground">For organisations with compliance requirements.</p>
       <p class="mt-5"><span class="text-4xl font-semibold tracking-[-0.025em]">Custom</span></p>
@@ -2024,7 +2024,7 @@
         <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-chart-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Audit log export</li>
         <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-chart-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>99.99% uptime SLA</li>
       </ul>
-      <button class="mt-6 inline-flex h-11 w-full items-center justify-center rounded-xl border border-input bg-background text-sm font-medium shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Contact sales</button>
+      <button class="mt-6 inline-flex h-11 w-full items-center justify-center rounded-xl border-2 border-input bg-background text-sm font-medium shadow-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Contact sales</button>
     </div>
   </div>
 </section>
@@ -2035,7 +2035,7 @@
   <h2 class="ks-lede">Testimonial</h2>
 
   <div class="ks-grid grid-cols-1 lg:grid-cols-2">
-    <figure class="rounded-xl border border-border bg-card p-8">
+    <figure class="rounded-xl border-2 border-border bg-card p-8">
       <svg class="h-6 w-6 text-border" viewBox="0 0 24 24" fill="currentColor"><path d="M9.5 5C6.5 6.8 5 9.4 5 12.8V19h6.2v-6.2H8.4c0-2.2.8-3.9 2.4-5.1L9.5 5Zm9 0c-3 1.8-4.5 4.4-4.5 7.8V19h6.2v-6.2h-2.8c0-2.2.8-3.9 2.4-5.1L18.5 5Z"/></svg>
       <blockquote class="mt-4 text-lg leading-relaxed tracking-[-0.01em]">
         We moved eleven services across in an afternoon. The part I did not expect was that our review cycle got faster — every PR having a real URL removed an entire round of “can you screenshot it”.
@@ -2050,14 +2050,14 @@
     </figure>
 
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 lg:content-start">
-      <figure class="rounded-xl border border-border bg-card p-6">
+      <figure class="rounded-xl border-2 border-border bg-card p-6">
         <blockquote class="text-sm leading-relaxed text-muted-foreground">“Rollback used to be a meeting. Now it is a button, and I have stopped dreading Friday releases.”</blockquote>
         <figcaption class="mt-4 flex items-center gap-2.5 text-[0.8125rem]">
           <span class="flex h-9 w-8 items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground">TO</span>
           <span><span class="font-medium text-foreground">Tomás Ortiz</span> · Platform Lead, Kestrel</span>
         </figcaption>
       </figure>
-      <figure class="rounded-xl border border-border bg-card p-6">
+      <figure class="rounded-xl border-2 border-border bg-card p-6">
         <blockquote class="text-sm leading-relaxed text-muted-foreground">“The audit log alone got it through our security review. That never happens.”</blockquote>
         <figcaption class="mt-4 flex items-center gap-2.5 text-[0.8125rem]">
           <span class="flex h-9 w-8 items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground">RK</span>
@@ -2093,7 +2093,7 @@
   <p class="ks-title">28 · Composed</p>
   <h2 class="ks-lede">Footer</h2>
 
-  <footer class="mt-8 rounded-xl border border-border bg-card px-6 py-10 sm:px-10">
+  <footer class="mt-8 rounded-xl border-2 border-border bg-card px-6 py-10 sm:px-10">
     <div class="grid gap-10 lg:grid-cols-[1.5fr_repeat(3,1fr)]">
       <div>
         <div class="flex items-center gap-2.5">
@@ -2160,24 +2160,24 @@
   <p class="ks-note">Lucide, inline SVG, 16px in controls and 20px standalone, stroke width 2 (1.5 above 24px). Never an emoji, never a filled glyph icon — the stroke weight is what keeps the set coherent.</p>
 
   <div class="mt-8 grid grid-cols-4 gap-4 sm:grid-cols-6 lg:grid-cols-9">
-    <div class="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5v14"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">plus</span></div>
-    <div class="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">search</span></div>
-    <div class="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">settings</span></div>
-    <div class="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">user</span></div>
-    <div class="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">users</span></div>
-    <div class="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">folder</span></div>
-    <div class="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">file</span></div>
-    <div class="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">chart</span></div>
-    <div class="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">bell</span></div>
-    <div class="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">info</span></div>
-    <div class="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">check-circle</span></div>
-    <div class="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><path d="M12 9v4m0 4h.01"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">alert</span></div>
-    <div class="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">x</span></div>
-    <div class="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">chevron-down</span></div>
-    <div class="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">arrow-right</span></div>
-    <div class="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">refresh</span></div>
-    <div class="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">copy</span></div>
-    <div class="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">trash</span></div>
+    <div class="flex flex-col items-center gap-2 rounded-xl border-2 border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5v14"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">plus</span></div>
+    <div class="flex flex-col items-center gap-2 rounded-xl border-2 border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">search</span></div>
+    <div class="flex flex-col items-center gap-2 rounded-xl border-2 border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">settings</span></div>
+    <div class="flex flex-col items-center gap-2 rounded-xl border-2 border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">user</span></div>
+    <div class="flex flex-col items-center gap-2 rounded-xl border-2 border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">users</span></div>
+    <div class="flex flex-col items-center gap-2 rounded-xl border-2 border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">folder</span></div>
+    <div class="flex flex-col items-center gap-2 rounded-xl border-2 border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">file</span></div>
+    <div class="flex flex-col items-center gap-2 rounded-xl border-2 border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">chart</span></div>
+    <div class="flex flex-col items-center gap-2 rounded-xl border-2 border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">bell</span></div>
+    <div class="flex flex-col items-center gap-2 rounded-xl border-2 border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">info</span></div>
+    <div class="flex flex-col items-center gap-2 rounded-xl border-2 border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">check-circle</span></div>
+    <div class="flex flex-col items-center gap-2 rounded-xl border-2 border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><path d="M12 9v4m0 4h.01"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">alert</span></div>
+    <div class="flex flex-col items-center gap-2 rounded-xl border-2 border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">x</span></div>
+    <div class="flex flex-col items-center gap-2 rounded-xl border-2 border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">chevron-down</span></div>
+    <div class="flex flex-col items-center gap-2 rounded-xl border-2 border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">arrow-right</span></div>
+    <div class="flex flex-col items-center gap-2 rounded-xl border-2 border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">refresh</span></div>
+    <div class="flex flex-col items-center gap-2 rounded-xl border-2 border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">copy</span></div>
+    <div class="flex flex-col items-center gap-2 rounded-xl border-2 border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">trash</span></div>
   </div>
 </section>
 
@@ -2188,7 +2188,7 @@
   <p class="ks-note">One duration for everything interactive. Colour and opacity animate; layout and position do not.</p>
 
   <div class="ks-grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_20rem]">
-    <div class="overflow-x-auto rounded-xl border border-border">
+    <div class="overflow-x-auto rounded-xl border-2 border-border">
       <table class="w-full text-sm">
         <thead class="bg-muted/50 [&_th]:h-12 [&_th]:px-4 [&_th]:text-left [&_th]:text-xs [&_th]:font-medium [&_th]:uppercase [&_th]:tracking-wide [&_th]:text-muted-foreground">
           <tr class="border-b border-border"><th>State</th><th>Treatment</th><th>Timing</th></tr>
@@ -2205,12 +2205,12 @@
       </table>
     </div>
 
-    <div class="rounded-xl border border-border bg-card p-6">
+    <div class="rounded-xl border-2 border-border bg-card p-6">
       <p class="ks-label">Try it — tab through these</p>
       <div class="flex flex-wrap gap-3">
         <button class="inline-flex h-11 items-center rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground shadow-md transition-colors duration-150 hover:bg-primary/90 active:bg-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Primary</button>
-        <button class="inline-flex h-11 items-center rounded-xl border border-input bg-background px-4 text-sm font-medium shadow-md transition-colors duration-150 hover:bg-accent active:bg-accent/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Outline</button>
-        <input placeholder="Focus me" class="h-11 w-full rounded-xl border border-input bg-background px-3 text-sm shadow-md transition-colors duration-150 placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+        <button class="inline-flex h-11 items-center rounded-xl border-2 border-input bg-background px-4 text-sm font-medium shadow-md transition-colors duration-150 hover:bg-accent active:bg-accent/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Outline</button>
+        <input placeholder="Focus me" class="h-11 w-full rounded-xl border-2 border-input bg-background px-3 text-sm shadow-md transition-colors duration-150 placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
       </div>
       <p class="mt-4 text-[0.8125rem] text-muted-foreground">The ring uses <span class="font-mono">ring-offset-background</span> so it stays visible on both page and card surfaces.</p>
     </div>

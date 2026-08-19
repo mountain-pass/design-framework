@@ -24,25 +24,25 @@ What was deliberately *not* taken: photo-real illustration, noisy gradients, or 
 
 The palette is anchored on a dark, almost black-blue background and a saturated green accent. This keeps the interface calm and immersive while making the primary action feel immediate and encouraging. The dark mode is intentional and dominant, since the reference product is a dark app shell with bright action surfaces.
 
-| Token | Light | Dark | Role |
+| Token | Light | Dark | Note |
 |---|---|---|---|
-| `--background` | `oklch(0.98 0.006 210)` | `oklch(0.18 0.024 214)` | Page surface |
-| `--foreground` | `oklch(0.18 0.028 214)` | `oklch(0.97 0.006 214)` | Body text |
-| `--card` | `oklch(1 0 0)` | `oklch(0.23 0.020 214)` | Raised surface |
-| `--popover` | `oklch(1 0 0)` | `oklch(0.27 0.022 214)` | Floating surface |
-| `--primary` | `oklch(0.68 0.150 142)` | `oklch(0.77 0.146 142)` | Brand action |
-| `--primary-foreground` | `oklch(0.15 0.028 142)` | `oklch(0.15 0.028 142)` | Text on primary |
-| `--secondary` | `oklch(0.93 0.012 210)` | `oklch(0.30 0.018 214)` | Subdued fill |
-| `--secondary-foreground` | `oklch(0.25 0.020 214)` | `oklch(0.92 0.010 214)` | Secondary text |
-| `--muted` | `oklch(0.96 0.010 210)` | `oklch(0.25 0.016 214)` | Soft fill |
-| `--muted-foreground` | `oklch(0.52 0.018 214)` | `oklch(0.70 0.014 214)` | Secondary text |
-| `--accent` | `oklch(0.72 0.140 142)` | `oklch(0.82 0.120 142)` | Hover / active surface |
-| `--accent-foreground` | `oklch(0.15 0.030 142)` | `oklch(0.15 0.030 142)` | Text on accent |
-| `--destructive` | `oklch(0.62 0.180 25)` | `oklch(0.68 0.170 25)` | Danger |
-| `--destructive-foreground` | `oklch(0.15 0.030 25)` | `oklch(0.15 0.030 25)` | Text on destructive |
-| `--border` | `oklch(0.88 0.010 210)` | `oklch(0.35 0.015 214)` | Hairlines and dividers |
-| `--input` | `oklch(0.67 0.010 214)` | `oklch(0.44 0.015 214)` | Control boundaries |
-| `--ring` | `oklch(0.68 0.150 142)` | `oklch(0.77 0.146 142)` | Focus ring |
+| `--background` | `oklch(1 0 89.88)` | `oklch(0.2304 0.0195 225.76)` | Page surface |
+| `--foreground` | `oklch(0.4128 0 89.88)` | `oklch(0.9728 0.0083 236.56)` | Body text |
+| `--card` | `oklch(1 0 89.88)` | `oklch(0.2949 0.0237 228.44)` | Raised surface |
+| `--popover` | `oklch(1 0 89.88)` | `oklch(0.2949 0.0237 228.44)` | Floating surface |
+| `--primary` | `oklch(0.537 0.2289 137.63)` | `oklch(0.7478 0.2289 137.63)` | Brand action — the green |
+| `--primary-foreground` | `oklch(1 0 89.88)` | `oklch(0.2304 0.0195 225.76)` | Text on primary |
+| `--secondary` | `oklch(0.547 0.1513 237.07)` | `oklch(0.7181 0.1513 237.07)` | Secondary action — the blue |
+| `--secondary-foreground` | `oklch(1 0 89.88)` | `oklch(0.2304 0.0195 225.76)` | Text on secondary |
+| `--muted` | `oklch(0.9761 0 89.88)` | `oklch(0.2949 0.0237 228.44)` | Soft fill |
+| `--muted-foreground` | `oklch(0.5602 0 89.88)` | `oklch(0.7032 0.0269 229.31)` | Secondary text |
+| `--accent` | `oklch(0.8575 0.1752 88.49)` | `oklch(0.8575 0.1752 88.49)` | Reward gold |
+| `--accent-foreground` | `oklch(0.4128 0 89.88)` | `oklch(0.2304 0.0195 225.76)` | Text on accent |
+| `--destructive` | `oklch(0.5866 0.2165 25.19)` | `oklch(0.6708 0.2165 25.19)` | Danger |
+| `--destructive-foreground` | `oklch(1 0 89.88)` | `oklch(0.2304 0.0195 225.76)` | Text on destructive |
+| `--border` | `oklch(0.9219 0 89.88)` | `oklch(0.3847 0.0246 234.61)` | Container edges (2px) and dividers |
+| `--input` | `oklch(0.6568 0 89.88)` | `oklch(0.526 0.0246 234.61)` | Control boundaries |
+| `--ring` | `oklch(0.537 0.2289 137.63)` | `oklch(0.7478 0.2289 137.63)` | Focus ring |
 
 ### Why this primary
 
@@ -52,14 +52,15 @@ The green is chosen to mirror the Duolingo reference: saturated enough to feel r
 
 | Pair | Light | Dark | Minimum |
 |---|---|---|---|
-| `foreground` on `background` | 12.69:1 | 17.05:1 | 4.5:1 |
-| `muted-foreground` on `background` | 5.42:1 | 6.12:1 | 4.5:1 |
-| `primary-foreground` on `primary` | 6.62:1 | 6.75:1 | 4.5:1 |
-| `primary` on `background` | 5.45:1 | 6.39:1 | 4.5:1 |
-| `destructive-foreground` on `destructive` | 5.54:1 | 5.80:1 | 4.5:1 |
-| `destructive` on `background` | 4.95:1 | 5.47:1 | 4.5:1 |
-| `ring` on `background` | 5.45:1 | 6.39:1 | 3:1 |
-| `input` on `background` | 3.06:1 | 3.67:1 | 3:1 |
+| `foreground` on `background` | 8.73:1 | 15.56:1 | 4.5:1 |
+| `muted-foreground` on `background` | 4.65:1 | 6.41:1 | 4.5:1 |
+| `primary-foreground` on `primary` | 4.65:1 | 8.05:1 | 4.5:1 |
+| `primary` on `background` | 4.65:1 | 8.05:1 | 4.5:1 |
+| `secondary-foreground` on `secondary` | 4.65:1 | 6.88:1 | 4.5:1 |
+| `destructive-foreground` on `destructive` | 4.65:1 | 5.09:1 | 4.5:1 |
+| `destructive` on `background` | 4.65:1 | 5.09:1 | 4.5:1 |
+| `ring` on `background` | 4.65:1 | 8.05:1 | 3:1 |
+| `input` on `background` | 3.15:1 | 3.15:1 | 3:1 |
 
 Everything clears the WCAG minimum, and `check.mjs` is part of the required validation.
 
@@ -121,7 +122,9 @@ This design sits in the middle of the density range: it is not as compact as `sl
 
 ### Depth rule
 
-The design uses subtle surface separation rather than heavy shadows. Panels sit on a dark background with a thin border and low-contrast shadow. Buttons are the main tactile element; they carry a stronger roundness and a crisp fill.
+Depth here is structural, not atmospheric. Panels sit on the page background behind a **2px** border — the border is the edge, not a hairline, and it is what separates a card from the page rather than a shadow. Containers and form fields take `border-2`; dividers inside them stay 1px, because a divider separates content rather than enclosing it.
+
+Buttons are the exception and the main tactile element: they sit on a solid 4px slab of their own colour, darkened, which is a hard `box-shadow` rather than a blur. See Motion for how the press works.
 
 ```
 shadow-xs  0 1px 2px 0 rgb(0 0 0 / 0.06)
@@ -140,18 +143,32 @@ shadow-lg  0 16px 28px -18px rgb(0 0 0 / 0.38)
 |---|---|
 | Hover | Slight background shift with no large transform |
 | Focus | Visible ring on `:focus-visible` |
-| Active | Button darkens one step, and its bottom edge collapses by `--button-lift` (4px) — the key presses flat |
+| Active | Button travels down `--button-lift` (4px) onto its slab, which collapses to nothing underneath it |
 | Disabled | `opacity-50` with pointer-events removed |
 
 This design animates mostly at the level of colour and shadow; there is no playful scale effect and no long looped motion. `prefers-reduced-motion` is handled in `theme.css`.
 
-**The pressed button is the one exception.** Every button carries a bottom border
-`--button-lift` thicker than the rest of its frame, in a darker shade of its own
-face, so it reads as a physical key. On `:active` that lift collapses — a solid
-button's 4px bottom edge goes to 0, an outline button's 6px goes back to the 2px
-of its frame — and both transition over the standard 160ms. Because buttons are
-fixed-height (`h-11`) and `border-box`, the face grows into the space the border
-vacates: the press costs no reflow. See the note on prohibition 7.
+**The pressed button is the one exception.** Every button that reads as a key sits
+on a solid slab `--button-lift` (4px) deep, in a darker shade of its own face.
+On `:active` the button travels down onto the slab and the slab collapses to
+nothing beneath it, so the bottom edge never moves and only the top edge does —
+the button is pressed into the page rather than squashed.
+
+The slab is a `box-shadow` and the travel is a `transform`, not a border that
+changes width:
+
+- A border carries one colour, so pushing the face down by growing a *top*
+  border would draw a visible line across the top of any outlined button.
+  Padding avoids the line but collides with whatever `py-*` the markup sets.
+- `box-shadow` and `transform` cost no layout at all, so the press is composited
+  rather than reflowed — at any button size, fixed-height or not.
+- The slab genuinely sits outside the button box, which is what the metaphor
+  describes.
+
+The consequence is that `box-shadow` belongs to the design on a button: a
+`shadow-*` utility there is overridden. That is deliberate. These buttons carry a
+hard slab, never a soft drop shadow. Ghost and link buttons have no face to drop,
+so they stay flat and do not travel. See prohibition 7.
 
 ---
 
@@ -239,7 +256,7 @@ Baseline is `shared/ACCESSIBILITY.md` — WCAG 2.2 AA. This section covers only 
 `playful` decides for itself.
 
 **Focus ring.** `ring-2 ring-ring ring-offset-2` on `:focus-visible`, instant, no
-transition. `--ring` is the purple primary: 4.46:1 light and 7.06:1 dark against the
+transition. `--ring` is the green primary: 4.65:1 light and 8.05:1 dark against the
 page, both well past the 3:1 WCAG 1.4.11 asks of an indicator. The offset matters
 more here than in the other designs, because `rounded-xl` corners and `shadow-md`
 already soften the button edge — without the offset the ring merges into the shadow.
@@ -265,10 +282,10 @@ its own 3:1, and `border-2` stays because the design wants it.
 
 **State is never colour alone.** Status pills carry text alongside the fill. Alerts
 carry an icon and a title, not just a tinted background. Because this palette leans
-on two saturated hues that sit close in lightness (purple L=0.58, orange L=0.75), a
+on two saturated hues that sit close in lightness (green L=0.75, gold L=0.86 in dark), a
 greyscale check matters more here than in a neutral design — run one.
 
-**Charts.** The chart ramp is green/cyan/pink at similar chroma, which is close to
+**Charts.** The chart ramp is green/blue/gold/purple/red at similar chroma, which is close to
 worst-case for red-green colour blindness. Any chart with more than two series
 needs direct labels, or shape and dash variation in the legend.
 
@@ -290,19 +307,19 @@ tight on" under Colour. Re-run the check after any palette change, however small
 
 1. **Never use sharp corners.** This design's personality lives in its rounded shapes. A 90° corner on a button or card breaks the aesthetic instantly. Minimum radius is `rounded-lg` (12px). For interactive elements, use `rounded-xl` (16px).
 
-2. **Never use more than two accent colors on a single screen.** Purple primary and orange accent — that's the palette. You can bring in the chart colors (green, cyan, pink) for data visualization, but UI chrome should stay purple/orange. Adding a third accent for emphasis just creates noise.
+2. **Never use more than two accent colours on a single screen.** Green and one of blue or gold — that is the palette. The chart ramp (green, blue, gold, purple, red) exists for data visualisation; UI chrome stays green plus a single supporting hue. A third accent in the chrome just creates noise.
 
 3. **Never reduce card padding below 24px (`p-6`).** This design is roomy. Cramming content into tight cards undoes the friendly breathing room that makes it work. If something doesn't fit comfortably at `p-8`, rethink the content, don't shrink the padding.
 
-4. **Never use hard black or pure white for text.** Foreground is `oklch(0.25 0.02 280)` (a very dark purple-grey), not `#000`. Primary foreground is `oklch(1 0 0)` (pure white) but only on colored backgrounds. Absolute black creates too much contrast and feels harsh.
+4. **Never use hard black or pure white for text.** Foreground in dark mode is `#F1F7FB` and in light mode `#4B4B4B` — never `#000` or `#FFF` for body copy. Pure white appears only as a foreground on the light theme's saturated fills. Absolute black on a near-black ground reads as a hole rather than as text.
 
 5. **Never use drop shadows on flat surfaces.** Shadows are for elevation — cards, buttons, dialogs. Page backgrounds, section dividers, and inline elements stay flat. A shadow on a `<p>` tag is a mistake.
 
 6. **Never stack headings without content between them.** If an h2 is immediately followed by an h3, one of them is wrong. Headings introduce content; they aren't decoration. This matters more in playful designs because the display font (Fredoka) is visually distinctive — stacked headings look like a type specimen, not a hierarchy.
 
-7. **Never animate layout properties.** Color, opacity, and shadow can transition. Height, width, transform — no. Buttons don't scale on hover, panels don't slide open. This keeps interactions feeling snappy and predictable. The exception is purpose-built animation components (carousels, drawers) where movement is the point, and the pressed button described under Motion — its bottom border animates, but on a fixed-height `border-box` element, so it moves no other pixel on the page. The rule is really about reflow; an animation that cannot cause one does not break it.
+7. **Never animate anything that causes reflow.** Colour, opacity, shadow, and transform can transition. Height, width, padding, margin, and border width cannot — animating those relays out the page around them. Buttons don't scale on hover and panels don't slide open. The exceptions are purpose-built animation components (carousels, drawers) where movement is the point, and the button press described under Motion, which moves a `transform` and a `box-shadow` and so touches no other pixel on the page.
 
-8. **Never let the orange accent dominate the purple primary.** Orange is a garnish, not the main course. It appears on hover states, selected tabs, and occasional CTAs, but the primary action color is always purple. If you find yourself with an orange header and orange buttons, you've inverted the hierarchy.
+8. **Never let gold or blue outrank the green.** Green is the action colour: the primary button, the progress fill, the completed state. Gold belongs to rewards and streaks, blue to navigation and secondary actions. A screen whose main call to action is gold has inverted the hierarchy — the learner should always be able to find "the green one".
 
 9. **Never use thin font weights (300 or lighter).** DM Sans starts at 400 Regular and goes up. Thin weights on colored backgrounds become illegible, and they undermine the friendly, approachable tone. Headings are bold (700); UI text is regular (400) or semibold (600). That's the range.
 
