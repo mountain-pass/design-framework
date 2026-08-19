@@ -19,7 +19,7 @@ The trigger looks like:
    and specific prohibitions, and the value of the design is in those specifics.
 
 2. **Read the shared contracts** if you have not already in this session:
-   `shared/TOKENS.md` and `shared/COMPONENTS.md`.
+   `shared/TOKENS.md`, `shared/COMPONENTS.md`, and `shared/ACCESSIBILITY.md`.
 
 3. **Open the demo HTML.** `designs/<name>/index.html` is a rendered answer to
    "what does a button look like in this design". When you are unsure how to style
@@ -102,6 +102,14 @@ rename, or reorder.
 inline SVG icons, no imports of local JS or CSS files (a `file://` page cannot
 fetch them). If a demo needs `npm install` to look at, it has failed at its only
 job.
+
+**Accessibility is a contract, not a polish pass.** `shared/ACCESSIBILITY.md` is
+WCAG 2.2 AA, and it binds the demos in this repo as tightly as it binds the
+applications built from them. The markup in a kitchen sink is copied verbatim by
+agents downstream, so an unlabelled icon button or a placeholder used as a label
+propagates into every consuming project. `check.mjs` computes real contrast ratios
+from each `theme.css` — never record an estimated ratio in a `DESIGN.md`, and never
+ship a contrast failure as a known issue when the fix is a token value.
 
 **Every design ships light and dark.** Both are part of the deliverable. The
 kitchen sink's dark-mode toggle must produce a dark theme that someone actually

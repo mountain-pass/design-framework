@@ -21,11 +21,13 @@ then asks you to change.
 
 ## Before you start
 
-Read these three files completely. They are contracts, not suggestions, and most of
+Read these four files completely. They are contracts, not suggestions, and most of
 the work below is defined by them:
 
 - `shared/TOKENS.md` — the CSS variables you must define
 - `shared/COMPONENTS.md` — the components you must render, in order, with fixed IDs
+- `shared/ACCESSIBILITY.md` — the WCAG 2.2 AA baseline, the keyboard and ARIA
+  contract per component, and the contrast minimums your tokens must clear
 - `designs/slate/DESIGN.md` — a worked example of the output quality expected
 
 Then open `designs/slate/index.html` in a browser so you know what you are aiming
@@ -60,9 +62,22 @@ to be lighter and less saturated than light-mode `--primary`, not the same hue a
 different lightness.
 
 Check contrast on every foreground/background pair. AA minimum: 4.5:1 for body text,
-3:1 for large text and UI boundaries. Record the ratios you measured for the
-primary pairs in `DESIGN.md`. If a pair fails, fix the token — do not note it as a
-known issue.
+3:1 for large text and UI boundaries. **Do not estimate these — run
+`node scripts/check.mjs`, which computes the real ratios from your `oklch()` values
+in both light and dark**, and record what it reports in `DESIGN.md`. Estimated
+ratios in this repo have historically been optimistic by 2–4×.
+
+If a pair fails, fix the token — do not note it as a known issue.
+
+Two pairs are missed almost every time, so check them deliberately:
+
+- **`--input` must clear 3:1 against the surface behind it.** If an outlined field's
+  border is the only thing identifying it as a field, that border is a UI boundary
+  under WCAG 1.4.11, not a decorative hairline. `--border` and `--input` are
+  separate tokens so they can hold different values — use that.
+- **`--destructive` in dark mode.** A fill that carries white text at AA in light
+  mode usually fails once it is lightened for dark, because the foreground stays
+  white while the fill moves. This is the single most common failure in this repo.
 
 ### 2. `index.html`
 
@@ -101,6 +116,13 @@ Markup requirements:
   the purpose of the repository.
 - Every interactive element gets a visible focus ring using `--ring`. Tab through
   the page before you call it done.
+- **The markup is part of the deliverable, not just the styling.** Agents copy the
+  kitchen sink's markup verbatim, so a missing `<label for>` or an unlabelled
+  icon-only button here becomes the same bug in every application built from this
+  design. Follow the per-component semantics table in `shared/ACCESSIBILITY.md`:
+  real `<label>`s, `aria-label` on icon-only buttons, `aria-hidden="true"` on
+  decorative SVGs, `<th scope>` and `aria-sort` in tables, `aria-current` on the
+  active nav item, and `aria-invalid` + `aria-describedby` on the error field.
 - Real content, not lorem ipsum. Plausible product copy makes design decisions
   legible in a way that placeholder Latin does not — you cannot judge a table's
   density with fake words in it.
@@ -144,6 +166,14 @@ active, and disabled treatments. Include a `prefers-reduced-motion` rule.
 an implementer would otherwise get wrong. Where a component behaves the same as
 stock shadcn, say "stock" and move on; only spend words where this design differs.
 
+**Accessibility** — Required, and checked by `check.mjs`. What *this design*
+decides: the focus ring treatment and its measured contrast, the target sizes for
+every control class (plus the 44×44 touch floor), how state is encoded in something
+other than colour, how charts stay readable without hue, and anything the design
+animates that reduced motion must remove. Do not restate `shared/ACCESSIBILITY.md`
+— it applies regardless. End with a "Known gaps" subsection listing anything that
+fails the baseline, each with its fix; write "None." if `check.mjs` is clean.
+
 **Never** — The prohibitions. This is the most useful section in the file and the
 one most likely to be skipped. What would make something stop looking like this
 design? Write five to ten of them, specifically. "Never use a drop shadow on a
@@ -171,7 +201,13 @@ sections exist; they cannot tell you the design is good. Specifically check that
 - Light and dark both look chosen, not merely functional.
 - The page still looks like one design at the bottom as at the top.
 - Nothing is illegible — thin type on tinted backgrounds is the usual offender.
-- The focus ring is visible on every control when tabbing.
+- The focus ring is visible on every control when tabbing, and never hidden behind
+  a sticky header.
+- **Tab through the entire page.** Every control reachable, nothing trapped, order
+  matching visual order. This is the check that catches the most real bugs.
+- **Take a greyscale screenshot.** Every status, every chart series, and every
+  active state must still be distinguishable with hue removed.
+- **Zoom to 200% and narrow to 320px.** Nothing clipped, nothing overlapping.
 - It looks meaningfully different from the other designs in `designs/`. If it does
   not, the repository has not gained anything and you should push the choices
   further.

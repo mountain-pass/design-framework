@@ -25,6 +25,8 @@ Read:
 
 - `layouts/app-shell/LAYOUT.md` and its `index.html` — a worked example
 - `shared/COMPONENTS.md` — so your placeholders name real components
+- `shared/ACCESSIBILITY.md` — layouts own landmarks, skip links, focus order, and
+  keeping focus out from behind sticky regions
 
 Then copy `layouts/_template/` as your starting point.
 
@@ -109,6 +111,20 @@ the layout and whatever design is paired with it.
 `<main>`, `<aside>`, `<footer>`), heading hierarchy, skip-link target, and focus
 order. Focus order is worth stating explicitly, because DOM order and visual order
 diverge in most multi-pane layouts.
+
+Layouts own the structural half of `shared/ACCESSIBILITY.md`. Cover, specifically:
+
+- One `<h1>` per page, and where it lives.
+- A skip link as the first focusable element, targeting a `<main>` that has
+  `tabindex="-1"` so focus can actually land in it.
+- Multiple `<nav>` or `<aside>` regions each need a distinguishing `aria-label`.
+- **Any sticky or fixed region must not obscure a focused element** (WCAG 2.2
+  SC 2.4.11). A sticky header without `scroll-margin-top` on focusable content
+  will hide whatever the user just tabbed to. State the value.
+- If a region becomes a modal overlay at a breakpoint — a slide-over sidebar on
+  mobile is the usual case — say that it traps focus, closes on `Escape`, returns
+  focus to its trigger, and marks the background `inert`.
+- Never reorder the DOM for visual reasons and never use a positive `tabindex`.
 
 **Never** — The prohibitions that keep this layout itself. "Never let the main
 region scroll the whole page." "Never put primary navigation in the right rail."

@@ -27,16 +27,39 @@ The palette centers on a vibrant purple (hue 285°) as primary, with bright oran
 | Token | Light | Dark | Role | Contrast |
 |---|---|---|---|---|
 | `--background` | `oklch(0.99 0.005 280)` | `oklch(0.20 0.04 285)` | Page background | — |
-| `--foreground` | `oklch(0.25 0.02 280)` | `oklch(0.95 0.01 285)` | Body text | 16.2:1 (AAA) |
+| `--foreground` | `oklch(0.25 0.02 280)` | `oklch(0.95 0.01 285)` | Body text | — |
 | `--card` | `oklch(1 0 0)` | `oklch(0.25 0.04 285)` | Card surface | — |
-| `--primary` | `oklch(0.58 0.19 285)` | `oklch(0.72 0.15 285)` | Vibrant purple | 5.1:1 on white |
-| `--primary-foreground` | `oklch(1 0 0)` | `oklch(0.20 0.04 285)` | Text on primary | 8.9:1 (AAA) |
+| `--primary` | `oklch(0.58 0.19 285)` | `oklch(0.72 0.15 285)` | Vibrant purple | — |
+| `--primary-foreground` | `oklch(1 0 0)` | `oklch(0.20 0.04 285)` | Text on primary | — |
 | `--secondary` | `oklch(0.92 0.04 285)` | `oklch(0.30 0.06 285)` | Soft lavender fill | — |
-| `--accent` | `oklch(0.75 0.15 50)` | `oklch(0.65 0.12 50)` | Bright orange | 4.6:1 |
-| `--accent-foreground` | `oklch(0.20 0.03 50)` | `oklch(0.98 0.01 285)` | Text on accent | 12.1:1 (AAA) |
+| `--accent` | `oklch(0.75 0.15 50)` | `oklch(0.65 0.12 50)` | Bright orange | — |
+| `--accent-foreground` | `oklch(0.20 0.03 50)` | `oklch(0.98 0.01 285)` | Text on accent | — |
 | `--muted` | `oklch(0.96 0.008 70)` | `oklch(0.28 0.04 285)` | Warm grey fill | — |
-| `--destructive` | `oklch(0.61 0.22 25)` | `oklch(0.65 0.18 25)` | Warm red | 4.8:1 |
+| `--destructive` | `oklch(0.61 0.22 25)` | `oklch(0.65 0.18 25)` | Warm red | — |
 | `--border` | `oklch(0.90 0.01 280)` | `oklch(0.35 0.05 285)` | Default border | — |
+
+### Measured contrast
+
+Computed from `theme.css` by `scripts/check.mjs`. The estimates previously recorded
+in the table above were optimistic by 2–4× in places and have been removed.
+
+| Pair | Light | Dark | Minimum |
+|---|---|---|---|
+| `foreground` on `background` | 15.58:1 | 15.71:1 | 4.5:1 |
+| `muted-foreground` on `background` | 5.85:1 | 5.60:1 | 4.5:1 |
+| `primary-foreground` on `primary` | 4.59:1 | 7.06:1 | 4.5:1 |
+| `primary` on `background` | **4.46:1** ⚠ | 7.06:1 | 4.5:1 |
+| `accent-foreground` on `accent` | 7.80:1 | **3.17:1** ⚠ | 4.5:1 |
+| `destructive-foreground` on `destructive` | **4.23:1** ⚠ | **3.32:1** ⚠ | 4.5:1 |
+| `destructive` on `background` | **4.11:1** ⚠ | 5.17:1 | 4.5:1 |
+| `ring` on `background` | 4.46:1 | 7.06:1 | 3:1 |
+| `input` on `background` | **1.40:1** ⚠ | **1.42:1** ⚠ | 3:1 |
+
+`playful` is the least accessible of the three designs, and that is a direct
+consequence of its brief: high-chroma purple and orange at mid lightness is exactly
+the region of the space where contrast is hardest to hold. Several pairs land just
+under AA rather than dramatically under it — `primary` at 4.46:1 misses by 0.04 —
+but "just under" is still under. See `## Accessibility`.
 
 **Reasoning:** Purple at hue 285° hits the sweet spot between blue and magenta — energetic without being garish. At 19% chroma in light mode, it's vivid enough to feel playful but not so saturated it fatigues. The orange accent at hue 50° provides warm contrast without fighting for attention.
 
@@ -201,6 +224,70 @@ Toasts appear in the bottom-right, `rounded-xl`, with the same tinted-background
 Progress bars have a `rounded-full` track (full pill shape) filled with `bg-primary`. Circular spinners use a partial arc with `stroke-primary` at 2px weight.
 
 Skeletons use `bg-muted animate-pulse`, with `rounded-lg` to match the shapes they're standing in for (avatar skeletons are `rounded-full`).
+
+---
+
+## Accessibility
+
+Baseline is `shared/ACCESSIBILITY.md` — WCAG 2.2 AA. This section covers only what
+`playful` decides for itself.
+
+**Focus ring.** `ring-2 ring-ring ring-offset-2` on `:focus-visible`, instant, no
+transition. `--ring` is the purple primary: 4.46:1 light and 7.06:1 dark against the
+page, both well past the 3:1 WCAG 1.4.11 asks of an indicator. The offset matters
+more here than in the other designs, because `rounded-xl` corners and `shadow-md`
+already soften the button edge — without the offset the ring merges into the shadow.
+
+**Target sizes are this design's biggest accessibility advantage.** Everything is
+generous, and that is worth protecting:
+
+| Control | Size | Notes |
+|---|---|---|
+| Button, input, select | 44px (`h-11`) | Meets the touch minimum everywhere, not just on mobile |
+| Icon button | 44×44 (`h-11 w-11`) | Squares, aligned with text buttons in toolbars |
+| Table row | 44px (`h-11`) | Rows are comfortably selectable by touch |
+| Top nav bar | 64px (`h-16`) | — |
+
+`playful` is the only design here that clears the 44px touch target by default. Do
+not "tighten it up" for a desktop build — the size is part of the aesthetic *and*
+the accessibility story, and shrinking it costs both.
+
+**`border-2` on form controls is doing accessibility work, not just decoration.**
+The doubled border weight is what makes fields findable given that `--input` itself
+is low contrast. Do not reduce it to 1px.
+
+**State is never colour alone.** Status pills carry text alongside the fill. Alerts
+carry an icon and a title, not just a tinted background. Because this palette leans
+on two saturated hues that sit close in lightness (purple L=0.58, orange L=0.75), a
+greyscale check matters more here than in a neutral design — run one.
+
+**Charts.** The chart ramp is green/cyan/pink at similar chroma, which is close to
+worst-case for red-green colour blindness. Any chart with more than two series
+needs direct labels, or shape and dash variation in the legend.
+
+**Motion.** No transforms on hover — targets do not move — and
+`prefers-reduced-motion` is handled in `theme.css`. The shadow-deepening hover is
+a colour transition and is safe to keep under reduced motion.
+
+### Known gaps
+
+`playful` has more contrast failures than the other designs. All are reported by
+`node scripts/check.mjs`:
+
+1. **`--input` at 1.40:1** (needs 3:1). Partly mitigated by `border-2`, which makes
+   the boundary thicker but no more contrasting — WCAG measures colour, not width.
+   Fix by darkening `--input` independently of `--border`.
+2. **`--destructive` on `--background` at 4.11:1**, and
+   **`--destructive-foreground` on `--destructive` at 4.23:1 light / 3.32:1 dark.**
+   Error text and destructive buttons both miss AA. This is the most user-affecting
+   of the failures, because error states are exactly where legibility matters.
+3. **`--accent-foreground` on `--accent` at 3.17:1 in dark mode.** The orange
+   lightens for dark mode while its foreground stays near-white.
+4. **`--primary` on `--background` at 4.46:1**, missing by 0.04. Purple link text at
+   body size is marginally under; it is fine at large sizes and as a focus ring.
+
+Fixing 2 and 3 does not require abandoning the palette — both are lightness
+adjustments to the fill, and `oklch` makes them cheap to apply without shifting hue.
 
 ---
 

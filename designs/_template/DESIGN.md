@@ -176,6 +176,47 @@ shadow-lg
 
 ---
 
+## Accessibility
+
+<!-- Baseline is shared/ACCESSIBILITY.md — WCAG 2.2 AA — and it applies whether or
+     not you restate it. Write only what THIS design decides. Do not copy the
+     shared contract back in here.
+
+     `scripts/check.mjs` computes the real contrast ratios from theme.css; put its
+     numbers in "Measured contrast" above, not estimates. If a pair fails, fix the
+     token. If you genuinely cannot, record it under "Known gaps" below with the
+     fix — never ship a silent failure. -->
+
+**Focus ring.** <Treatment, and the measured contrast of `--ring` against what it
+sits on. Must clear 3:1. `:focus-visible` only.>
+
+**Target sizes.**
+
+| Control | Size | Notes |
+|---|---|---|
+| Button, input, select | | |
+| Icon button | | |
+| Table row | | |
+| Below `md`, and any touch target | **44×44** | Non-negotiable |
+
+<Where this design sits relative to the 24px SC 2.5.8 floor, and what an
+implementer must not shrink.>
+
+**State is never colour alone.** <How status, errors, active nav, and sort state
+are encoded in something other than hue — icon, label, weight, marker, `aria-current`.>
+
+**Charts.** <How more than two series stay distinguishable without colour.>
+
+**Reduced motion.** <Confirm it is handled in `theme.css`, and note anything this
+design animates that reduced motion must remove.>
+
+### Known gaps
+
+<Anything failing the baseline, with the fix. Write "None." if `check.mjs` is
+clean — and mean it.>
+
+---
+
 ## Never
 
 <!-- The most useful section in this file, and the one most likely to be skipped.

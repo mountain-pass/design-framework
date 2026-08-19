@@ -23,6 +23,7 @@ Designs and layouts are kept separate so they can be mixed freely.
 | Owns | Colour, type, spacing, radius, shadow, component styling | Page structure, regions, responsive behaviour, navigation model |
 | Demo file | A **kitchen sink** — every component, fully styled | A **wireframe** — grey boxes with `<navigation goes here>` placeholders |
 | Contains no | Page structure opinions | Colour or styling opinions |
+| Owns, for a11y | Contrast, focus ring, target size, non-colour encoding | Landmarks, skip links, focus order, heading hierarchy |
 
 Any design combines with any layout. `slate` + `app-shell` and `slate` +
 `document-editor` are both valid; so is a different design with either layout.
@@ -50,6 +51,8 @@ a routing structure, layout has leaked into it.
 ├── SAMPLE-PROMPT-USE-DESIGN.md      Worked example: consuming this repo
 │
 ├── shared/
+│   ├── ACCESSIBILITY.md     The accessibility contract — WCAG 2.2 AA, plus the
+│   │                        keyboard and ARIA behaviour of every component
 │   ├── COMPONENTS.md        The kitchen sink contract — the component list
 │   │                        every design must render, in order
 │   └── TOKENS.md            The token contract — the CSS variables every
@@ -121,7 +124,8 @@ tell your agent which ones you want:
 When a user names a design or layout:
 
 1. Read `designs/<name>/DESIGN.md` and/or `layouts/<name>/LAYOUT.md` in full.
-2. Read `shared/TOKENS.md` and `shared/COMPONENTS.md` for the shared contracts.
+2. Read `shared/TOKENS.md`, `shared/COMPONENTS.md`, and `shared/ACCESSIBILITY.md`
+   for the shared contracts.
 3. Copy `designs/<name>/theme.css` into the target project's global stylesheet.
 4. Use `designs/<name>/index.html` as the reference for how any given component
    should look. It is a rendered answer, not a description of one.
@@ -176,7 +180,14 @@ node scripts/build-gallery.mjs # regenerate index.html
 
 `check.mjs` verifies that every design has the required files, defines every
 required token in both light and dark, and renders every required kitchen sink
-section. It has no dependencies — Node 18+ is all you need.
+section. It also converts every `oklch()` token to sRGB and computes real WCAG
+contrast ratios for the standard pairs in both themes, so the numbers recorded in a
+`DESIGN.md` are measured rather than estimated. It has no dependencies — Node 18+ is
+all you need.
+
+Contrast shortfalls are currently reported as **warnings** while the existing
+designs are brought up to standard; flip `CONTRAST_LEVEL` in `check.mjs` to `fail`
+to make them a hard gate.
 
 ---
 

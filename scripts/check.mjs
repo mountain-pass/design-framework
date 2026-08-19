@@ -42,6 +42,37 @@ const TOKENS = [
 
 const DARK_EXEMPT = new Set(["radius"]); // --radius is defined once, in :root
 
+// The accessibility contract — shared/ACCESSIBILITY.md.
+//
+// Pairs are [foreground, background, minimum ratio]. 4.5 is WCAG 1.4.3 for body
+// text; 3.0 is WCAG 1.4.11 for UI component boundaries and focus indicators.
+//
+// `--input` is held to 3:1 because a text field's border is usually the only thing
+// identifying it as a text field — a UI boundary, not a decorative hairline.
+// `--border` is deliberately NOT checked: it is normally a divider, and dividers
+// carry no information. A design that identifies controls with `--border` should
+// say so in DESIGN.md and hold itself to 3:1 there.
+const CONTRAST_PAIRS = [
+  ["foreground", "background", 4.5],
+  ["muted-foreground", "background", 4.5],
+  ["card-foreground", "card", 4.5],
+  ["popover-foreground", "popover", 4.5],
+  ["primary-foreground", "primary", 4.5],
+  ["secondary-foreground", "secondary", 4.5],
+  ["accent-foreground", "accent", 4.5],
+  ["destructive-foreground", "destructive", 4.5],
+  ["primary", "background", 4.5],
+  ["destructive", "background", 4.5],
+  ["sidebar-foreground", "sidebar", 4.5],
+  ["input", "background", 3.0],
+  ["ring", "background", 3.0],
+];
+
+// Contrast failures are reported as warnings rather than errors while the existing
+// designs are brought up to standard. Flip this to `fail` once they are — the
+// ratios are computed, not asserted, so this is a real gate when you want it.
+const CONTRAST_LEVEL = "warn";
+
 let errors = 0;
 let warnings = 0;
 const problems = [];
@@ -80,6 +111,53 @@ const block = (css, selector) => {
 const ROOT_RULE = () => /^[ \t]*:root[ \t]*\{/m;
 const DARK_RULE = () => /^[ \t]*\.dark\b[^{]*\{/m;
 
+// ------------------------------------------------------------- contrast ---
+// oklch() -> linear-light sRGB, per CSS Color 4. Values are returned before
+// gamma encoding, which is exactly what WCAG relative luminance wants, so no
+// round trip through 8-bit hex is needed. Out-of-gamut components are clipped,
+// which is a rough gamut map but accurate enough to judge a ratio by.
+
+const oklchToLinearSrgb = (L, C, H) => {
+  const h = (H * Math.PI) / 180;
+  const a = C * Math.cos(h);
+  const b = C * Math.sin(h);
+  const l = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3;
+  const m = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3;
+  const s = (L - 0.0894841775 * a - 1.291485548 * b) ** 3;
+  return [
+     4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+    -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+    -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s,
+  ];
+};
+
+const clamp = (c) => Math.max(0, Math.min(1, c));
+
+const luminance = ([r, g, b]) =>
+  0.2126 * clamp(r) + 0.7152 * clamp(g) + 0.0722 * clamp(b);
+
+const contrast = (fg, bg) => {
+  const [hi, lo] = [luminance(fg), luminance(bg)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+};
+
+// Only oklch() is understood, because TOKENS.md requires it. Anything else
+// returns null and is reported as unresolvable rather than silently passing.
+const parseColour = (value) => {
+  const m = /oklch\(\s*([\d.]+%?)\s+([\d.]+)\s+([\d.]+)/.exec(value ?? "");
+  if (!m) return null;
+  const L = m[1].endsWith("%") ? parseFloat(m[1]) / 100 : parseFloat(m[1]);
+  return oklchToLinearSrgb(L, parseFloat(m[2]), parseFloat(m[3]));
+};
+
+const customProperties = (cssBlock) => {
+  const out = {};
+  for (const m of (cssBlock ?? "").matchAll(/--([a-z0-9-]+)\s*:\s*([^;]+);/g)) {
+    out[m[1]] = m[2].trim();
+  }
+  return out;
+};
+
 // ---------------------------------------------------------------- designs ---
 
 const designs = folders("designs");
@@ -111,6 +189,30 @@ for (const name of designs) {
     }
     if (dark && !DARK_EXEMPT.has(token) && !new RegExp(`--${token}\\s*:`).test(dark)) {
       fail(label, `theme.css .dark is missing --${token}`);
+    }
+  }
+
+  // --- computed contrast, light and dark (shared/ACCESSIBILITY.md)
+  const report = CONTRAST_LEVEL === "fail" ? fail : warn;
+  for (const [mode, body] of [["light", light], ["dark", dark]]) {
+    if (!body) continue;
+    const vars = customProperties(body);
+    for (const [fg, bg, min] of CONTRAST_PAIRS) {
+      const a = parseColour(vars[fg]);
+      const b = parseColour(vars[bg]);
+      if (!a || !b) {
+        if (vars[fg] && vars[bg]) {
+          warn(label, `theme.css ${mode}: cannot compute --${fg} on --${bg} (not an oklch() value)`);
+        }
+        continue;
+      }
+      const ratio = contrast(a, b);
+      if (ratio < min) {
+        report(
+          label,
+          `theme.css ${mode}: --${fg} on --${bg} is ${ratio.toFixed(2)}:1, below the ${min}:1 minimum`
+        );
+      }
     }
   }
 
@@ -164,6 +266,12 @@ for (const name of designs) {
   }
   if (!/##\s*Never/i.test(md)) {
     warn(label, "DESIGN.md has no `## Never` section — the prohibitions are the most useful part");
+  }
+  // Layouts have always been required to document this; designs own the other
+  // half of it — focus ring, target size, non-colour encoding. See
+  // shared/ACCESSIBILITY.md for the split.
+  if (!/^##\s*.*Accessibility/im.test(md)) {
+    fail(label, 'DESIGN.md has no "## Accessibility" section — see shared/ACCESSIBILITY.md');
   }
   if (/lorem ipsum/i.test(html)) {
     warn(label, "index.html contains lorem ipsum — use plausible product copy so density is legible");

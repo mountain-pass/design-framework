@@ -29,6 +29,13 @@ Component names match [shadcn/ui](https://ui.shadcn.com) where a shadcn componen
 exists, so that "the `Alert` in the kitchen sink" and "the `Alert` in your React app"
 are the same thing.
 
+**The markup is part of the contract, not just the styling.** `shared/ACCESSIBILITY.md`
+holds the keyboard behaviour and ARIA semantics every component must have, and it
+applies to the kitchen sink itself — not only to applications built from it. Agents
+copy these class lists and this markup verbatim, so an unlabelled icon button in the
+demo becomes an unlabelled icon button in every application downstream. Where a
+component's accessible markup is easy to get wrong, it is called out inline below.
+
 ---
 
 ## 1. Foundations
@@ -64,6 +71,9 @@ sits on the page background.
   spinner), with leading icon, with trailing icon
 - A button group / split button
 
+**Accessibility:** every icon-only button needs an `aria-label`. Disabled buttons use
+the `disabled` attribute, not only `opacity-50`. The loading example sets `aria-busy`.
+
 ### `id="inputs"` — Form controls
 - `Input` — default, with placeholder, disabled, with leading icon, error state
 - `Textarea`
@@ -74,11 +84,20 @@ sits on the page background.
 - `Slider` — single value
 - `Label` + help text + error message
 
+**Accessibility:** every control is wired to a real `<label for>` — a placeholder is
+not a label. The error example must show the full wiring an implementer will copy:
+`aria-invalid="true"` on the control and `aria-describedby` pointing at the message.
+The indeterminate checkbox needs `aria-checked="mixed"`. The radio group is a
+`<fieldset>` with a `<legend>`.
+
 ### `id="form"` — Composed form
 A realistic form: two-column layout, a fieldset with legend, required-field
 markers, inline validation error on one field, help text on another, and a
 footer row with cancel + submit actions. This shows spacing and rhythm, which
 individual controls do not.
+
+**Accessibility:** the required-field marker is decorative — the control carries the
+`required` attribute as well. The fieldset's `<legend>` is real, not a styled `div`.
 
 ---
 
@@ -96,6 +115,12 @@ A data table with: a header row, at least five body rows, a sortable column
 a right-aligned numeric column, a row-actions button, a selected row, and a
 footer with pagination.
 
+**Accessibility:** a real `<table>` with `<th scope>` and a `<caption>`. The sortable
+column's header is a `<button>` inside the `<th>`, and the `<th>` carries `aria-sort`.
+Row-action buttons must not be hover-only — a `display:none` button is not focusable,
+so reveal with `opacity` and include `:focus-within`. Selection checkboxes need
+per-row accessible names, not five copies of "Select".
+
 ### `id="list"` — List & feed
 - A settings-style list (label, description, control on the right, dividers)
 - An activity feed with avatars and relative timestamps
@@ -105,6 +130,9 @@ footer with pagination.
 - `Badge` variants: `default`, `secondary`, `destructive`, `outline`
 - Status pills with a leading dot: success, warning, error, info, neutral
 - A counter badge on an icon
+
+**Accessibility:** the status word is in the text. A bare coloured dot or fill carries
+no meaning for a screen reader, and none for a colour-blind reader either (WCAG 1.4.1).
 
 ### `id="avatar"` — Avatar
 Single avatar with image, avatar with initials fallback, avatar with a status dot,
@@ -116,6 +144,10 @@ inline SVG using the `chart-1` … `chart-5` tokens. These do not need to be rea
 charts — they need to show what the design's chart colours look like next to
 each other, plus axis, gridline, and legend styling.
 
+**Accessibility:** five chart colours are not distinguishable to roughly 1 in 12 men,
+so the legend must vary shape or dash as well as hue, or label series directly. Each
+chart needs a text alternative describing what it shows.
+
 ---
 
 ## 4. Navigation
@@ -126,10 +158,18 @@ each other, plus axis, gridline, and legend styling.
   group, and a nested child item
 - A mobile/collapsed representation of the sidebar
 
+**Accessibility:** each `<nav>` gets a distinguishing `aria-label`. The active item
+carries `aria-current="page"` — a colour or fill change alone is not announced. The
+collapsible group's trigger is a `<button>` with `aria-expanded`.
+
 ### `id="tabs"` — Tabs & segmented control
 - `Tabs` with three tabs, one active, showing the panel below
 - A segmented control / toggle group
 - A vertical tab variant
+
+**Accessibility:** `role="tablist"` / `tab` / `tabpanel` with `aria-selected` and
+`aria-controls`. Tabs use a roving `tabindex` — `Tab` reaches the active tab only,
+and `← →` move between tabs.
 
 ### `id="breadcrumb"` — Breadcrumb & pagination
 - `Breadcrumb` with three levels and an overflow ellipsis
@@ -141,6 +181,11 @@ click), including a label, several items with icons, a keyboard shortcut hint,
 a separator, a submenu indicator, a checkbox item, and a destructive item.
 
 Also include a `CommandMenu` / search palette in its open state.
+
+**Accessibility:** the trigger carries `aria-haspopup` and `aria-expanded`. Because
+these are rendered statically open for readability, their focus behaviour cannot be
+demonstrated here — `DESIGN.md` documents it instead. The command palette follows the
+APG combobox pattern, tracking the active option with `aria-activedescendant`.
 
 ---
 
@@ -158,13 +203,26 @@ this file needs to see them without running JavaScript):
 - `Sheet` / drawer — a side panel
 - `Popover` and `Tooltip`
 
+**Accessibility:** each dialog is labelled by its title (`aria-labelledby`) and marked
+`aria-modal="true"`. Tooltips are `role="tooltip"` and referenced by `aria-describedby`
+— never put interactive or essential content inside one, since it is unreachable for
+touch and keyboard users.
+
 ### `id="progress"` — Progress & loading
 `Progress` bar, an indeterminate spinner, a circular progress ring, and three
 `Skeleton` shapes (line, block, avatar).
 
+**Accessibility:** determinate bars use `role="progressbar"` with `aria-valuenow`.
+Indeterminate spinners need an accessible label. Skeletons are decorative — mark the
+region `aria-busy="true"` and hide the shapes with `aria-hidden`.
+
 ### `id="toast"` — Toast & notification
 A stack of two or three toasts: neutral, success, and destructive, each with a
 title, description, dismiss control, and one with an undo action.
+
+**Accessibility:** `role="status"` for neutral and success, `role="alert"` for
+destructive. A toast never steals focus, and its dismiss control is a labelled button.
+Anything with an action must not auto-dismiss faster than the user can reach it.
 
 ### `id="empty"` — Empty, error & loading states
 An empty state (icon, heading, description, primary action), a "no search results"
@@ -209,6 +267,10 @@ A grid of 12–20 icons at the design's standard size, demonstrating stroke weig
 and corner treatment. Use inline SVG. [Lucide](https://lucide.dev) is the default
 icon set (it is what shadcn/ui ships with); if a design uses a different one,
 `DESIGN.md` must say so and say why.
+
+**Accessibility:** decorative icons get `aria-hidden="true"` and `focusable="false"`.
+An icon carrying meaning on its own needs a `<title>` or an adjacent visually hidden
+label.
 
 ### `id="motion"` — Motion & interaction
 A written table (not animated) documenting: default transition duration and easing,

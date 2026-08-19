@@ -75,18 +75,34 @@ more.
 
 ### Measured contrast
 
-| Pair | Light | Dark |
-|---|---|---|
-| `foreground` on `background` | 13.8:1 | 12.1:1 |
-| `muted-foreground` on `background` | 5.9:1 | 4.7:1 |
-| `primary-foreground` on `primary` | 9.2:1 | 8.6:1 |
-| `primary` on `background` | 5.8:1 | 6.3:1 |
-| `destructive-foreground` on `destructive` | 8.4:1 | 7.9:1 |
-| `border` on `background` | 1.4:1 | 1.6:1 (decorative, not held to 3:1) |
+Computed from `theme.css` by `scripts/check.mjs`, not estimated:
 
-All text pairs clear WCAG AA (4.5:1 for body text, 3:1 for large text). `muted-foreground`
-is deliberately kept well above the minimum so that secondary text — which in a
-reading interface is often the text that matters — remains comfortably legible.
+| Pair | Light | Dark | Minimum |
+|---|---|---|---|
+| `foreground` on `background` | 14.49:1 | 12.87:1 | 4.5:1 |
+| `muted-foreground` on `background` | 5.16:1 | 5.56:1 | 4.5:1 |
+| `primary-foreground` on `primary` | 7.05:1 | 4.62:1 | 4.5:1 |
+| `primary` on `background` | 6.94:1 | **4.25:1** ⚠ | 4.5:1 |
+| `destructive-foreground` on `destructive` | 5.60:1 | **3.42:1** ⚠ | 4.5:1 |
+| `ring` on `background` | 6.94:1 | 4.25:1 | 3:1 |
+| `input` on `background` | **1.34:1** ⚠ | **1.66:1** ⚠ | 3:1 |
+| `border` on `background` | 1.37:1 | 1.37:1 | decorative |
+
+`muted-foreground` is deliberately kept well above the minimum so that secondary
+text — which in a reading interface is often the text that matters — remains
+comfortably legible.
+
+**Three known failures**, tracked rather than hidden:
+
+- `--input` at 1.34:1 does not meet the 3:1 WCAG 1.4.11 requires of a control
+  boundary. `warm-paper` uses hairline-bordered fields with no background fill, so
+  the border is the *only* thing identifying a field — this is a real defect.
+- `--primary` on `--background` drops to 4.25:1 in dark mode, so oxblood links in
+  running text fall just under AA. It still clears 3:1, so it remains valid for
+  large text and for the focus ring.
+- `destructive-foreground` on `destructive` falls to 3.42:1 in dark mode.
+
+Until these are fixed, do not treat `warm-paper` as AA-clean. See `## Accessibility`.
 
 ### Rules
 
@@ -345,6 +361,70 @@ persistent. No special colour, no bold weight. The active state is indicated by
 the background fill, not by shouting.
 
 Icon + text: `gap-2` between icon and label. Icons are 16px (1rem) in navigation.
+
+---
+
+## Accessibility
+
+Baseline is `shared/ACCESSIBILITY.md` — WCAG 2.2 AA. This section covers only what
+`warm-paper` decides for itself.
+
+**Focus ring.** `ring-2 ring-ring ring-offset-2 ring-offset-background`, applied on
+`:focus-visible` only, and never animated in — a focus indicator that fades is a
+focus indicator that is missing for the first 150ms. `--ring` is the oxblood
+primary: 6.94:1 in light and 4.25:1 in dark against the page, both clear of the 3:1
+that WCAG 1.4.11 requires of an indicator.
+
+**Target sizes.** `warm-paper` sizes its controls with padding rather than a fixed
+height, which makes the resulting target easy to lose track of. The floors:
+
+| Control | Size | Notes |
+|---|---|---|
+| Button (default, `px-4 py-2`) | ≈36px tall | Comes out of padding + 14px line box |
+| Button (small, `px-3 py-1.5`) | ≈30px tall | Still above the 24px floor — do not shrink further |
+| Form controls | Match the default button | Hairline border, no fill |
+| Inline links in prose | Exempt (SC 2.5.8 inline exception) | But keep the underline |
+| Below `md`, and any touch target | **44×44** | Pad out; do not scale the type |
+
+Generous rhythm is part of this design, so there is no reason to go near the floor.
+If a control is landing under 30px, the padding scale is being ignored.
+
+**Reading-first obligations.** This design exists to be read for a long time, which
+raises the bar on a few things beyond the shared baseline:
+
+- Body copy is capped by measure, and must survive the SC 1.4.12 text-spacing
+  overrides — never set a fixed height on a container holding prose.
+- The serif is used for *content*, never for UI chrome, so nothing functional
+  depends on a webfont that may not load.
+- Links in running text are underlined, not merely oxblood. This matters more here
+  than in `slate`, because `--primary` on `--background` is only 4.25:1 in dark
+  mode — the underline is what carries the link, not the colour.
+
+**State is never colour alone.** Status pills carry a text label alongside the dot.
+Form errors put the message in text below the field. The active nav item uses a
+`bg-accent` fill — a lightness change, so it survives greyscale — but must still
+carry `aria-current="page"`, because a fill is not announced.
+
+**Charts.** More than two series need direct labels or shape/dash variation; the
+`--chart-*` ramp is warm and closely spaced by design, which makes it *less*
+separable than a cooler ramp, not more.
+
+**Reduced motion** is handled by the `prefers-reduced-motion` block above and
+applies automatically. Note that this design animates `height` on accordions and
+`transform: scale` on button press — both are removed under reduced motion.
+
+### Known gaps
+
+Carried openly rather than quietly, per `shared/ACCESSIBILITY.md` §9:
+
+1. `--input` is 1.34:1 against the background (needs 3:1). Fields are outlined with
+   no fill, so the boundary is the only identifier. Fix by darkening `--input`
+   independently of `--border`.
+2. `--primary` on `--background` is 4.25:1 in dark mode (needs 4.5:1 for body-size
+   link text). Fix by lightening dark-mode `--primary` slightly.
+3. `--destructive-foreground` on `--destructive` is 3.42:1 in dark mode.
+
+All three are reported by `node scripts/check.mjs`.
 
 ---
 

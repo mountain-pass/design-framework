@@ -68,18 +68,36 @@ against a dark surface.
 
 ### Measured contrast
 
-| Pair | Light | Dark |
-|---|---|---|
-| `foreground` on `background` | 16.1:1 | 15.2:1 |
-| `muted-foreground` on `background` | 5.4:1 | 6.1:1 |
-| `primary-foreground` on `primary` | 7.9:1 | 8.4:1 |
-| `primary` on `background` | 6.8:1 | 7.2:1 |
-| `destructive-foreground` on `destructive` | 5.1:1 | 5.6:1 |
-| `border` on `background` | 1.3:1 | 1.5:1 (decorative, not held to 3:1) |
+Computed from `theme.css` by `scripts/check.mjs`, not estimated:
 
-All text pairs clear AA. `muted-foreground` is deliberately kept above 4.5:1 rather
-than the 3:1 that "secondary text" is often allowed, because in a dense tool the
-secondary text is frequently the text that matters.
+| Pair | Light | Dark | Minimum |
+|---|---|---|---|
+| `foreground` on `background` | 17.73:1 | 16.77:1 | 4.5:1 |
+| `muted-foreground` on `background` | 4.83:1 | 6.57:1 | 4.5:1 |
+| `primary-foreground` on `primary` | 5.66:1 | 6.35:1 | 4.5:1 |
+| `primary` on `background` | 5.91:1 | 6.46:1 | 4.5:1 |
+| `destructive-foreground` on `destructive` | 4.62:1 | **3.37:1** ⚠ | 4.5:1 |
+| `ring` on `background` | 5.91:1 | 6.46:1 | 3:1 |
+| `input` on `background` | **1.26:1** ⚠ | **1.54:1** ⚠ | 3:1 |
+| `border` on `background` | 1.26:1 | 1.27:1 | decorative |
+
+`muted-foreground` is deliberately kept above 4.5:1 rather than the 3:1 that
+"secondary text" is often allowed, because in a dense tool the secondary text is
+frequently the text that matters.
+
+**Two known failures**, carried deliberately and tracked rather than hidden:
+
+- `--input` at 1.26:1 does not meet the 3:1 that WCAG 1.4.11 requires of a control
+  boundary. In `slate` an outlined input's border is the only thing identifying it
+  as an input, so this is a real defect, not an exempt decorative hairline. Fixing
+  it means darkening `--input` away from `--border` — a visible change to the
+  design's hairline character, so it is called out here rather than silently
+  applied.
+- `destructive-foreground` on `destructive` falls to 3.37:1 in dark mode. This is
+  the classic dark-mode inversion trap described in `shared/ACCESSIBILITY.md`: the
+  fill lightens for dark mode while the foreground stays white.
+
+Until these are fixed, do not treat `slate` as AA-clean. See `## Accessibility`.
 
 ### Rules
 
@@ -256,6 +274,61 @@ caption scale in `muted-foreground`.
 **Tabs** — Underline style, not the filled-pill style shadcn ships by default. A
 2px `border-primary` underline on the active tab, `text-muted-foreground` on the
 rest. The filled style competes with buttons for attention.
+
+---
+
+## Accessibility
+
+Baseline is `shared/ACCESSIBILITY.md` — WCAG 2.2 AA. This section covers only what
+`slate` decides for itself.
+
+**Focus ring.** `ring-2 ring-ring ring-offset-2 ring-offset-background`, on
+`:focus-visible` only. `--ring` is the primary blue, which measures 5.91:1 light and
+6.46:1 dark against the page — comfortably past the 3:1 that WCAG 1.4.11 wants of a
+focus indicator. The offset is what keeps it legible on filled buttons, where the
+ring would otherwise sit directly on a similar blue.
+
+**Target sizes.** `slate` is a dense design, so this needs stating precisely:
+
+| Control | Height | Notes |
+|---|---|---|
+| Button, input, select | 36px (`h-9`) | Above the 24px floor, below the 44px touch size |
+| Icon button | 36×36 (`h-9 w-9`) | 16px icon, padding makes up the target |
+| Menu item | 32px (`h-8`) | Fine for pointer; full-width, so the row is the target |
+| Table row | 44px | Row actions are a 32px ghost button inside it |
+| Below `md` | **44×44** | Every interactive target, no exceptions |
+
+The 36px default is a deliberate trade for density and is legal at AA. If you are
+building something used on a touch screen, use 44px throughout and accept the
+lower density — do not split the difference.
+
+**State is never colour alone.** Status pills pair the dot with a text label. Table
+sort state uses a chevron, not a coloured header. The active sidebar item uses
+`font-medium` plus `bg-sidebar-accent` plus `aria-current="page"`, not colour by
+itself — this is why `slate` has no left accent bar and still reads unambiguously.
+Form errors put the message in text below the field; the `border-destructive` is a
+secondary cue, which is also why the border colour changes but its width does not.
+
+**Disabled** is `opacity-50 pointer-events-none` plus the real `disabled` attribute.
+Opacity alone leaves the control operable by keyboard.
+
+**Charts.** Five `--chart-*` tokens are not distinguishable to a colour-blind
+reader. Any chart with more than two series needs direct labels or a legend that
+also varies shape or dash pattern.
+
+**Reduced motion** is handled in `theme.css` and applies automatically.
+
+### Known gaps
+
+Carried openly rather than quietly, per `shared/ACCESSIBILITY.md` §9:
+
+1. `--input` is 1.26:1 against the background (needs 3:1). Outlined fields are not
+   reliably perceivable. Fix by darkening `--input` independently of `--border`.
+2. `--destructive-foreground` on `--destructive` is 3.37:1 in dark mode (needs
+   4.5:1). Fix by darkening dark-mode `--destructive` or by moving its foreground
+   off pure white.
+
+Both are reported by `node scripts/check.mjs`.
 
 ---
 
