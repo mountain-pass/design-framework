@@ -320,18 +320,7 @@ button[class*="border-input"]:focus-visible,
 [type="button"].border:focus-visible,
 [type="button"][class*="border-input"]:focus-visible {
   outline: 2px solid var(--ring);
-  /* The offset has to clear the slab, not just the border box. The slab is a
-     box-shadow, and outlines ignore shadows entirely, so at a 2px offset the
-     outline is drawn straight through it — the indicator and the slab occupy the
-     same 2px band under the bottom edge and read as one thick smear. Offsetting
-     by the lift plus a 2px gap puts clean background between them.
-
-     outline-offset is uniform on all four sides, so the sides gain the same room.
-     That is the trade for keeping this an outline: a pseudo-element could clear
-     only the bottom, but ::after does not render on <input type="button">, and
-     every element this rule matches carries the slab, so a ring that is tight on
-     three sides and loose on the fourth would look lopsided anyway. */
-  outline-offset: calc(var(--button-lift) + 2px);
+  outline-offset: 2px;
 }
 
 /* The slab shade, derived from whichever fill the button carries so a recoloured
