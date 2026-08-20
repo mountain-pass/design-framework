@@ -1,5 +1,8 @@
 # Design: `material-design`
 
+**Read [`../README.md`](../README.md) first.** It explains how this design's
+`theme.css` and `index.html` are meant to be used alongside this file.
+
 > Google's Material Design with the classic Material Design 2 blue. Tonal surfaces,
 > elevation with shadow, fully rounded buttons, and Roboto typography. Colorful but
 > systematic.

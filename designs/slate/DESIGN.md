@@ -1,5 +1,8 @@
 # Design: `slate`
 
+**Read [`../README.md`](../README.md) first.** It explains how this design's
+`theme.css` and `index.html` are meant to be used alongside this file.
+
 > A calm, neutral product UI. Cool greys, one blue accent, restrained depth.
 > The design equivalent of getting out of the way.
 

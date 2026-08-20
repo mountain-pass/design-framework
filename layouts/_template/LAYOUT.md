@@ -4,6 +4,9 @@
      Read CREATE-LAYOUT.md in the repo root first.
      Delete every one of these HTML comments before you finish. -->
 
+**Read [`../README.md`](../README.md) first.** It explains how this layout's
+`index.html` wireframe is meant to be used alongside this file.
+
 > <One-line description of the structure. Not what it is for — what it *is*.>
 
 **Suits:** <the page types this is right for>

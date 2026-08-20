@@ -1,5 +1,8 @@
 # Layout: `app-shell`
 
+**Read [`../README.md`](../README.md) first.** It explains how this layout's
+`index.html` wireframe is meant to be used alongside this file.
+
 > Viewport-locked application shell. Fixed sidebar, fixed top bar, one scrolling
 > content pane.
 

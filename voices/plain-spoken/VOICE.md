@@ -1,5 +1,8 @@
 # Voice: `plain-spoken`
 
+**Read [`../README.md`](../README.md) first.** It explains how this voice's
+`index.html` string sink is meant to be used alongside this file.
+
 > Warm but direct. An expert peer explaining something clearly and then stopping.
 > No jargon, no hype, no hedging — and no coldness either.
 

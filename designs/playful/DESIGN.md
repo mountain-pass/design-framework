@@ -1,5 +1,8 @@
 # Design: `playful`
 
+**Read [`../README.md`](../README.md) first.** It explains how this design's
+`theme.css` and `index.html` are meant to be used alongside this file.
+
 > Bright, cheerful, energetic. A vibrant purple and orange palette with generous rounded corners that brings joy to every interaction.
 
 **Adjectives:** playful, energetic, friendly, vibrant, cheerful.

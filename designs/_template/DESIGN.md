@@ -8,6 +8,9 @@
      still contains scaffold instructions will be read by an AI as if the
      instructions were part of the design. -->
 
+**Read [`../README.md`](../README.md) first.** It explains how this design's
+`theme.css` and `index.html` are meant to be used alongside this file.
+
 > <One-line description. What it feels like, in a sentence someone could repeat.>
 
 **Adjectives:** <three to five, comma separated>

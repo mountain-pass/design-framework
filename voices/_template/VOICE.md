@@ -5,6 +5,9 @@
      Read shared/COPY.md first: it is the contract this file and index.html must
      satisfy, and check.mjs enforces it. -->
 
+**Read [`../README.md`](../README.md) first.** It explains how this voice's
+`index.html` string sink is meant to be used alongside this file.
+
 > <One or two lines. What does this voice sound like? Written as a description of
 > speech, not a list of adjectives.>
 
