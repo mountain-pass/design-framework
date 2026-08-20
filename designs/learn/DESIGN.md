@@ -211,16 +211,25 @@ On `:active` the button travels down onto the slab and the slab collapses to
 nothing beneath it, so the bottom edge never moves and only the top edge does —
 the button is pressed into the page rather than squashed.
 
-The slab is a `box-shadow` and the travel is a `transform`, not a border that
-changes width:
+The slab is a `box-shadow` and the travel is `top` on a relatively positioned
+button, not a border that changes width and not a transform:
 
 - A border carries one colour, so pushing the face down by growing a *top*
   border would draw a visible line across the top of any outlined button.
   Padding avoids the line but collides with whatever `py-*` the markup sets.
-- `box-shadow` and `transform` cost no layout at all, so the press is composited
-  rather than reflowed — at any button size, fixed-height or not.
+- The travel must be painted on the same thread as the slab. A transform is
+  handed to the compositor while `box-shadow` repaints on the main thread, and
+  the two tick from different clocks: when the main thread is busy — rapid
+  clicking is the easy way to provoke it — the face keeps gliding while the slab
+  waits a frame or two to be repainted, and the bottom edge visibly jumps.
+  `top` and `box-shadow` are both main-thread paint properties, resolved in one
+  style pass and committed in one frame, so they cannot drift apart. A relative
+  offset moves nothing but the button itself, so no sibling reflows.
 - The slab genuinely sits outside the button box, which is what the metaphor
   describes.
+
+Both halves share one duration, for the same reason. `--button-press-duration`
+(160ms) drives them together; set it to `0ms` for an instant press.
 
 The consequence is that `box-shadow` belongs to the design on a button: a
 `shadow-*` utility there is overridden. That is deliberate. These buttons carry a
@@ -248,8 +257,13 @@ so they stay flat and do not travel. See prohibition 7.
 Baseline is `shared/ACCESSIBILITY.md` — WCAG 2.2 AA. This section covers only what
 `learn` decides for itself.
 
-**Focus ring.** `ring-2 ring-ring ring-offset-2` on `:focus-visible`, instant, no
-transition. `--ring` is the green primary, which measures 2.09:1 light and 8.05:1
+**Focus ring.** `outline: 2px solid var(--ring)` with `outline-offset: 2px` on
+`:focus-visible`, instant, no transition — an outline, deliberately, not a ring.
+Tailwind draws `ring-*` with `box-shadow`, which on these buttons is the slab, and
+the slab wins; a button whose markup said `focus-visible:ring-2` rendered no
+indicator at all while `focus-visible:outline-none` in the same class list had
+already removed the native one. `outline` is a separate property that the slab
+cannot overwrite. Do not convert it back to a ring — it fails silently. `--ring` is the green primary, which measures 2.09:1 light and 8.05:1
 dark against the page. Dark mode is comfortably past the 3:1 WCAG 1.4.11 asks of
 an indicator; light mode is not, and is one of the shortfalls the waiver above
 covers — the ring is the same green as the primary, so it cannot clear 3:1 on
@@ -317,7 +331,7 @@ is a deliberate asymmetry rather than an oversight.
 
 6. **Never stack headings without content between them.** If an h2 is immediately followed by an h3, one of them is wrong. Headings introduce content; they aren't decoration. This matters more here because the rounded display face is visually distinctive — stacked headings look like a type specimen, not a hierarchy.
 
-7. **Never animate anything that causes reflow.** Colour, opacity, shadow, and transform can transition. Height, width, padding, margin, and border width cannot — animating those relays out the page around them. Buttons don't scale on hover and panels don't slide open. The exceptions are purpose-built animation components (carousels, drawers) where movement is the point, and the button press described under Motion, which moves a `transform` and a `box-shadow` and so touches no other pixel on the page.
+7. **Never animate anything that causes reflow.** Colour, opacity, shadow, and transform can transition. Height, width, padding, margin, and border width cannot — animating those relays out the page around them. Buttons don't scale on hover and panels don't slide open. The exceptions are purpose-built animation components (carousels, drawers) where movement is the point, and the button press described under Motion, which moves a relative `top` and a `box-shadow` and so touches no other pixel on the page.
 
 8. **Never let gold or blue outrank the green.** Green is the action colour: the primary button, the progress fill, the completed state. Gold belongs to rewards and streaks, blue to navigation and secondary actions. A screen whose main call to action is gold has inverted the hierarchy — the learner should always be able to find "the green one".
 
