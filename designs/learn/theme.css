@@ -209,9 +209,16 @@
        border would draw a visible line across the top of any outlined button,
        because that border is already visible at 2px. Padding avoids the line
        but collides with whatever `py-*` the markup sets.
-     - box-shadow and transform are the only properties involved that cost no
-       layout: the press is composited rather than reflowed, at any button size,
-       fixed-height or not.
+     - The face moves with `top` on a relatively positioned button, NOT with a
+       transform. This matters: box-shadow is painted on the main thread and a
+       transform animation is handed to the compositor, and the two tick from
+       different clocks. Under a busy main thread — rapid clicking is the easy
+       way to see it — the transform keeps gliding while the shadow waits for a
+       repaint, so the slab appears to snap up a frame or two before the face
+       comes down to meet it, and the bottom edge visibly jumps. `top` and
+       box-shadow are both main-thread paint properties, evaluated in the same
+       style pass and committed in the same frame, so they cannot drift apart.
+       Relative offsets do not move siblings, so nothing else on the row reflows.
      - It is what the slab metaphor actually describes — the slab sits outside
        the button box, and the button visibly travels down onto it.
 
@@ -227,10 +234,18 @@ button,
 [type="button"],
 [type="submit"] {
   /* Named explicitly rather than left to `transition-all`, because half these
-     buttons carry `transition-colors`, which covers neither transform nor
-     box-shadow. */
-  transition-property: transform, box-shadow, background-color, border-color, color;
-  transition-duration: 160ms;
+     buttons carry `transition-colors`, which covers neither `top` nor
+     box-shadow.
+
+     The two halves of the press — the face travelling down and the slab
+     collapsing — share one duration, because they are one movement and any gap
+     between them reads as the bottom edge jumping. Set --button-press-duration
+     to 0ms to make the press instant; nothing else needs to change. */
+  transition-property: top, box-shadow, background-color, border-color, color;
+  transition-duration:
+    var(--button-press-duration, 160ms),
+    var(--button-press-duration, 160ms),
+    160ms, 160ms, 160ms;
   transition-timing-function: cubic-bezier(0.2, 0, 0.2, 1);
 }
 
@@ -250,6 +265,8 @@ button[class*="border-input"],
 [type="button"].border-2,
 [type="button"].border,
 [type="button"][class*="border-input"] {
+  position: relative;
+  top: 0;
   box-shadow: 0 var(--button-lift) 0 0 var(--button-edge, var(--border));
 }
 
@@ -267,8 +284,43 @@ button[class*="border-input"]:active,
 [type="button"].border-2:active,
 [type="button"].border:active,
 [type="button"][class*="border-input"]:active {
-  transform: translateY(var(--button-lift));
+  top: var(--button-lift);
   box-shadow: 0 0 0 0 var(--button-edge, var(--border));
+}
+
+/* The focus indicator, which the slab would otherwise eat.
+   -----------------------------------------------------------------------------
+   Tailwind draws `ring-*` with box-shadow. The slab above is also box-shadow, and
+   it is unlayered, so it beats the ring utility outright — a button that markup
+   says is `focus-visible:ring-2 focus-visible:ring-ring` computed to nothing but
+   the slab, while `focus-visible:outline-none` in the same class list had already
+   removed the native indicator. Every key button was reachable by keyboard with no
+   visible focus state at all: WCAG 2.2 SC 2.4.7, failed.
+
+   Drawing the indicator with `outline` instead of a ring is what fixes it. outline
+   is its own property, so the slab cannot overwrite it however the two are ordered,
+   and modern engines follow border-radius with it. Being unlayered, it also beats
+   the `outline-none` the utilities set.
+
+   Do not "simplify" this back to a ring. The ring is the thing that does not work
+   here, and it fails silently — nothing renders, no rule is crossed out. */
+
+button.bg-primary:focus-visible,
+button.bg-secondary:focus-visible,
+button.bg-accent:focus-visible,
+button.bg-destructive:focus-visible,
+button.border-2:focus-visible,
+button.border:focus-visible,
+button[class*="border-input"]:focus-visible,
+[type="button"].bg-primary:focus-visible,
+[type="button"].bg-secondary:focus-visible,
+[type="button"].bg-accent:focus-visible,
+[type="button"].bg-destructive:focus-visible,
+[type="button"].border-2:focus-visible,
+[type="button"].border:focus-visible,
+[type="button"][class*="border-input"]:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
 }
 
 /* The slab shade, derived from whichever fill the button carries so a recoloured
