@@ -1,5 +1,8 @@
 # Layout: `document-editor`
 
+**Read [`../README.md`](../README.md) first.** It explains how this layout's
+`index.html` wireframe is meant to be used alongside this file.
+
 > A centred writing surface with a collapsible document tree on the left and a
 > contextual inspector on the right. The document is the interface.
 

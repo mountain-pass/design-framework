@@ -1,5 +1,8 @@
 # Design: `warm-paper`
 
+**Read [`../README.md`](../README.md) first.** It explains how this design's
+`theme.css` and `index.html` are meant to be used alongside this file.
+
 > Editorial and reading-first. Warm off-white paper, soft near-black ink, serif
 > for content, sans for UI chrome. One muted oxblood accent. Minimal chrome,
 > generous rhythm, 16px body text.

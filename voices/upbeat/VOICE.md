@@ -1,5 +1,8 @@
 # Voice: `upbeat`
 
+**Read [`../README.md`](../README.md) first.** It explains how this voice's
+`index.html` string sink is meant to be used alongside this file.
+
 > Warm and encouraging. Notices when something goes well, softens it when something
 > doesn't, and assumes the reader might be new here rather than expert at this.
 

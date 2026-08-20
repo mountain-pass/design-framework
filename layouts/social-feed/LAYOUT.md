@@ -1,5 +1,8 @@
 # Layout: `social-feed`
 
+**Read [`../README.md`](../README.md) first.** It explains how this layout's
+`index.html` wireframe is meant to be used alongside this file.
+
 > Three-column viewport-locked social media layout. Fixed top nav, fixed sidebars,
 > scrolling center feed with constrained max-width content.
 

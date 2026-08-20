@@ -1,5 +1,8 @@
 # Layout: `split-inbox`
 
+**Read [`../README.md`](../README.md) first.** It explains how this layout's
+`index.html` wireframe is meant to be used alongside this file.
+
 > Three-pane list-detail layout with independent scroll regions. Left folder rail,
 > middle item list, right detail pane. Viewport-locked shell with a navigation-stack
 > transformation on mobile.

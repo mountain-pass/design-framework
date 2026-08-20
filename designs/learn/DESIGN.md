@@ -1,5 +1,8 @@
 # Design: `learn`
 
+**Read [`../README.md`](../README.md) first.** It explains how this design's
+`theme.css` and `index.html` are meant to be used alongside this file.
+
 > A Duolingo-inspired learning interface: dark navy surfaces, green action buttons, rounded forms, and a friendly rhythm built around momentum and progress.
 
 **Adjectives:** focused, encouraging, bright, tactile, motivating.
