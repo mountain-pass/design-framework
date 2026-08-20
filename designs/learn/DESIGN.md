@@ -257,13 +257,22 @@ so they stay flat and do not travel. See prohibition 7.
 Baseline is `shared/ACCESSIBILITY.md` — WCAG 2.2 AA. This section covers only what
 `learn` decides for itself.
 
-**Focus ring.** `outline: 2px solid var(--ring)` with `outline-offset: 2px` on
+**Focus ring.** `outline: 2px solid var(--ring)` with
+`outline-offset: calc(var(--button-lift) + 2px)` on
 `:focus-visible`, instant, no transition — an outline, deliberately, not a ring.
 Tailwind draws `ring-*` with `box-shadow`, which on these buttons is the slab, and
 the slab wins; a button whose markup said `focus-visible:ring-2` rendered no
 indicator at all while `focus-visible:outline-none` in the same class list had
 already removed the native one. `outline` is a separate property that the slab
-cannot overwrite. Do not convert it back to a ring — it fails silently. `--ring` is the green primary, which measures 2.09:1 light and 8.05:1
+cannot overwrite. Do not convert it back to a ring — it fails silently.
+
+The offset clears the slab rather than the border box. Outlines ignore box-shadows,
+so at a 2px offset the indicator was drawn straight through the slab and the two
+read as one thick smear under the bottom edge; at lift + 2px there is clean
+background between them — 4px of slab, a 2px gap, then the 2px outline. The offset
+is uniform on all four sides, so the sides gain the same room. That is the trade
+for keeping this an outline rather than a pseudo-element, which could clear only
+the bottom but does not render on `<input type="button">`. `--ring` is the green primary, which measures 2.09:1 light and 8.05:1
 dark against the page. Dark mode is comfortably past the 3:1 WCAG 1.4.11 asks of
 an indicator; light mode is not, and is one of the shortfalls the waiver above
 covers — the ring is the same green as the primary, so it cannot clear 3:1 on
