@@ -67,12 +67,34 @@ const kindLabel = (kind) => (kind === "design" ? "kitchen sink" : kind === "layo
 
 const codeClass = "rounded border border-border bg-card px-1.5 py-0.5 font-mono text-[0.85em]";
 
-const card = (item, kind) => `
-        <a href="${esc(item.href)}" class="group flex flex-col gap-1 rounded-lg border border-border bg-card p-5 shadow-xs transition-colors hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-          <span class="text-[0.6875rem] font-semibold uppercase tracking-wide text-muted-foreground">${kind}</span>
-          <span class="font-mono text-base font-semibold">${esc(item.name)}</span>
-          <span class="text-sm text-muted-foreground">${esc(item.description)}</span>
-          <span class="mt-2 text-xs text-muted-foreground/80">${esc(item.doc.split("/").pop())} &middot; ${kindLabel(kind)}</span>
+// Each design's kitchen sink hand-picks its own radius and border weight for
+// the Card component (e.g. `learn` uses a 2px border where the others use
+// 1px) — that choice lives in the demo's markup, not in theme.css's tokens,
+// so it can't be picked up by swapping CSS variables alone. Pulled straight
+// from the "Basic card" example in designs/<name>/index.html#card, so the
+// gallery's own cards use the exact same shell classes a kitchen sink does.
+const FALLBACK_CARD_SHELL = "rounded-lg border border-border bg-card";
+const cardShellClasses = Object.fromEntries(
+  designs.map((d) => {
+    const demoHtml = readFileSync(join(ROOT, "designs", d.name, "index.html"), "utf8");
+    const m = demoHtml.match(/<div class="(rounded-\S+ border(?:-\d+)? border-border bg-card)">/);
+    return [d.name, m ? m[1] : FALLBACK_CARD_SHELL];
+  })
+);
+
+const CARD_STATIC =
+  "block transition-colors hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+
+// Structure mirrors the kitchen sink's own Basic Card: a `p-6 pb-4` header
+// and a `border-t` footer strip, rather than a bespoke card shape.
+const card = (item, kind, shellClasses) => `
+        <a href="${esc(item.href)}" data-card class="${shellClasses} ${CARD_STATIC}">
+          <div class="p-6 pb-4">
+            <span class="text-[0.6875rem] font-semibold uppercase tracking-wide text-muted-foreground">${kind}</span>
+            <h3 class="mt-1 font-mono text-base font-semibold">${esc(item.name)}</h3>
+            <p class="mt-1 text-sm text-muted-foreground">${esc(item.description)}</p>
+          </div>
+          <div class="border-t border-border px-6 py-3 text-xs text-muted-foreground/80">${esc(item.doc.split("/").pop())} &middot; ${kindLabel(kind)}</div>
         </a>`;
 
 const empty = (what) => `
@@ -106,6 +128,7 @@ const templateRaw = readFileSync(join(ROOT, "DESIGN.md.template"), "utf8").repla
 // The design this page itself previews on load. Falls back to the first
 // design if `slate` is ever renamed or removed.
 const DEFAULT_DESIGN = designs.some((d) => d.name === "slate") ? "slate" : (designs[0]?.name ?? "slate");
+const defaultCardShell = cardShellClasses[DEFAULT_DESIGN] ?? FALLBACK_CARD_SHELL;
 
 // The vendored Tailwind browser compiler — same file every kitchen sink loads
 // (see vendor/README.md). Resolved by scanning rather than hardcoding the
@@ -205,7 +228,7 @@ const html = `<!doctype html>
       What it looks like — colour, type, spacing, and the styling of every component.
       Each demo is a <strong class="font-semibold text-foreground">kitchen sink</strong>: the same components, in the same order, so designs can be compared directly.
     </p>
-    <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">${designs.length ? designs.map((d) => card(d, "design")).join("") : empty("designs")}
+    <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">${designs.length ? designs.map((d) => card(d, "design", defaultCardShell)).join("") : empty("designs")}
     </div>
 
     <h2 class="mt-14 text-xs font-semibold uppercase tracking-widest text-muted-foreground">Layouts</h2>
@@ -213,7 +236,7 @@ const html = `<!doctype html>
       Where everything goes — regions, sizes, scroll behaviour, and responsive rules.
       Each demo is a <strong class="font-semibold text-foreground">wireframe</strong>: greyscale, with <code class="${codeClass}">&lt;placeholder&gt;</code> labels marking what belongs where.
     </p>
-    <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">${layouts.length ? layouts.map((l) => card(l, "layout")).join("") : empty("layouts")}
+    <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">${layouts.length ? layouts.map((l) => card(l, "layout", defaultCardShell)).join("") : empty("layouts")}
     </div>
 
     <h2 class="mt-14 text-xs font-semibold uppercase tracking-widest text-muted-foreground">Voices</h2>
@@ -221,7 +244,7 @@ const html = `<!doctype html>
       How it speaks — attributes, mechanics, vocabulary, and the actual strings a product says.
       Each demo is a <strong class="font-semibold text-foreground">string sink</strong>: the same writing situations, in the same order, in greyscale, so voices can be compared line for line.
     </p>
-    <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">${voices.length ? voices.map((v) => card(v, "voice")).join("") : empty("voices")}
+    <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">${voices.length ? voices.map((v) => card(v, "voice", defaultCardShell)).join("") : empty("voices")}
     </div>
   </section>
 
@@ -293,6 +316,22 @@ const html = `<!doctype html>
   var TAILWIND_SRC = ${JSON.stringify(TAILWIND_SRC)};
   var STORAGE_KEY = "design-framework:preview-design";
 
+  // Card radius/border weight are choices baked into each design's own
+  // markup (see the Card section of designs/<name>/index.html), not tokens
+  // theme.css exposes — so they can't ride along with the CSS swap above.
+  // Reapplied to every [data-card] element whenever the preview changes.
+  var CARD_SHELL = ${JSON.stringify(cardShellClasses)};
+  var CARD_FALLBACK_SHELL = ${JSON.stringify(FALLBACK_CARD_SHELL)};
+  var CARD_STATIC = ${JSON.stringify(CARD_STATIC)};
+
+  function applyCardShell(name) {
+    var shell = CARD_SHELL[name] || CARD_FALLBACK_SHELL;
+    var cards = document.querySelectorAll("[data-card]");
+    for (var i = 0; i < cards.length; i++) {
+      cards[i].className = shell + " " + CARD_STATIC;
+    }
+  }
+
   var themeSelect = document.getElementById("preview-design");
   var themeNote = document.getElementById("preview-note");
   var themeStyle = null;
@@ -330,6 +369,7 @@ const html = `<!doctype html>
           script.src = TAILWIND_SRC;
           document.head.appendChild(script);
         }
+        applyCardShell(name);
         currentDesign = name;
         themeNote.classList.add("hidden");
       })
