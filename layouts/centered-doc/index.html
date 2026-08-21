@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>centered-doc — wireframe</title>
+
+<script src="../../vendor/tailwind-browser-4.3.3.js"></script>
+
+<style type="text/tailwindcss">
+/* Wireframes are deliberately greyscale. If this file starts looking
+   attractive, styling has leaked in and the layout has stopped being
+   combinable with an arbitrary design. */
+:root {
+  --wire-bg:     oklch(0.985 0 0);
+  --wire-panel:  oklch(0.955 0 0);
+  --wire-line:   oklch(0.80 0 0);
+  --wire-ink:    oklch(0.32 0 0);
+  --wire-dim:    oklch(0.56 0 0);
+  --wire-mark:   oklch(0.90 0 0);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --wire-bg:    oklch(0.19 0 0);
+    --wire-panel: oklch(0.24 0 0);
+    --wire-line:  oklch(0.42 0 0);
+    --wire-ink:   oklch(0.88 0 0);
+    --wire-dim:   oklch(0.62 0 0);
+    --wire-mark:  oklch(0.30 0 0);
+  }
+}
+
+@theme inline {
+  --color-wire-bg:    var(--wire-bg);
+  --color-wire-panel: var(--wire-panel);
+  --color-wire-line:  var(--wire-line);
+  --color-wire-ink:   var(--wire-ink);
+  --color-wire-dim:   var(--wire-dim);
+  --color-wire-mark:  var(--wire-mark);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@layer base {
+  body {
+    background-color: var(--wire-bg);
+    color: var(--wire-ink);
+    font-family: var(--font-mono);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer components {
+  /* A wireframe region: dashed outline, no fill. */
+  .rgn   { @apply rounded border border-dashed border-wire-line; }
+  /* A filled region, for chrome that is structurally distinct. */
+  .rgn-f { @apply rounded border border-dashed border-wire-line bg-wire-panel; }
+  /* The placeholder text inside a region. */
+  .slot  { @apply text-[0.6875rem] leading-tight text-wire-ink; }
+  /* The sizing annotation on a region. */
+  .dim   { @apply text-[0.625rem] leading-tight text-wire-dim; }
+  /* A solid content-stand-in bar. */
+  .bar   { @apply rounded-sm bg-wire-mark; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="mx-auto max-w-[1100px] px-4 py-8 sm:px-6">
+
+  <header class="mb-8">
+    <p class="text-[0.6875rem] uppercase tracking-widest text-wire-dim">Layout wireframe</p>
+    <h1 class="mt-1.5 text-2xl font-medium tracking-tight">centered-doc</h1>
+    <p class="mt-2 max-w-[75ch] text-xs leading-relaxed text-wire-dim">
+      Single-column centered document. The page scrolls as a whole — no viewport-locking,
+      no independent scroll panes. Annotations in <span class="text-wire-ink">grey</span>
+      are the real Tailwind values. Draw them exactly.
+    </p>
+  </header>
+
+  <!-- ======================================================================
+       DESKTOP — the layout at its real proportions
+       =================================================================== -->
+  <p class="mb-2 text-[0.6875rem] uppercase tracking-widest text-wire-dim">Desktop · ≥ lg (1024px+)</p>
+
+  <!-- Outer page boundary -->
+  <div class="rgn overflow-hidden">
+
+    <!-- SITE HEADER -->
+    <div class="rgn-f flex h-14 items-center gap-3 border-b border-dashed border-wire-line px-6">
+      <!-- Brand -->
+      <div class="rgn flex h-8 w-36 shrink-0 items-center justify-center px-2">
+        <span class="slot">&lt;brand / logo&gt;</span>
+      </div>
+      <!-- Global nav links -->
+      <div class="rgn mx-6 flex h-8 flex-1 items-center gap-4 px-2">
+        <span class="slot">&lt;global nav links&gt;</span>
+        <span class="dim ml-auto">hidden on mobile · sm:flex</span>
+      </div>
+      <!-- Global actions -->
+      <div class="rgn flex h-8 w-28 shrink-0 items-center justify-center gap-2 px-2">
+        <span class="slot">&lt;global actions&gt;</span>
+      </div>
+    </div>
+    <div class="flex justify-end px-2 pb-0.5 pt-0.5">
+      <span class="dim">h-14 · sticky top-0 · z-10 · full width</span>
+    </div>
+
+    <!-- PAGE BACKGROUND + GUTTERS -->
+    <div class="py-10">
+      <div class="dim mb-2 px-6">← gutter (viewport edge to column) · symmetric ·  grows as viewport widens past max-w-4xl</div>
+
+      <!-- THE CENTERED COLUMN -->
+      <div class="mx-auto w-full max-w-[56rem] px-6">
+        <div class="dim mb-3 text-center">max-w-4xl (56rem) · mx-auto · px-6 · py-12</div>
+
+        <!-- PAGE HEADER -->
+        <div class="rgn mb-6 p-4">
+          <span class="slot block mb-1">&lt;page title&gt; — h1</span>
+          <div class="bar mb-2 h-7 w-72"></div>
+          <span class="slot block mb-1">&lt;page subtitle / lede&gt; — optional · max-w-[60ch] · text-muted-foreground</span>
+          <div class="bar h-4 w-96 opacity-50"></div>
+          <div class="dim mt-2">one &lt;h1&gt; per page · lives here and nowhere else</div>
+        </div>
+
+        <!-- TAB BAR -->
+        <div class="rgn mb-0 p-3">
+          <span class="slot block mb-2">&lt;tabs for different sections&gt; — optional · omit when page has no sections</span>
+          <div class="flex items-end gap-0 border-b border-wire-line pb-0">
+            <!-- Active tab -->
+            <div class="flex flex-col items-start gap-0.5 pr-5">
+              <span class="slot font-medium">Tab A</span>
+              <div class="h-0.5 w-full bg-wire-ink"></div>
+            </div>
+            <!-- Inactive tabs -->
+            <div class="flex flex-col items-start gap-0.5 px-4">
+              <span class="dim">Tab B</span>
+              <div class="h-0.5 w-full bg-transparent"></div>
+            </div>
+            <div class="flex flex-col items-start gap-0.5 px-4">
+              <span class="dim">Tab C</span>
+              <div class="h-0.5 w-full bg-transparent"></div>
+            </div>
+          </div>
+          <div class="dim mt-2">role="tablist" · active tab: border-b-2 border-primary · underline only, never background fill</div>
+        </div>
+
+        <!-- PRIMARY CONTENT (tab panel) -->
+        <div class="rgn mt-0 p-4">
+          <span class="slot block mb-3">&lt;primary content&gt; — tab panel or direct body · role="tabpanel"</span>
+          <div class="dim mb-3">pt-6 sm:pt-8 · expands to content height · page scrolls as a whole</div>
+          <!-- Simulated content rows -->
+          <div class="space-y-2.5">
+            <div class="rgn flex h-16 items-center gap-3 px-3">
+              <div class="bar h-8 w-8 shrink-0 rounded-sm"></div>
+              <div class="flex-1 space-y-1.5">
+                <div class="bar h-3.5 w-2/3"></div>
+                <div class="bar h-3 w-1/2 opacity-50"></div>
+              </div>
+              <div class="bar h-6 w-16 shrink-0"></div>
+            </div>
+            <div class="rgn flex h-16 items-center gap-3 px-3">
+              <div class="bar h-8 w-8 shrink-0 rounded-sm"></div>
+              <div class="flex-1 space-y-1.5">
+                <div class="bar h-3.5 w-3/4"></div>
+                <div class="bar h-3 w-2/5 opacity-50"></div>
+              </div>
+              <div class="bar h-6 w-16 shrink-0"></div>
+            </div>
+            <div class="rgn flex h-16 items-center gap-3 px-3">
+              <div class="bar h-8 w-8 shrink-0 rounded-sm"></div>
+              <div class="flex-1 space-y-1.5">
+                <div class="bar h-3.5 w-1/2"></div>
+                <div class="bar h-3 w-1/3 opacity-50"></div>
+              </div>
+              <div class="bar h-6 w-16 shrink-0"></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end centred column -->
+    </div><!-- end page bg -->
+
+    <!-- Scroll annotation -->
+    <div class="border-t border-dashed border-wire-line px-6 py-2">
+      <span class="dim">↓ page scrolls as a whole · html and body scroll freely · no h-screen or overflow-hidden on body</span>
+    </div>
+
+  </div><!-- end outer page boundary -->
+
+  <!-- ======================================================================
+       BREAKPOINT STRIP
+       =================================================================== -->
+  <div class="mt-12">
+    <p class="mb-4 text-[0.6875rem] uppercase tracking-widest text-wire-dim">Breakpoints</p>
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+
+      <!-- MOBILE -->
+      <div>
+        <p class="mb-2 text-[0.625rem] uppercase tracking-widest text-wire-dim">&lt; sm · &lt; 640px</p>
+        <div class="rgn overflow-hidden" style="width: 200px;">
+          <!-- Header -->
+          <div class="rgn-f flex h-10 items-center justify-between border-b border-dashed border-wire-line px-2">
+            <div class="bar h-5 w-14"></div>
+            <!-- hamburger stand-in -->
+            <div class="flex flex-col gap-0.5">
+              <div class="bar h-0.5 w-4"></div>
+              <div class="bar h-0.5 w-4"></div>
+              <div class="bar h-0.5 w-4"></div>
+            </div>
+          </div>
+          <!-- Column — full width with px-4 -->
+          <div class="px-3 py-4">
+            <div class="dim mb-1.5">px-4 · full width</div>
+            <!-- Page header -->
+            <div class="rgn mb-2 p-2">
+              <div class="bar mb-1 h-4 w-24"></div>
+              <div class="bar h-3 w-32 opacity-50"></div>
+            </div>
+            <!-- Tabs -->
+            <div class="rgn mb-2 flex gap-3 border-b border-wire-line pb-0.5 px-2 pt-1.5">
+              <div>
+                <div class="bar mb-0.5 h-2.5 w-7"></div>
+                <div class="h-0.5 w-full bg-wire-ink"></div>
+              </div>
+              <div class="bar mb-1.5 h-2.5 w-7 opacity-40"></div>
+            </div>
+            <!-- Content -->
+            <div class="rgn space-y-1.5 p-2">
+              <div class="rgn flex h-9 items-center gap-1.5 px-1.5">
+                <div class="bar h-5 w-5 shrink-0"></div>
+                <div class="flex-1 space-y-1">
+                  <div class="bar h-2.5 w-full"></div>
+                  <div class="bar h-2 w-3/4 opacity-50"></div>
+                </div>
+              </div>
+              <div class="rgn flex h-9 items-center gap-1.5 px-1.5">
+                <div class="bar h-5 w-5 shrink-0"></div>
+                <div class="flex-1 space-y-1">
+                  <div class="bar h-2.5 w-full"></div>
+                  <div class="bar h-2 w-1/2 opacity-50"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="mt-2 max-w-[24ch] text-[0.6875rem] leading-snug text-wire-dim">
+          Nav links hidden. Hamburger replaces them. Column fills viewport with <span class="text-wire-ink">px-4</span>.
+        </p>
+      </div>
+
+      <!-- TABLET -->
+      <div>
+        <p class="mb-2 text-[0.625rem] uppercase tracking-widest text-wire-dim">sm – lg · 640 – 1024px</p>
+        <div class="rgn overflow-hidden" style="width: 260px;">
+          <!-- Header -->
+          <div class="rgn-f flex h-10 items-center gap-2 border-b border-dashed border-wire-line px-3">
+            <div class="bar h-5 w-14 shrink-0"></div>
+            <div class="flex flex-1 gap-3 px-2">
+              <div class="bar h-2.5 w-10 opacity-70"></div>
+              <div class="bar h-2.5 w-10 opacity-70"></div>
+            </div>
+            <div class="bar h-5 w-10 shrink-0"></div>
+          </div>
+          <!-- Column — starts to center once wider than max-w-4xl -->
+          <div class="px-4 py-4">
+            <div class="dim mb-1.5">px-6 · centering visible as viewport widens</div>
+            <div class="rgn mb-2 p-2">
+              <div class="bar mb-1 h-4 w-28"></div>
+              <div class="bar h-3 w-40 opacity-50"></div>
+            </div>
+            <div class="rgn mb-2 flex gap-3 border-b border-wire-line pb-0.5 px-2 pt-1.5">
+              <div>
+                <div class="bar mb-0.5 h-2.5 w-7"></div>
+                <div class="h-0.5 w-full bg-wire-ink"></div>
+              </div>
+              <div class="bar mb-1.5 h-2.5 w-7 opacity-40"></div>
+              <div class="bar mb-1.5 h-2.5 w-7 opacity-40"></div>
+            </div>
+            <div class="rgn space-y-1.5 p-2">
+              <div class="rgn flex h-9 items-center gap-1.5 px-1.5">
+                <div class="bar h-5 w-5 shrink-0"></div>
+                <div class="flex-1 space-y-1">
+                  <div class="bar h-2.5 w-full"></div>
+                  <div class="bar h-2 w-3/4 opacity-50"></div>
+                </div>
+                <div class="bar h-4 w-8 shrink-0"></div>
+              </div>
+              <div class="rgn flex h-9 items-center gap-1.5 px-1.5">
+                <div class="bar h-5 w-5 shrink-0"></div>
+                <div class="flex-1 space-y-1">
+                  <div class="bar h-2.5 w-4/5"></div>
+                  <div class="bar h-2 w-1/2 opacity-50"></div>
+                </div>
+                <div class="bar h-4 w-8 shrink-0"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="mt-2 max-w-[28ch] text-[0.6875rem] leading-snug text-wire-dim">
+          Nav links visible in header. <span class="text-wire-ink">px-6</span>. Max-width starts centering the column.
+        </p>
+      </div>
+
+      <!-- DESKTOP -->
+      <div>
+        <p class="mb-2 text-[0.625rem] uppercase tracking-widest text-wire-dim">≥ lg · 1024px+</p>
+        <div class="rgn overflow-hidden" style="width: 320px;">
+          <!-- Header -->
+          <div class="rgn-f flex h-10 items-center gap-2 border-b border-dashed border-wire-line px-3">
+            <div class="bar h-5 w-14 shrink-0"></div>
+            <div class="flex flex-1 gap-3 px-2">
+              <div class="bar h-2.5 w-10 opacity-70"></div>
+              <div class="bar h-2.5 w-10 opacity-70"></div>
+              <div class="bar h-2.5 w-10 opacity-70"></div>
+            </div>
+            <div class="bar h-5 w-14 shrink-0"></div>
+          </div>
+          <!-- Gutters visible -->
+          <div class="flex py-4">
+            <div class="w-8 shrink-0">
+              <div class="dim mt-2 rotate-90 whitespace-nowrap">gutter</div>
+            </div>
+            <div class="min-w-0 flex-1 px-1">
+              <div class="dim mb-1.5">max-w-4xl · centred</div>
+              <div class="rgn mb-2 p-2">
+                <div class="bar mb-1 h-4 w-28"></div>
+                <div class="bar h-3 w-40 opacity-50"></div>
+              </div>
+              <div class="rgn mb-2 flex gap-3 border-b border-wire-line pb-0.5 px-2 pt-1.5">
+                <div>
+                  <div class="bar mb-0.5 h-2.5 w-7"></div>
+                  <div class="h-0.5 w-full bg-wire-ink"></div>
+                </div>
+                <div class="bar mb-1.5 h-2.5 w-7 opacity-40"></div>
+              </div>
+              <div class="rgn space-y-1.5 p-2">
+                <div class="rgn flex h-9 items-center gap-1.5 px-1.5">
+                  <div class="bar h-5 w-5 shrink-0"></div>
+                  <div class="flex-1 space-y-1">
+                    <div class="bar h-2.5 w-full"></div>
+                    <div class="bar h-2 w-3/4 opacity-50"></div>
+                  </div>
+                  <div class="bar h-4 w-8 shrink-0"></div>
+                </div>
+                <div class="rgn flex h-9 items-center gap-1.5 px-1.5">
+                  <div class="bar h-5 w-5 shrink-0"></div>
+                  <div class="flex-1 space-y-1">
+                    <div class="bar h-2.5 w-4/5"></div>
+                    <div class="bar h-2 w-1/2 opacity-50"></div>
+                  </div>
+                  <div class="bar h-4 w-8 shrink-0"></div>
+                </div>
+              </div>
+            </div>
+            <div class="w-8 shrink-0">
+              <div class="dim mt-2 rotate-90 whitespace-nowrap">gutter</div>
+            </div>
+          </div>
+        </div>
+        <p class="mt-2 max-w-[28ch] text-[0.6875rem] leading-snug text-wire-dim">
+          Column fully centred with symmetric gutters. Site header still full width.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       VARIANT: NO TABS
+       =================================================================== -->
+  <div class="mt-12">
+    <p class="mb-2 text-[0.6875rem] uppercase tracking-widest text-wire-dim">Variant — no tabs (direct content body)</p>
+    <p class="mb-4 text-xs text-wire-dim">When the page has a single section, omit the tab bar entirely.</p>
+
+    <div class="rgn overflow-hidden">
+      <!-- Header -->
+      <div class="rgn-f flex h-14 items-center gap-3 border-b border-dashed border-wire-line px-6">
+        <div class="rgn flex h-8 w-36 shrink-0 items-center justify-center px-2">
+          <span class="slot">&lt;brand / logo&gt;</span>
+        </div>
+        <div class="ml-auto flex gap-2">
+          <div class="bar h-6 w-6 rounded-sm opacity-60"></div>
+          <div class="bar h-6 w-6 rounded-sm opacity-60"></div>
+        </div>
+      </div>
+
+      <!-- Centred column, no tabs -->
+      <div class="mx-auto w-full max-w-[56rem] px-6 py-10">
+        <div class="dim mb-3 text-center">max-w-4xl · mx-auto · no tab bar</div>
+        <!-- Page header -->
+        <div class="rgn mb-6 p-4">
+          <span class="slot block mb-1">&lt;page title&gt; — h1</span>
+          <div class="bar mb-2 h-7 w-56"></div>
+          <span class="slot block mb-1">&lt;page subtitle / lede&gt; — optional</span>
+          <div class="bar h-4 w-80 opacity-50"></div>
+        </div>
+        <!-- Direct content — no tab nav above it -->
+        <div class="rgn p-4">
+          <span class="slot block mb-3">&lt;primary content&gt; — directly in &lt;main&gt;, no tab panel wrapper</span>
+          <div class="grid grid-cols-3 gap-3">
+            <div class="rgn p-3 space-y-1.5">
+              <div class="bar h-3.5 w-full"></div>
+              <div class="bar h-3 w-3/4 opacity-50"></div>
+              <div class="bar h-8 w-full opacity-30 mt-2"></div>
+            </div>
+            <div class="rgn p-3 space-y-1.5">
+              <div class="bar h-3.5 w-full"></div>
+              <div class="bar h-3 w-3/4 opacity-50"></div>
+              <div class="bar h-8 w-full opacity-30 mt-2"></div>
+            </div>
+            <div class="rgn p-3 space-y-1.5">
+              <div class="bar h-3.5 w-full"></div>
+              <div class="bar h-3 w-3/4 opacity-50"></div>
+              <div class="bar h-8 w-full opacity-30 mt-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       VARIANT: NO HEADER
+       =================================================================== -->
+  <div class="mt-12">
+    <p class="mb-2 text-[0.6875rem] uppercase tracking-widest text-wire-dim">Variant — no site header (self-contained page)</p>
+    <p class="mb-4 text-xs text-wire-dim">
+      Omit the site header entirely for stand-alone pages with no persistent navigation.
+      The centred column starts at the top of the page.
+    </p>
+
+    <div class="rgn overflow-hidden">
+      <div class="mx-auto w-full max-w-[56rem] px-6 py-10">
+        <div class="dim mb-3 text-center">no sticky header · page content starts immediately · max-w-4xl · mx-auto</div>
+        <div class="rgn mb-6 p-4">
+          <span class="slot block mb-1">&lt;page title&gt; — h1</span>
+          <div class="bar mb-2 h-7 w-64"></div>
+          <span class="slot block mb-1">&lt;page subtitle / lede&gt;</span>
+          <div class="bar h-4 w-96 opacity-50"></div>
+        </div>
+        <div class="rgn mb-0 p-3">
+          <div class="flex items-end gap-0 border-b border-wire-line pb-0">
+            <div class="flex flex-col items-start gap-0.5 pr-5">
+              <span class="slot font-medium">Tab A</span>
+              <div class="h-0.5 w-full bg-wire-ink"></div>
+            </div>
+            <div class="flex flex-col items-start gap-0.5 px-4">
+              <span class="dim">Tab B</span>
+            </div>
+          </div>
+        </div>
+        <div class="rgn mt-0 p-4">
+          <span class="slot block mb-2">&lt;primary content&gt;</span>
+          <div class="space-y-2">
+            <div class="bar h-4 w-full opacity-40"></div>
+            <div class="bar h-4 w-5/6 opacity-40"></div>
+            <div class="bar h-4 w-4/5 opacity-40"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end outer wrap -->
+</body>
+</html>
