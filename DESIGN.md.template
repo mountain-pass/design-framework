@@ -11,13 +11,11 @@
     {{DESIGN}}  - design folder name, e.g. slate, warm-paper, playful
     {{LAYOUT}}  - layout folder name, e.g. app-shell, document-editor
     {{VOICE}}   - voice folder name, e.g. plain-spoken
-    {{REF}}     - branch, tag, or commit in design-framework, e.g. main
 
   Every URL below points at raw.githubusercontent.com on purpose. A
   github.com/.../blob/... URL returns GitHub's HTML page wrapper rather than
   the file, which is wasted context for an agent and sometimes unreadable.
-  Pin {{REF}} to a tag or commit if you want the design to stop moving under
-  you; use `main` if you want to track it.
+  They are pinned to `main` so the design tracks the framework as it evolves.
 -->
 
 This project's design system lives in a separate repo:
@@ -28,20 +26,20 @@ Before writing any UI or any user-facing copy, fetch and read these in full:
 
 ```
 Shared contracts
-  https://raw.githubusercontent.com/mountain-pass/design-framework/{{REF}}/CLAUDE.md
-  https://raw.githubusercontent.com/mountain-pass/design-framework/{{REF}}/shared/TOKENS.md
-  https://raw.githubusercontent.com/mountain-pass/design-framework/{{REF}}/shared/COMPONENTS.md
-  https://raw.githubusercontent.com/mountain-pass/design-framework/{{REF}}/shared/ACCESSIBILITY.md
-  https://raw.githubusercontent.com/mountain-pass/design-framework/{{REF}}/shared/COPY.md
+  https://raw.githubusercontent.com/mountain-pass/design-framework/main/CLAUDE.md
+  https://raw.githubusercontent.com/mountain-pass/design-framework/main/shared/TOKENS.md
+  https://raw.githubusercontent.com/mountain-pass/design-framework/main/shared/COMPONENTS.md
+  https://raw.githubusercontent.com/mountain-pass/design-framework/main/shared/ACCESSIBILITY.md
+  https://raw.githubusercontent.com/mountain-pass/design-framework/main/shared/COPY.md
 
 Theme and design
-  https://raw.githubusercontent.com/mountain-pass/design-framework/{{REF}}/designs/{{DESIGN}}/DESIGN.md
+  https://raw.githubusercontent.com/mountain-pass/design-framework/main/designs/{{DESIGN}}/DESIGN.md
 
 Page layout
-  https://raw.githubusercontent.com/mountain-pass/design-framework/{{REF}}/layouts/{{LAYOUT}}/LAYOUT.md
+  https://raw.githubusercontent.com/mountain-pass/design-framework/main/layouts/{{LAYOUT}}/LAYOUT.md
 
 Voice and tone
-  https://raw.githubusercontent.com/mountain-pass/design-framework/{{REF}}/voices/{{VOICE}}/VOICE.md
+  https://raw.githubusercontent.com/mountain-pass/design-framework/main/voices/{{VOICE}}/VOICE.md
 ```
 
 Then open the two demos. They are rendered answers, not descriptions of answers —
@@ -50,17 +48,17 @@ here and copy it rather than inventing a treatment:
 
 ```
 Kitchen sink — what every component looks like in this design
-  https://raw.githubusercontent.com/mountain-pass/design-framework/{{REF}}/designs/{{DESIGN}}/index.html
+  https://raw.githubusercontent.com/mountain-pass/design-framework/main/designs/{{DESIGN}}/index.html
 
 String sink — how this voice writes every kind of UI string
-  https://raw.githubusercontent.com/mountain-pass/design-framework/{{REF}}/voices/{{VOICE}}/index.html
+  https://raw.githubusercontent.com/mountain-pass/design-framework/main/voices/{{VOICE}}/index.html
 ```
 
 Copy the theme verbatim into this project's global stylesheet
 (`app/globals.css` in a Next.js + shadcn project):
 
 ```
-  https://raw.githubusercontent.com/mountain-pass/design-framework/{{REF}}/designs/{{DESIGN}}/theme.css
+  https://raw.githubusercontent.com/mountain-pass/design-framework/main/designs/{{DESIGN}}/theme.css
 ```
 
 ## Rules

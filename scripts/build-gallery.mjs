@@ -6,6 +6,11 @@
 //
 // Descriptions come from the blockquote line at the top of each DESIGN.md /
 // LAYOUT.md / VOICE.md, so the gallery cannot drift from the instruction files.
+//
+// The page has two tabs:
+//   Get Started — pick a design/layout/voice from three dropdowns and get a
+//     filled-in DESIGN.md.template, ready to copy or save into a project.
+//   Browse — the three kitchen-sink / wireframe / string-sink card grids.
 
 import { readdirSync, readFileSync, writeFileSync, existsSync, statSync } from "node:fs";
 import { join, dirname } from "node:path";
@@ -59,6 +64,12 @@ const card = (item, kind) => `
 
 const empty = (what) => `
         <p class="empty">No ${what} yet. Follow <code>CREATE-${what.toUpperCase().replace(/S$/, "")}.md</code> to add one.</p>`;
+
+const option = (item) => `<option value="${esc(item.name)}" title="${esc(item.description)}">${esc(item.name)}</option>`;
+
+// DESIGN.md.template, stripped of its leading HTML comment (that comment is
+// for someone reading the raw file — the generated output doesn't need it).
+const templateRaw = readFileSync(join(ROOT, "DESIGN.md.template"), "utf8").replace(/<!--[\s\S]*?-->\n\n/, "");
 
 const html = `<!doctype html>
 <html lang="en">
@@ -114,6 +125,7 @@ const html = `<!doctype html>
     letter-spacing: 0.1em;
     color: var(--dim);
   }
+  h2:first-child { margin-top: 0; }
   .axis { margin: 0 0 1.25rem; max-width: 60ch; color: var(--dim); font-size: 0.875rem; }
   .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); }
   .card {
@@ -165,6 +177,107 @@ const html = `<!doctype html>
   }
   footer { margin-top: 3rem; color: var(--dim); font-size: 0.8125rem; }
   a.plain { color: var(--accent); }
+
+  .tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 2.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .tab {
+    appearance: none;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    padding: 0.65rem 0.25rem;
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: var(--dim);
+    cursor: pointer;
+  }
+  .tab + .tab { margin-left: 1.25rem; }
+  .tab:hover { color: var(--fg); }
+  .tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .tab.active { color: var(--fg); border-bottom-color: var(--accent); }
+
+  .tab-panel { display: none; padding-top: 2.5rem; }
+  .tab-panel.active { display: block; }
+
+  .picker {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    margin-bottom: 1.5rem;
+  }
+  .picker label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--dim);
+  }
+  .picker select {
+    font: inherit;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--fg);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 0.6rem 0.75rem;
+  }
+  .picker select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .output {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .output-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 1rem;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+  }
+  .output-label {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--dim);
+  }
+  .output-actions { display: flex; gap: 0.5rem; }
+  .output-actions button {
+    appearance: none;
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--fg);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 0.4rem 0.75rem;
+    cursor: pointer;
+  }
+  .output-actions button:hover { border-color: var(--accent); }
+  .output-actions button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .output pre {
+    margin: 0;
+    padding: 1.25rem;
+    max-height: 32rem;
+    overflow: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
 </style>
 </head>
 <body>
@@ -176,29 +289,67 @@ const html = `<!doctype html>
     Pick the ones you want and name them in your prompt.
   </p>
 
-  <h2>Designs</h2>
-  <p class="axis">
-    What it looks like — colour, type, spacing, and the styling of every component.
-    Each demo is a <strong>kitchen sink</strong>: the same components, in the same order, so designs can be compared directly.
-  </p>
-  <div class="grid">${designs.length ? designs.map((d) => card(d, "design")).join("") : empty("designs")}
+  <div class="tabs" role="tablist">
+    <button type="button" class="tab active" role="tab" id="tab-get-started" aria-selected="true" aria-controls="panel-get-started" data-tab="get-started">Get Started</button>
+    <button type="button" class="tab" role="tab" id="tab-browse" aria-selected="false" aria-controls="panel-browse" data-tab="browse">Browse</button>
   </div>
 
-  <h2>Layouts</h2>
-  <p class="axis">
-    Where everything goes — regions, sizes, scroll behaviour, and responsive rules.
-    Each demo is a <strong>wireframe</strong>: greyscale, with <code>&lt;placeholder&gt;</code> labels marking what belongs where.
-  </p>
-  <div class="grid">${layouts.length ? layouts.map((l) => card(l, "layout")).join("") : empty("layouts")}
-  </div>
+  <section id="panel-get-started" class="tab-panel active" role="tabpanel" aria-labelledby="tab-get-started">
+    <p class="axis">
+      Pick a design, a layout and a voice. This generates a <code>DESIGN.md</code> — copy it, or save it, into your
+      project's repo root. Agents look for <code>DESIGN.md</code> by default, so this points them at the right
+      combination without you having to name it in every prompt.
+    </p>
 
-  <h2>Voices</h2>
-  <p class="axis">
-    How it speaks — attributes, mechanics, vocabulary, and the actual strings a product says.
-    Each demo is a <strong>string sink</strong>: the same writing situations, in the same order, in greyscale, so voices can be compared line for line.
-  </p>
-  <div class="grid">${voices.length ? voices.map((v) => card(v, "voice")).join("") : empty("voices")}
-  </div>
+    <div class="picker">
+      <label>Design
+        <select id="pick-design">${designs.map(option).join("")}</select>
+      </label>
+      <label>Layout
+        <select id="pick-layout">${layouts.map(option).join("")}</select>
+      </label>
+      <label>Voice
+        <select id="pick-voice">${voices.map(option).join("")}</select>
+      </label>
+    </div>
+
+    <div class="output">
+      <div class="output-bar">
+        <span class="output-label">DESIGN.md</span>
+        <div class="output-actions">
+          <button type="button" id="copy-btn">Copy</button>
+          <button type="button" id="save-btn">Save</button>
+        </div>
+      </div>
+      <pre><code id="output-code"></code></pre>
+    </div>
+  </section>
+
+  <section id="panel-browse" class="tab-panel" role="tabpanel" aria-labelledby="tab-browse">
+    <h2>Designs</h2>
+    <p class="axis">
+      What it looks like — colour, type, spacing, and the styling of every component.
+      Each demo is a <strong>kitchen sink</strong>: the same components, in the same order, so designs can be compared directly.
+    </p>
+    <div class="grid">${designs.length ? designs.map((d) => card(d, "design")).join("") : empty("designs")}
+    </div>
+
+    <h2>Layouts</h2>
+    <p class="axis">
+      Where everything goes — regions, sizes, scroll behaviour, and responsive rules.
+      Each demo is a <strong>wireframe</strong>: greyscale, with <code>&lt;placeholder&gt;</code> labels marking what belongs where.
+    </p>
+    <div class="grid">${layouts.length ? layouts.map((l) => card(l, "layout")).join("") : empty("layouts")}
+    </div>
+
+    <h2>Voices</h2>
+    <p class="axis">
+      How it speaks — attributes, mechanics, vocabulary, and the actual strings a product says.
+      Each demo is a <strong>string sink</strong>: the same writing situations, in the same order, in greyscale, so voices can be compared line for line.
+    </p>
+    <div class="grid">${voices.length ? voices.map((v) => card(v, "voice")).join("") : empty("voices")}
+    </div>
+  </section>
 
   <div class="how">
     <h3>Using these</h3>
@@ -210,10 +361,6 @@ const html = `<!doctype html>
     <p>The agent reads the <code>DESIGN.md</code>, <code>LAYOUT.md</code> and <code>VOICE.md</code> in the named folders,
       copies the design's <code>theme.css</code> into the project, and fills the layout's regions with
       the design's components. <code>CLAUDE.md</code> in the repo root has the full agent instructions.</p>
-    <p>Alternatively, copy <code>DESIGN.md.template</code> into your project's repo root as
-      <code>DESIGN.md</code>, fill in the design and layout names, and delete the leading comment.
-      <code>DESIGN.md</code> is a convention agents look for by default, so this points them at the
-      right design and layout without having to name them in every prompt.</p>
     <h3>Adding your own</h3>
     <p>Point an agent at <code>CREATE-DESIGN.md</code>, <code>CREATE-LAYOUT.md</code> or
       <code>CREATE-VOICE.md</code> along with what you want. All three are written as complete prompts. Run <code>node scripts/check.mjs</code> and
@@ -228,6 +375,64 @@ const html = `<!doctype html>
   </footer>
 
 </div>
+<script>
+(function () {
+  var TEMPLATE = ${JSON.stringify(templateRaw)};
+
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+  var panels = Array.prototype.slice.call(document.querySelectorAll(".tab-panel"));
+  tabs.forEach(function (tab) {
+    tab.addEventListener("click", function () {
+      tabs.forEach(function (t) {
+        t.classList.remove("active");
+        t.setAttribute("aria-selected", "false");
+      });
+      panels.forEach(function (p) { p.classList.remove("active"); });
+      tab.classList.add("active");
+      tab.setAttribute("aria-selected", "true");
+      document.getElementById("panel-" + tab.dataset.tab).classList.add("active");
+    });
+  });
+
+  var designSel = document.getElementById("pick-design");
+  var layoutSel = document.getElementById("pick-layout");
+  var voiceSel = document.getElementById("pick-voice");
+  var output = document.getElementById("output-code");
+
+  function render() {
+    var filled = TEMPLATE
+      .split("{{DESIGN}}").join(designSel.value)
+      .split("{{LAYOUT}}").join(layoutSel.value)
+      .split("{{VOICE}}").join(voiceSel.value);
+    output.textContent = filled;
+  }
+  [designSel, layoutSel, voiceSel].forEach(function (sel) {
+    sel.addEventListener("change", render);
+  });
+  render();
+
+  var copyBtn = document.getElementById("copy-btn");
+  copyBtn.addEventListener("click", function () {
+    navigator.clipboard.writeText(output.textContent).then(function () {
+      var prev = copyBtn.textContent;
+      copyBtn.textContent = "Copied";
+      setTimeout(function () { copyBtn.textContent = prev; }, 1500);
+    });
+  });
+
+  document.getElementById("save-btn").addEventListener("click", function () {
+    var blob = new Blob([output.textContent], { type: "text/markdown" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "DESIGN.md";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+})();
+</script>
 </body>
 </html>
 `;
