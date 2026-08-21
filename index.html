@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Design Framework</title>
+<title>Design framework</title>
 <!-- GENERATED FILE — do not edit by hand.
      Run `node scripts/build-gallery.mjs` to regenerate. -->
 
@@ -28,15 +28,18 @@
   })();
 </script>
 </head>
-<body class="bg-background text-foreground antialiased">
-<div class="mx-auto max-w-6xl px-6 py-16 pb-24">
+<body class="min-h-screen bg-background text-foreground antialiased">
 
-  <div class="flex flex-wrap items-start justify-between gap-6">
+<a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:text-primary-foreground">Skip to main content</a>
+
+<main id="main-content" tabindex="-1" class="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+
+  <div class="mb-6 flex flex-wrap items-start justify-between gap-6 sm:mb-8">
     <div>
-      <h1 class="text-3xl font-semibold tracking-tight">Design Framework</h1>
-      <p class="mt-3 max-w-[60ch] text-muted-foreground">
-        A library of web page designs, layouts and voices, written to be consumed by AI coding agents.
-        Pick the ones you want and name them in your prompt.
+      <h1 class="text-3xl font-semibold tracking-tight">Design framework</h1>
+      <p class="mt-2 max-w-[60ch] text-muted-foreground">
+        A library of web page designs, layouts, and voices, written to be consumed by AI coding agents.
+        Pick the ones you want, and name them in your prompt.
       </p>
     </div>
 
@@ -50,16 +53,16 @@
     </div>
   </div>
 
-  <div class="mt-10 border-b border-border">
-    <nav class="-mb-px flex gap-6" role="tablist">
-      <button type="button" role="tab" id="tab-get-started" aria-selected="true" aria-controls="panel-get-started" data-tab="get-started" class="shrink-0 whitespace-nowrap border-b-2 border-primary px-1 pb-3 text-sm font-medium text-foreground">Get Started</button>
-      <button type="button" role="tab" id="tab-browse" aria-selected="false" aria-controls="panel-browse" data-tab="browse" class="shrink-0 whitespace-nowrap border-b-2 border-transparent px-1 pb-3 text-sm text-muted-foreground transition-colors hover:border-border hover:text-foreground">Browse</button>
-    </nav>
-  </div>
+  <nav aria-label="Page sections">
+    <div role="tablist" class="-mb-px flex gap-0 border-b border-border">
+      <button type="button" role="tab" id="tab-get-started" aria-selected="true" aria-controls="panel-get-started" data-tab="get-started" class="border-b-2 border-primary pb-2 pr-4 font-semibold text-foreground">Get started</button>
+      <button type="button" role="tab" id="tab-browse" aria-selected="false" aria-controls="panel-browse" data-tab="browse" class="border-b-2 border-transparent pb-2 px-4 text-muted-foreground transition-colors hover:text-foreground">Browse</button>
+    </div>
+  </nav>
 
-  <section id="panel-get-started" role="tabpanel" aria-labelledby="tab-get-started" class="pt-8">
+  <section id="panel-get-started" role="tabpanel" aria-labelledby="tab-get-started" class="pt-6 sm:pt-8">
     <p class="max-w-[60ch] text-sm text-muted-foreground">
-      Pick a design, a layout and a voice. This generates a <code class="rounded border border-border bg-card px-1.5 py-0.5 font-mono text-[0.85em]">DESIGN.md</code> — copy it, or save it, into your
+      Pick a design, a layout, and a voice. This generates a <code class="rounded border border-border bg-card px-1.5 py-0.5 font-mono text-[0.85em]">DESIGN.md</code> — copy it, or save it, into your
       project's repo root. Agents look for <code class="rounded border border-border bg-card px-1.5 py-0.5 font-mono text-[0.85em]">DESIGN.md</code> by default, so this points them at the right
       combination without you having to name it in every prompt.
     </p>
@@ -106,7 +109,7 @@
     </div>
   </section>
 
-  <section id="panel-browse" role="tabpanel" aria-labelledby="tab-browse" class="hidden pt-8">
+  <section id="panel-browse" role="tabpanel" aria-labelledby="tab-browse" class="hidden pt-6 sm:pt-8">
     <h2 class="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Designs</h2>
     <p class="mt-1 max-w-[60ch] text-sm text-muted-foreground">
       What it looks like — colour, type, spacing, and the styling of every component.
@@ -119,7 +122,7 @@
             <h3 class="mt-1 font-mono text-base font-semibold">learn</h3>
             <p class="mt-1 text-sm text-muted-foreground">A Duolingo-inspired learning interface: dark navy surfaces, green action buttons, rounded forms, and a friendly rhythm built around momentum and progress.</p>
           </div>
-          <div class="border-t border-border px-6 py-3 text-xs text-muted-foreground/80">DESIGN.md &middot; kitchen sink</div>
+          <div class="border-t border-border px-6 py-4 text-xs text-muted-foreground/80">DESIGN.md &middot; kitchen sink</div>
         </a>
         <a href="designs/material-design/index.html" data-card class="rounded-lg border border-border bg-card block transition-colors hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
           <div class="p-6 pb-4">
@@ -127,7 +130,7 @@
             <h3 class="mt-1 font-mono text-base font-semibold">material-design</h3>
             <p class="mt-1 text-sm text-muted-foreground">Google's Material Design with the classic Material Design 2 blue. Tonal surfaces, elevation with shadow, fully rounded buttons, and Roboto typography. Colorful but systematic.</p>
           </div>
-          <div class="border-t border-border px-6 py-3 text-xs text-muted-foreground/80">DESIGN.md &middot; kitchen sink</div>
+          <div class="border-t border-border px-6 py-4 text-xs text-muted-foreground/80">DESIGN.md &middot; kitchen sink</div>
         </a>
         <a href="designs/playful/index.html" data-card class="rounded-lg border border-border bg-card block transition-colors hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
           <div class="p-6 pb-4">
@@ -135,7 +138,7 @@
             <h3 class="mt-1 font-mono text-base font-semibold">playful</h3>
             <p class="mt-1 text-sm text-muted-foreground">Bright, cheerful, energetic. A vibrant purple and orange palette with generous rounded corners that brings joy to every interaction.</p>
           </div>
-          <div class="border-t border-border px-6 py-3 text-xs text-muted-foreground/80">DESIGN.md &middot; kitchen sink</div>
+          <div class="border-t border-border px-6 py-4 text-xs text-muted-foreground/80">DESIGN.md &middot; kitchen sink</div>
         </a>
         <a href="designs/slate/index.html" data-card class="rounded-lg border border-border bg-card block transition-colors hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
           <div class="p-6 pb-4">
@@ -143,7 +146,7 @@
             <h3 class="mt-1 font-mono text-base font-semibold">slate</h3>
             <p class="mt-1 text-sm text-muted-foreground">A calm, neutral product UI. Cool greys, one blue accent, restrained depth. The design equivalent of getting out of the way.</p>
           </div>
-          <div class="border-t border-border px-6 py-3 text-xs text-muted-foreground/80">DESIGN.md &middot; kitchen sink</div>
+          <div class="border-t border-border px-6 py-4 text-xs text-muted-foreground/80">DESIGN.md &middot; kitchen sink</div>
         </a>
         <a href="designs/warm-paper/index.html" data-card class="rounded-lg border border-border bg-card block transition-colors hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
           <div class="p-6 pb-4">
@@ -151,7 +154,7 @@
             <h3 class="mt-1 font-mono text-base font-semibold">warm-paper</h3>
             <p class="mt-1 text-sm text-muted-foreground">Editorial and reading-first. Warm off-white paper, soft near-black ink, serif for content, sans for UI chrome. One muted oxblood accent. Minimal chrome, generous rhythm, 16px body text.</p>
           </div>
-          <div class="border-t border-border px-6 py-3 text-xs text-muted-foreground/80">DESIGN.md &middot; kitchen sink</div>
+          <div class="border-t border-border px-6 py-4 text-xs text-muted-foreground/80">DESIGN.md &middot; kitchen sink</div>
         </a>
     </div>
 
@@ -167,7 +170,7 @@
             <h3 class="mt-1 font-mono text-base font-semibold">app-shell</h3>
             <p class="mt-1 text-sm text-muted-foreground">Viewport-locked application shell. Fixed sidebar, fixed top bar, one scrolling content pane.</p>
           </div>
-          <div class="border-t border-border px-6 py-3 text-xs text-muted-foreground/80">LAYOUT.md &middot; wireframe</div>
+          <div class="border-t border-border px-6 py-4 text-xs text-muted-foreground/80">LAYOUT.md &middot; wireframe</div>
         </a>
         <a href="layouts/centered-doc/index.html" data-card class="rounded-lg border border-border bg-card block transition-colors hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
           <div class="p-6 pb-4">
@@ -175,7 +178,7 @@
             <h3 class="mt-1 font-mono text-base font-semibold">centered-doc</h3>
             <p class="mt-1 text-sm text-muted-foreground">Single-column centered document. The page scrolls as a whole; no viewport-locking.</p>
           </div>
-          <div class="border-t border-border px-6 py-3 text-xs text-muted-foreground/80">LAYOUT.md &middot; wireframe</div>
+          <div class="border-t border-border px-6 py-4 text-xs text-muted-foreground/80">LAYOUT.md &middot; wireframe</div>
         </a>
         <a href="layouts/document-editor/index.html" data-card class="rounded-lg border border-border bg-card block transition-colors hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
           <div class="p-6 pb-4">
@@ -183,7 +186,7 @@
             <h3 class="mt-1 font-mono text-base font-semibold">document-editor</h3>
             <p class="mt-1 text-sm text-muted-foreground">A centred writing surface with a collapsible document tree on the left and a contextual inspector on the right. The document is the interface.</p>
           </div>
-          <div class="border-t border-border px-6 py-3 text-xs text-muted-foreground/80">LAYOUT.md &middot; wireframe</div>
+          <div class="border-t border-border px-6 py-4 text-xs text-muted-foreground/80">LAYOUT.md &middot; wireframe</div>
         </a>
         <a href="layouts/social-feed/index.html" data-card class="rounded-lg border border-border bg-card block transition-colors hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
           <div class="p-6 pb-4">
@@ -191,7 +194,7 @@
             <h3 class="mt-1 font-mono text-base font-semibold">social-feed</h3>
             <p class="mt-1 text-sm text-muted-foreground">Three-column viewport-locked social media layout. Fixed top nav, fixed sidebars, scrolling center feed with constrained max-width content.</p>
           </div>
-          <div class="border-t border-border px-6 py-3 text-xs text-muted-foreground/80">LAYOUT.md &middot; wireframe</div>
+          <div class="border-t border-border px-6 py-4 text-xs text-muted-foreground/80">LAYOUT.md &middot; wireframe</div>
         </a>
         <a href="layouts/split-inbox/index.html" data-card class="rounded-lg border border-border bg-card block transition-colors hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
           <div class="p-6 pb-4">
@@ -199,7 +202,7 @@
             <h3 class="mt-1 font-mono text-base font-semibold">split-inbox</h3>
             <p class="mt-1 text-sm text-muted-foreground">Three-pane list-detail layout with independent scroll regions. Left folder rail, middle item list, right detail pane. Viewport-locked shell with a navigation-stack transformation on mobile.</p>
           </div>
-          <div class="border-t border-border px-6 py-3 text-xs text-muted-foreground/80">LAYOUT.md &middot; wireframe</div>
+          <div class="border-t border-border px-6 py-4 text-xs text-muted-foreground/80">LAYOUT.md &middot; wireframe</div>
         </a>
     </div>
 
@@ -215,7 +218,7 @@
             <h3 class="mt-1 font-mono text-base font-semibold">plain-spoken</h3>
             <p class="mt-1 text-sm text-muted-foreground">Warm but direct. An expert peer explaining something clearly and then stopping. No jargon, no hype, no hedging — and no coldness either.</p>
           </div>
-          <div class="border-t border-border px-6 py-3 text-xs text-muted-foreground/80">VOICE.md &middot; string sink</div>
+          <div class="border-t border-border px-6 py-4 text-xs text-muted-foreground/80">VOICE.md &middot; string sink</div>
         </a>
         <a href="voices/upbeat/index.html" data-card class="rounded-lg border border-border bg-card block transition-colors hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
           <div class="p-6 pb-4">
@@ -223,18 +226,18 @@
             <h3 class="mt-1 font-mono text-base font-semibold">upbeat</h3>
             <p class="mt-1 text-sm text-muted-foreground">Warm and encouraging. Notices when something goes well, softens it when something doesn't, and assumes the reader might be new here rather than expert at this.</p>
           </div>
-          <div class="border-t border-border px-6 py-3 text-xs text-muted-foreground/80">VOICE.md &middot; string sink</div>
+          <div class="border-t border-border px-6 py-4 text-xs text-muted-foreground/80">VOICE.md &middot; string sink</div>
         </a>
     </div>
   </section>
 
-</div>
+</main>
 <script>
 (function () {
   var TEMPLATE = "# DESIGN.md\n\nThis project's design system lives in a separate repo:\n[mountain-pass/design-framework](https://github.com/mountain-pass/design-framework).\n\nUse the `{{DESIGN}}` design, the `{{LAYOUT}}` layout, and the `{{VOICE}}` voice.\nBefore writing any UI or any user-facing copy, fetch and read these in full:\n\n```\nShared contracts\n  https://raw.githubusercontent.com/mountain-pass/design-framework/main/CLAUDE.md\n  https://raw.githubusercontent.com/mountain-pass/design-framework/main/shared/TOKENS.md\n  https://raw.githubusercontent.com/mountain-pass/design-framework/main/shared/COMPONENTS.md\n  https://raw.githubusercontent.com/mountain-pass/design-framework/main/shared/ACCESSIBILITY.md\n  https://raw.githubusercontent.com/mountain-pass/design-framework/main/shared/COPY.md\n\nTheme and design\n  https://raw.githubusercontent.com/mountain-pass/design-framework/main/designs/{{DESIGN}}/DESIGN.md\n\nPage layout\n  https://raw.githubusercontent.com/mountain-pass/design-framework/main/layouts/{{LAYOUT}}/LAYOUT.md\n\nVoice and tone\n  https://raw.githubusercontent.com/mountain-pass/design-framework/main/voices/{{VOICE}}/VOICE.md\n```\n\nThen open the following two demos. They are rendered answers, not descriptions of answers —\nwhen you are unsure how something should look or how a string should read, find it\nhere and copy it rather than inventing a treatment:\n\n```\nKitchen sink — what every component looks like in this design\n  https://raw.githubusercontent.com/mountain-pass/design-framework/main/designs/{{DESIGN}}/index.html\n\nString sink — how this voice writes every kind of UI string\n  https://raw.githubusercontent.com/mountain-pass/design-framework/main/voices/{{VOICE}}/index.html\n```\n\nCopy the theme verbatim into this project's global stylesheet\n(`app/globals.css` in a Next.js + shadcn project):\n\n```\n  https://raw.githubusercontent.com/mountain-pass/design-framework/main/designs/{{DESIGN}}/theme.css\n```\n\n## Rules\n\n- **Tokens only.** Every colour comes from a semantic token — `bg-background`,\n  `text-muted-foreground`, `border-border`. Never a hex value, never a Tailwind\n  palette class like `bg-blue-500`. This is the rule that keeps the design\n  swappable, and it is the one most often broken when working quickly.\n- **Update shadcn primitives, not call sites.** If the project already has local\n  shadcn components (`src/components/ui/*.tsx`), copy the kitchen sink's classes\n  into that component's own definition — its `cva` variants, its base className —\n  not into each place it's used. A design's shape (radius, border weight, shadow)\n  is a property of the component, not of any one screen that happens to use it.\n- **The three axes own different things.** The layout decides structure — regions,\n  sizes, responsive behaviour, scroll model. The design decides appearance — colour,\n  type, spacing, component styling. The voice decides words. If two of them appear\n  to conflict on anything else, ask rather than guessing.\n- **Follow the \"Never\" list** in each of the three files. If a rule genuinely can't\n  be followed, say why instead of silently breaking it.\n- **Accessibility is a contract, not a polish pass.** WCAG 2.2 AA, per\n  `shared/ACCESSIBILITY.md`. Real `<label>`s, `aria-label` on icon-only buttons, a\n  visible focus ring on everything, and state never carried by colour alone.\n- **Both light and dark** are part of the deliverable, not an afterthought.\n- **Copy is part of the deliverable too.** Buttons, empty states, errors and\n  confirmations all get written in the named voice — not filled with placeholder\n  text to be cleaned up later.\n";
 
-  var TAB_ACTIVE = "shrink-0 whitespace-nowrap border-b-2 border-primary px-1 pb-3 text-sm font-medium text-foreground";
-  var TAB_INACTIVE = "shrink-0 whitespace-nowrap border-b-2 border-transparent px-1 pb-3 text-sm text-muted-foreground transition-colors hover:border-border hover:text-foreground";
+  var TAB_ACTIVE = "border-b-2 border-primary pb-2 pr-4 font-semibold text-foreground";
+  var TAB_INACTIVE = "border-b-2 border-transparent pb-2 px-4 text-muted-foreground transition-colors hover:text-foreground";
   var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
   tabs.forEach(function (tab) {
     tab.addEventListener("click", function () {
@@ -325,7 +328,7 @@
       "margin:0;padding:1rem 1.25rem;font:500 14px/1.5 ui-sans-serif,system-ui,sans-serif;" +
       "background:#7f1d1d;color:#fff";
     banner.textContent =
-      "This page could not load its design tokens (" + message + "), so it is rendering unstyled. " +
+      "This page couldn't load its design tokens (" + message + "), so it is rendering unstyled. " +
       "Serve this folder over http(s) rather than opening the file directly.";
     document.body.prepend(banner);
   }

@@ -94,7 +94,7 @@ const card = (item, kind, shellClasses) => `
             <h3 class="mt-1 font-mono text-base font-semibold">${esc(item.name)}</h3>
             <p class="mt-1 text-sm text-muted-foreground">${esc(item.description)}</p>
           </div>
-          <div class="border-t border-border px-6 py-3 text-xs text-muted-foreground/80">${esc(item.doc.split("/").pop())} &middot; ${kindLabel(kind)}</div>
+          <div class="border-t border-border px-6 py-4 text-xs text-muted-foreground/80">${esc(item.doc.split("/").pop())} &middot; ${kindLabel(kind)}</div>
         </a>`;
 
 const empty = (what) => `
@@ -116,10 +116,12 @@ const selectField = (id, labelText, optionsHtml) => `
 const BTN_OUTLINE =
   "inline-flex h-8 items-center rounded-md border border-input bg-background px-3 text-xs font-medium shadow-xs transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
-const TAB_ACTIVE =
-  "shrink-0 whitespace-nowrap border-b-2 border-primary px-1 pb-3 text-sm font-medium text-foreground";
+// Matches the tab bar in layouts/centered-doc/LAYOUT.md's own Structure block
+// verbatim — "-mb-px on the tab list creates the standard underline-tab effect
+// without a double border."
+const TAB_ACTIVE = "border-b-2 border-primary pb-2 pr-4 font-semibold text-foreground";
 const TAB_INACTIVE =
-  "shrink-0 whitespace-nowrap border-b-2 border-transparent px-1 pb-3 text-sm text-muted-foreground transition-colors hover:border-border hover:text-foreground";
+  "border-b-2 border-transparent pb-2 px-4 text-muted-foreground transition-colors hover:text-foreground";
 
 // DESIGN.md.template, stripped of its leading HTML comment (that comment is
 // for someone reading the raw file — the generated output doesn't need it).
@@ -146,7 +148,7 @@ const html = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Design Framework</title>
+<title>Design framework</title>
 <!-- GENERATED FILE — do not edit by hand.
      Run \`node scripts/build-gallery.mjs\` to regenerate. -->
 
@@ -171,15 +173,18 @@ const html = `<!doctype html>
   })();
 </script>
 </head>
-<body class="bg-background text-foreground antialiased">
-<div class="mx-auto max-w-6xl px-6 py-16 pb-24">
+<body class="min-h-screen bg-background text-foreground antialiased">
 
-  <div class="flex flex-wrap items-start justify-between gap-6">
+<a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:text-primary-foreground">Skip to main content</a>
+
+<main id="main-content" tabindex="-1" class="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+
+  <div class="mb-6 flex flex-wrap items-start justify-between gap-6 sm:mb-8">
     <div>
-      <h1 class="text-3xl font-semibold tracking-tight">Design Framework</h1>
-      <p class="mt-3 max-w-[60ch] text-muted-foreground">
-        A library of web page designs, layouts and voices, written to be consumed by AI coding agents.
-        Pick the ones you want and name them in your prompt.
+      <h1 class="text-3xl font-semibold tracking-tight">Design framework</h1>
+      <p class="mt-2 max-w-[60ch] text-muted-foreground">
+        A library of web page designs, layouts, and voices, written to be consumed by AI coding agents.
+        Pick the ones you want, and name them in your prompt.
       </p>
     </div>
 
@@ -193,16 +198,16 @@ const html = `<!doctype html>
     </div>
   </div>
 
-  <div class="mt-10 border-b border-border">
-    <nav class="-mb-px flex gap-6" role="tablist">
-      <button type="button" role="tab" id="tab-get-started" aria-selected="true" aria-controls="panel-get-started" data-tab="get-started" class="${TAB_ACTIVE}">Get Started</button>
+  <nav aria-label="Page sections">
+    <div role="tablist" class="-mb-px flex gap-0 border-b border-border">
+      <button type="button" role="tab" id="tab-get-started" aria-selected="true" aria-controls="panel-get-started" data-tab="get-started" class="${TAB_ACTIVE}">Get started</button>
       <button type="button" role="tab" id="tab-browse" aria-selected="false" aria-controls="panel-browse" data-tab="browse" class="${TAB_INACTIVE}">Browse</button>
-    </nav>
-  </div>
+    </div>
+  </nav>
 
-  <section id="panel-get-started" role="tabpanel" aria-labelledby="tab-get-started" class="pt-8">
+  <section id="panel-get-started" role="tabpanel" aria-labelledby="tab-get-started" class="pt-6 sm:pt-8">
     <p class="max-w-[60ch] text-sm text-muted-foreground">
-      Pick a design, a layout and a voice. This generates a <code class="${codeClass}">DESIGN.md</code> — copy it, or save it, into your
+      Pick a design, a layout, and a voice. This generates a <code class="${codeClass}">DESIGN.md</code> — copy it, or save it, into your
       project's repo root. Agents look for <code class="${codeClass}">DESIGN.md</code> by default, so this points them at the right
       combination without you having to name it in every prompt.
     </p>
@@ -222,7 +227,7 @@ const html = `<!doctype html>
     </div>
   </section>
 
-  <section id="panel-browse" role="tabpanel" aria-labelledby="tab-browse" class="hidden pt-8">
+  <section id="panel-browse" role="tabpanel" aria-labelledby="tab-browse" class="hidden pt-6 sm:pt-8">
     <h2 class="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Designs</h2>
     <p class="mt-1 max-w-[60ch] text-sm text-muted-foreground">
       What it looks like — colour, type, spacing, and the styling of every component.
@@ -248,7 +253,7 @@ const html = `<!doctype html>
     </div>
   </section>
 
-</div>
+</main>
 <script>
 (function () {
   var TEMPLATE = ${JSON.stringify(templateRaw)};
@@ -345,7 +350,7 @@ const html = `<!doctype html>
       "margin:0;padding:1rem 1.25rem;font:500 14px/1.5 ui-sans-serif,system-ui,sans-serif;" +
       "background:#7f1d1d;color:#fff";
     banner.textContent =
-      "This page could not load its design tokens (" + message + "), so it is rendering unstyled. " +
+      "This page couldn't load its design tokens (" + message + "), so it is rendering unstyled. " +
       "Serve this folder over http(s) rather than opening the file directly.";
     document.body.prepend(banner);
   }
