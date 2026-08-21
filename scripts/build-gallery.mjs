@@ -11,6 +11,13 @@
 //   Get Started — pick a design/layout/voice from three dropdowns and get a
 //     filled-in DESIGN.md.template, ready to copy or save into a project.
 //   Browse — the three kitchen-sink / wireframe / string-sink card grids.
+//
+// The page itself is styled the same way a kitchen sink is: markup built from
+// shadcn-style Tailwind utility classes, compiled at runtime by the vendored
+// Tailwind browser build against a design's theme.css (see designs/*/index.html
+// for the pattern this borrows). A "Preview design" dropdown swaps which
+// theme.css is compiled against, so this page can demonstrate what each
+// design actually looks like — not just its token colours.
 
 import { readdirSync, readFileSync, writeFileSync, existsSync, statSync } from "node:fs";
 import { join, dirname } from "node:path";
@@ -54,18 +61,43 @@ const designs = collect("designs", "DESIGN.md");
 const layouts = collect("layouts", "LAYOUT.md");
 const voices = collect("voices", "VOICE.md");
 
+const option = (item) => `<option value="${esc(item.name)}" title="${esc(item.description)}">${esc(item.name)}</option>`;
+
+const kindLabel = (kind) => (kind === "design" ? "kitchen sink" : kind === "layout" ? "wireframe" : "string sink");
+
+const codeClass = "rounded border border-border bg-card px-1.5 py-0.5 font-mono text-[0.85em]";
+
 const card = (item, kind) => `
-        <a class="card" href="${esc(item.href)}">
-          <span class="card-kind">${kind}</span>
-          <span class="card-name">${esc(item.name)}</span>
-          <span class="card-desc">${esc(item.description)}</span>
-          <span class="card-meta">${esc(item.doc.split("/").pop())} &middot; ${kind === "design" ? "kitchen sink" : kind === "layout" ? "wireframe" : "string sink"}</span>
+        <a href="${esc(item.href)}" class="group flex flex-col gap-1 rounded-lg border border-border bg-card p-5 shadow-xs transition-colors hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+          <span class="text-[0.6875rem] font-semibold uppercase tracking-wide text-muted-foreground">${kind}</span>
+          <span class="font-mono text-base font-semibold">${esc(item.name)}</span>
+          <span class="text-sm text-muted-foreground">${esc(item.description)}</span>
+          <span class="mt-2 text-xs text-muted-foreground/80">${esc(item.doc.split("/").pop())} &middot; ${kindLabel(kind)}</span>
         </a>`;
 
 const empty = (what) => `
-        <p class="empty">No ${what} yet. Follow <code>CREATE-${what.toUpperCase().replace(/S$/, "")}.md</code> to add one.</p>`;
+        <p class="text-sm text-muted-foreground">No ${what} yet. Follow <code class="${codeClass}">CREATE-${what.toUpperCase().replace(/S$/, "")}.md</code> to add one.</p>`;
 
-const option = (item) => `<option value="${esc(item.name)}" title="${esc(item.description)}">${esc(item.name)}</option>`;
+const chevron = `<svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>`;
+
+const selectField = (id, labelText, optionsHtml) => `
+      <div class="space-y-2">
+        <label for="${id}" class="text-sm font-medium leading-none">${labelText}</label>
+        <div class="relative">
+          <select id="${id}" class="flex h-9 w-full appearance-none rounded-md border border-input bg-background py-1 pl-3 pr-9 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+            ${optionsHtml}
+          </select>
+          ${chevron}
+        </div>
+      </div>`;
+
+const BTN_OUTLINE =
+  "inline-flex h-8 items-center rounded-md border border-input bg-background px-3 text-xs font-medium shadow-xs transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+
+const TAB_ACTIVE =
+  "shrink-0 whitespace-nowrap border-b-2 border-primary px-1 pb-3 text-sm font-medium text-foreground";
+const TAB_INACTIVE =
+  "shrink-0 whitespace-nowrap border-b-2 border-transparent px-1 pb-3 text-sm text-muted-foreground transition-colors hover:border-border hover:text-foreground";
 
 // DESIGN.md.template, stripped of its leading HTML comment (that comment is
 // for someone reading the raw file — the generated output doesn't need it).
@@ -75,18 +107,16 @@ const templateRaw = readFileSync(join(ROOT, "DESIGN.md.template"), "utf8").repla
 // design if `slate` is ever renamed or removed.
 const DEFAULT_DESIGN = designs.some((d) => d.name === "slate") ? "slate" : (designs[0]?.name ?? "slate");
 
-// Pulls the flat `--token: value;` declarations out of a design's theme.css
-// `:root { ... }` and `.dark { ... }` blocks — the same tokens the kitchen
-// sinks use, extracted without the Tailwind build step this plain page
-// doesn't run.
-const extractThemeVars = (cssText) => ({
-  light: (cssText.match(/:root\s*\{([^}]*)\}/) || ["", ""])[1].trim(),
-  dark: (cssText.match(/\.dark\s*\{([^}]*)\}/) || ["", ""])[1].trim(),
-});
-
-const defaultThemeVars = extractThemeVars(
-  readFileSync(join(ROOT, "designs", DEFAULT_DESIGN, "theme.css"), "utf8")
-);
+// The vendored Tailwind browser compiler — same file every kitchen sink loads
+// (see vendor/README.md). Resolved by scanning rather than hardcoding the
+// version, so an upgrade there doesn't silently go stale here.
+const vendorFiles = existsSync(join(ROOT, "vendor"))
+  ? readdirSync(join(ROOT, "vendor")).filter((f) => /^tailwind-browser-.+\.js$/.test(f))
+  : [];
+if (vendorFiles.length !== 1) {
+  throw new Error(`expected exactly one vendor/tailwind-browser-*.js, found ${vendorFiles.length}`);
+}
+const TAILWIND_SRC = `vendor/${vendorFiles[0]}`;
 
 const html = `<!doctype html>
 <html lang="en">
@@ -96,290 +126,102 @@ const html = `<!doctype html>
 <title>Design Framework</title>
 <!-- GENERATED FILE — do not edit by hand.
      Run \`node scripts/build-gallery.mjs\` to regenerate. -->
-<style>
-  /* Default preview theme (${DEFAULT_DESIGN}) — replaced at runtime by
-     #design-vars when a different design is picked from the dropdown. */
-  :root {
-    ${defaultThemeVars.light}
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      ${defaultThemeVars.dark}
-    }
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--background);
-    color: var(--foreground);
-    font: 400 15px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
-  .wrap { max-width: 68rem; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
-  h1 { margin: 0; font-size: 2rem; font-weight: 600; letter-spacing: -0.025em; }
-  .lede { margin: 0.75rem 0 0; max-width: 60ch; color: var(--muted-foreground); }
-  .lede code { font-size: 0.9em; }
-  code {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 0.1em 0.35em;
-  }
-  h2 {
-    margin: 3.5rem 0 0.25rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--muted-foreground);
-  }
-  h2:first-child { margin-top: 0; }
-  .axis { margin: 0 0 1.25rem; max-width: 60ch; color: var(--muted-foreground); font-size: 0.875rem; }
-  .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); }
-  .card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    padding: 1.25rem;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--card);
-    text-decoration: none;
-    color: inherit;
-    transition: border-color 120ms, transform 120ms;
-  }
-  .card:hover { border-color: var(--primary); transform: translateY(-2px); }
-  .card:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
-  .card-kind {
-    font-size: 0.6875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--muted-foreground);
-  }
-  .card-name {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 1rem;
-    font-weight: 600;
-  }
-  .card-desc { font-size: 0.875rem; color: var(--muted-foreground); }
-  .card-meta {
-    margin-top: 0.35rem;
-    font-size: 0.75rem;
-    color: var(--muted-foreground);
-    opacity: 0.8;
-  }
-  .empty { color: var(--muted-foreground); font-size: 0.875rem; }
 
-  .page-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-  }
-  .theme-picker {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    flex-shrink: 0;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--muted-foreground);
-  }
-  .theme-picker-note {
-    font-size: 0.6875rem;
-    font-weight: 500;
-    text-transform: none;
-    letter-spacing: normal;
-    color: var(--muted-foreground);
-    max-width: 16rem;
-  }
-  .theme-picker-note[hidden] { display: none; }
+<!-- This page previews each design the same way its own kitchen sink does:
+     fetch theme.css, hand it to the Tailwind browser compiler as a
+     style[type="text/tailwindcss"] block, and load the vendored compiler.
+     Swapping the "Preview design" dropdown replaces that block's text —
+     the compiler's own MutationObserver notices and recompiles. See
+     designs/*/index.html for the same pattern applied to a single, fixed
+     design. This means, like a kitchen sink, this page must be served over
+     http(s) — opened from file://, the fetch is blocked. -->
+<link rel="preload" as="script" href="${TAILWIND_SRC}">
 
-  .tabs {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 2.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .tab {
-    appearance: none;
-    background: none;
-    border: none;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    padding: 0.65rem 0.25rem;
-    font: inherit;
-    font-weight: 600;
-    font-size: 0.9375rem;
-    color: var(--muted-foreground);
-    cursor: pointer;
-  }
-  .tab + .tab { margin-left: 1.25rem; }
-  .tab:hover { color: var(--foreground); }
-  .tab:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
-  .tab.active { color: var(--foreground); border-bottom-color: var(--primary); }
-
-  .tab-panel { display: none; padding-top: 2.5rem; }
-  .tab-panel.active { display: block; }
-
-  .picker {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-    margin-bottom: 1.5rem;
-  }
-  .picker label {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--muted-foreground);
-  }
-  .picker select,
-  .theme-picker select {
-    font: inherit;
-    font-size: 0.9375rem;
-    font-weight: 500;
-    color: var(--foreground);
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 0.6rem 0.75rem;
-  }
-  .picker select:focus-visible,
-  .theme-picker select:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
-
-  .output {
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .output-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.6rem 1rem;
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-  }
-  .output-label {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: var(--muted-foreground);
-  }
-  .output-actions { display: flex; gap: 0.5rem; }
-  .output-actions button {
-    appearance: none;
-    font: inherit;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: var(--foreground);
-    background: var(--background);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 0.4rem 0.75rem;
-    cursor: pointer;
-  }
-  .output-actions button:hover { border-color: var(--primary); }
-  .output-actions button:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
-  .output pre {
-    margin: 0;
-    padding: 1.25rem;
-    max-height: 32rem;
-    overflow: auto;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 0.8125rem;
-    line-height: 1.6;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-</style>
+<script>
+  // Applied before first paint to avoid a light flash on a dark-mode reload.
+  (function () {
+    try {
+      if (matchMedia("(prefers-color-scheme: dark)").matches) {
+        document.documentElement.classList.add("dark");
+      }
+    } catch (e) {}
+  })();
+</script>
 </head>
-<body>
-<div class="wrap">
+<body class="bg-background text-foreground antialiased">
+<div class="mx-auto max-w-6xl px-6 py-16 pb-24">
 
-  <div class="page-header">
+  <div class="flex flex-wrap items-start justify-between gap-6">
     <div>
-      <h1>Design Framework</h1>
-      <p class="lede">
+      <h1 class="text-3xl font-semibold tracking-tight">Design Framework</h1>
+      <p class="mt-3 max-w-[60ch] text-muted-foreground">
         A library of web page designs, layouts and voices, written to be consumed by AI coding agents.
         Pick the ones you want and name them in your prompt.
       </p>
     </div>
-    <label class="theme-picker">
-      Preview design
-      <select id="preview-design">${designs.map(option).join("")}</select>
-      <span id="preview-note" class="theme-picker-note" role="status" hidden></span>
-    </label>
+
+    <div class="w-56 shrink-0 space-y-2">
+      <label for="preview-design" class="text-sm font-medium leading-none">Preview design</label>
+      <div class="relative">
+        <select id="preview-design" class="flex h-9 w-full appearance-none rounded-md border border-input bg-background py-1 pl-3 pr-9 text-sm font-medium shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">${designs.map(option).join("")}</select>
+        ${chevron}
+      </div>
+      <p id="preview-note" role="status" class="hidden text-xs text-muted-foreground"></p>
+    </div>
   </div>
 
-  <div class="tabs" role="tablist">
-    <button type="button" class="tab active" role="tab" id="tab-get-started" aria-selected="true" aria-controls="panel-get-started" data-tab="get-started">Get Started</button>
-    <button type="button" class="tab" role="tab" id="tab-browse" aria-selected="false" aria-controls="panel-browse" data-tab="browse">Browse</button>
+  <div class="mt-10 border-b border-border">
+    <nav class="-mb-px flex gap-6" role="tablist">
+      <button type="button" role="tab" id="tab-get-started" aria-selected="true" aria-controls="panel-get-started" data-tab="get-started" class="${TAB_ACTIVE}">Get Started</button>
+      <button type="button" role="tab" id="tab-browse" aria-selected="false" aria-controls="panel-browse" data-tab="browse" class="${TAB_INACTIVE}">Browse</button>
+    </nav>
   </div>
 
-  <section id="panel-get-started" class="tab-panel active" role="tabpanel" aria-labelledby="tab-get-started">
-    <p class="axis">
-      Pick a design, a layout and a voice. This generates a <code>DESIGN.md</code> — copy it, or save it, into your
-      project's repo root. Agents look for <code>DESIGN.md</code> by default, so this points them at the right
+  <section id="panel-get-started" role="tabpanel" aria-labelledby="tab-get-started" class="pt-8">
+    <p class="max-w-[60ch] text-sm text-muted-foreground">
+      Pick a design, a layout and a voice. This generates a <code class="${codeClass}">DESIGN.md</code> — copy it, or save it, into your
+      project's repo root. Agents look for <code class="${codeClass}">DESIGN.md</code> by default, so this points them at the right
       combination without you having to name it in every prompt.
     </p>
 
-    <div class="picker">
-      <label>Design
-        <select id="pick-design">${designs.map(option).join("")}</select>
-      </label>
-      <label>Layout
-        <select id="pick-layout">${layouts.map(option).join("")}</select>
-      </label>
-      <label>Voice
-        <select id="pick-voice">${voices.map(option).join("")}</select>
-      </label>
+    <div class="mt-6 grid gap-4 sm:grid-cols-3">${selectField("pick-design", "Design", designs.map(option).join(""))}${selectField("pick-layout", "Layout", layouts.map(option).join(""))}${selectField("pick-voice", "Voice", voices.map(option).join(""))}
     </div>
 
-    <div class="output">
-      <div class="output-bar">
-        <span class="output-label">DESIGN.md</span>
-        <div class="output-actions">
-          <button type="button" id="copy-btn">Copy</button>
-          <button type="button" id="save-btn">Save</button>
+    <div class="mt-6 overflow-hidden rounded-lg border border-border bg-card">
+      <div class="flex items-center justify-between gap-3 border-b border-border px-4 py-2.5">
+        <span class="font-mono text-xs font-semibold text-muted-foreground">DESIGN.md</span>
+        <div class="flex gap-2">
+          <button type="button" id="copy-btn" class="${BTN_OUTLINE}">Copy</button>
+          <button type="button" id="save-btn" class="${BTN_OUTLINE}">Save</button>
         </div>
       </div>
-      <pre><code id="output-code"></code></pre>
+      <pre class="max-h-[32rem] overflow-auto p-5"><code id="output-code" class="whitespace-pre-wrap break-words font-mono text-[13px] leading-relaxed"></code></pre>
     </div>
   </section>
 
-  <section id="panel-browse" class="tab-panel" role="tabpanel" aria-labelledby="tab-browse">
-    <h2>Designs</h2>
-    <p class="axis">
+  <section id="panel-browse" role="tabpanel" aria-labelledby="tab-browse" class="hidden pt-8">
+    <h2 class="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Designs</h2>
+    <p class="mt-1 max-w-[60ch] text-sm text-muted-foreground">
       What it looks like — colour, type, spacing, and the styling of every component.
-      Each demo is a <strong>kitchen sink</strong>: the same components, in the same order, so designs can be compared directly.
+      Each demo is a <strong class="font-semibold text-foreground">kitchen sink</strong>: the same components, in the same order, so designs can be compared directly.
     </p>
-    <div class="grid">${designs.length ? designs.map((d) => card(d, "design")).join("") : empty("designs")}
+    <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">${designs.length ? designs.map((d) => card(d, "design")).join("") : empty("designs")}
     </div>
 
-    <h2>Layouts</h2>
-    <p class="axis">
+    <h2 class="mt-14 text-xs font-semibold uppercase tracking-widest text-muted-foreground">Layouts</h2>
+    <p class="mt-1 max-w-[60ch] text-sm text-muted-foreground">
       Where everything goes — regions, sizes, scroll behaviour, and responsive rules.
-      Each demo is a <strong>wireframe</strong>: greyscale, with <code>&lt;placeholder&gt;</code> labels marking what belongs where.
+      Each demo is a <strong class="font-semibold text-foreground">wireframe</strong>: greyscale, with <code class="${codeClass}">&lt;placeholder&gt;</code> labels marking what belongs where.
     </p>
-    <div class="grid">${layouts.length ? layouts.map((l) => card(l, "layout")).join("") : empty("layouts")}
+    <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">${layouts.length ? layouts.map((l) => card(l, "layout")).join("") : empty("layouts")}
     </div>
 
-    <h2>Voices</h2>
-    <p class="axis">
+    <h2 class="mt-14 text-xs font-semibold uppercase tracking-widest text-muted-foreground">Voices</h2>
+    <p class="mt-1 max-w-[60ch] text-sm text-muted-foreground">
       How it speaks — attributes, mechanics, vocabulary, and the actual strings a product says.
-      Each demo is a <strong>string sink</strong>: the same writing situations, in the same order, in greyscale, so voices can be compared line for line.
+      Each demo is a <strong class="font-semibold text-foreground">string sink</strong>: the same writing situations, in the same order, in greyscale, so voices can be compared line for line.
     </p>
-    <div class="grid">${voices.length ? voices.map((v) => card(v, "voice")).join("") : empty("voices")}
+    <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">${voices.length ? voices.map((v) => card(v, "voice")).join("") : empty("voices")}
     </div>
   </section>
 
@@ -388,18 +230,17 @@ const html = `<!doctype html>
 (function () {
   var TEMPLATE = ${JSON.stringify(templateRaw)};
 
-  var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
-  var panels = Array.prototype.slice.call(document.querySelectorAll(".tab-panel"));
+  var TAB_ACTIVE = ${JSON.stringify(TAB_ACTIVE)};
+  var TAB_INACTIVE = ${JSON.stringify(TAB_INACTIVE)};
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
   tabs.forEach(function (tab) {
     tab.addEventListener("click", function () {
       tabs.forEach(function (t) {
-        t.classList.remove("active");
-        t.setAttribute("aria-selected", "false");
+        var active = t === tab;
+        t.className = active ? TAB_ACTIVE : TAB_INACTIVE;
+        t.setAttribute("aria-selected", active ? "true" : "false");
+        document.getElementById("panel-" + t.dataset.tab).classList.toggle("hidden", !active);
       });
-      panels.forEach(function (p) { p.classList.remove("active"); });
-      tab.classList.add("active");
-      tab.setAttribute("aria-selected", "true");
-      document.getElementById("panel-" + tab.dataset.tab).classList.add("active");
     });
   });
 
@@ -441,46 +282,65 @@ const html = `<!doctype html>
     URL.revokeObjectURL(url);
   });
 
-  // Preview design — swaps this page's own token values for a chosen
-  // design's, so the framework's own landing page can show what each
-  // design looks like without a build step.
+  // Preview design — this page renders itself the same way a kitchen sink
+  // renders a design: fetch theme.css, feed it to the Tailwind browser
+  // compiler as a style[type="text/tailwindcss"] block, load the compiler.
+  // Switching designs just replaces that block's text; the compiler watches
+  // it for changes and recompiles the whole page's utility classes against
+  // the new tokens.
   var DEFAULT_DESIGN = ${JSON.stringify(DEFAULT_DESIGN)};
   var DESIGN_NAMES = ${JSON.stringify(designs.map((d) => d.name))};
+  var TAILWIND_SRC = ${JSON.stringify(TAILWIND_SRC)};
   var STORAGE_KEY = "design-framework:preview-design";
 
   var themeSelect = document.getElementById("preview-design");
   var themeNote = document.getElementById("preview-note");
   var themeStyle = null;
-
-  function applyThemeVars(cssText) {
-    var light = (cssText.match(/:root\\s*\\{([^}]*)\\}/) || ["", ""])[1];
-    var dark = (cssText.match(/\\.dark\\s*\\{([^}]*)\\}/) || ["", ""])[1];
-    if (!themeStyle) {
-      themeStyle = document.createElement("style");
-      themeStyle.id = "design-vars";
-      document.head.appendChild(themeStyle);
-    }
-    themeStyle.textContent =
-      ":root {" + light + "}\\n@media (prefers-color-scheme: dark) {\\n  :root {" + dark + "}\\n}";
-  }
-
+  var compilerLoaded = false;
   var currentDesign = null;
+
+  function showBanner(message) {
+    var banner = document.createElement("p");
+    banner.setAttribute("role", "alert");
+    banner.style.cssText =
+      "margin:0;padding:1rem 1.25rem;font:500 14px/1.5 ui-sans-serif,system-ui,sans-serif;" +
+      "background:#7f1d1d;color:#fff";
+    banner.textContent =
+      "This page could not load its design tokens (" + message + "), so it is rendering unstyled. " +
+      "Serve this folder over http(s) rather than opening the file directly.";
+    document.body.prepend(banner);
+  }
 
   function loadDesign(name) {
     fetch("designs/" + name + "/theme.css")
       .then(function (res) {
-        if (!res.ok) throw new Error("theme.css → " + res.status);
+        if (!res.ok) throw new Error("theme.css \\u2192 " + res.status);
         return res.text();
       })
       .then(function (css) {
-        applyThemeVars(css);
+        if (!themeStyle) {
+          themeStyle = document.createElement("style");
+          themeStyle.type = "text/tailwindcss";
+          document.head.prepend(themeStyle);
+        }
+        themeStyle.textContent = '@import "tailwindcss";\\n' + css;
+        if (!compilerLoaded) {
+          compilerLoaded = true;
+          var script = document.createElement("script");
+          script.src = TAILWIND_SRC;
+          document.head.appendChild(script);
+        }
         currentDesign = name;
-        themeNote.hidden = true;
+        themeNote.classList.add("hidden");
       })
-      .catch(function () {
-        if (currentDesign) themeSelect.value = currentDesign;
-        themeNote.textContent = "Couldn't load \\"" + name + "\\" — serve this page over http(s) to preview other designs.";
-        themeNote.hidden = false;
+      .catch(function (err) {
+        if (currentDesign) {
+          themeSelect.value = currentDesign;
+          themeNote.textContent = "Couldn't load \\"" + name + "\\" — serve this page over http(s) to preview designs.";
+          themeNote.classList.remove("hidden");
+        } else {
+          showBanner(err.message);
+        }
       });
   }
 
