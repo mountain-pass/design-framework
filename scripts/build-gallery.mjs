@@ -71,6 +71,23 @@ const option = (item) => `<option value="${esc(item.name)}" title="${esc(item.de
 // for someone reading the raw file — the generated output doesn't need it).
 const templateRaw = readFileSync(join(ROOT, "DESIGN.md.template"), "utf8").replace(/<!--[\s\S]*?-->\n\n/, "");
 
+// The design this page itself previews on load. Falls back to the first
+// design if `slate` is ever renamed or removed.
+const DEFAULT_DESIGN = designs.some((d) => d.name === "slate") ? "slate" : (designs[0]?.name ?? "slate");
+
+// Pulls the flat `--token: value;` declarations out of a design's theme.css
+// `:root { ... }` and `.dark { ... }` blocks — the same tokens the kitchen
+// sinks use, extracted without the Tailwind build step this plain page
+// doesn't run.
+const extractThemeVars = (cssText) => ({
+  light: (cssText.match(/:root\s*\{([^}]*)\}/) || ["", ""])[1].trim(),
+  dark: (cssText.match(/\.dark\s*\{([^}]*)\}/) || ["", ""])[1].trim(),
+});
+
+const defaultThemeVars = extractThemeVars(
+  readFileSync(join(ROOT, "designs", DEFAULT_DESIGN, "theme.css"), "utf8")
+);
+
 const html = `<!doctype html>
 <html lang="en">
 <head>
@@ -80,40 +97,32 @@ const html = `<!doctype html>
 <!-- GENERATED FILE — do not edit by hand.
      Run \`node scripts/build-gallery.mjs\` to regenerate. -->
 <style>
+  /* Default preview theme (${DEFAULT_DESIGN}) — replaced at runtime by
+     #design-vars when a different design is picked from the dropdown. */
   :root {
-    --bg: #ffffff;
-    --fg: #18181b;
-    --dim: #71717a;
-    --line: #e4e4e7;
-    --panel: #fafafa;
-    --accent: #4338ca;
+    ${defaultThemeVars.light}
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #0c0c0f;
-      --fg: #f4f4f5;
-      --dim: #a1a1aa;
-      --line: #27272a;
-      --panel: #17171a;
-      --accent: #a5b4fc;
+      ${defaultThemeVars.dark}
     }
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    background: var(--bg);
-    color: var(--fg);
+    background: var(--background);
+    color: var(--foreground);
     font: 400 15px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
     -webkit-font-smoothing: antialiased;
   }
   .wrap { max-width: 68rem; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
   h1 { margin: 0; font-size: 2rem; font-weight: 600; letter-spacing: -0.025em; }
-  .lede { margin: 0.75rem 0 0; max-width: 60ch; color: var(--dim); }
+  .lede { margin: 0.75rem 0 0; max-width: 60ch; color: var(--muted-foreground); }
   .lede code { font-size: 0.9em; }
   code {
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    background: var(--panel);
-    border: 1px solid var(--line);
+    background: var(--card);
+    border: 1px solid var(--border);
     border-radius: 4px;
     padding: 0.1em 0.35em;
   }
@@ -123,66 +132,78 @@ const html = `<!doctype html>
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--dim);
+    color: var(--muted-foreground);
   }
   h2:first-child { margin-top: 0; }
-  .axis { margin: 0 0 1.25rem; max-width: 60ch; color: var(--dim); font-size: 0.875rem; }
+  .axis { margin: 0 0 1.25rem; max-width: 60ch; color: var(--muted-foreground); font-size: 0.875rem; }
   .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); }
   .card {
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
     padding: 1.25rem;
-    border: 1px solid var(--line);
+    border: 1px solid var(--border);
     border-radius: 10px;
-    background: var(--panel);
+    background: var(--card);
     text-decoration: none;
     color: inherit;
     transition: border-color 120ms, transform 120ms;
   }
-  .card:hover { border-color: var(--accent); transform: translateY(-2px); }
-  .card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .card:hover { border-color: var(--primary); transform: translateY(-2px); }
+  .card:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
   .card-kind {
     font-size: 0.6875rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--dim);
+    color: var(--muted-foreground);
   }
   .card-name {
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     font-size: 1rem;
     font-weight: 600;
   }
-  .card-desc { font-size: 0.875rem; color: var(--dim); }
+  .card-desc { font-size: 0.875rem; color: var(--muted-foreground); }
   .card-meta {
     margin-top: 0.35rem;
     font-size: 0.75rem;
-    color: var(--dim);
+    color: var(--muted-foreground);
     opacity: 0.8;
   }
-  .empty { color: var(--dim); font-size: 0.875rem; }
-  .how {
-    margin-top: 4rem;
-    padding: 1.5rem;
-    border: 1px solid var(--line);
-    border-radius: 10px;
+  .empty { color: var(--muted-foreground); font-size: 0.875rem; }
+
+  .page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
   }
-  .how h3 { margin: 0 0 0.5rem; font-size: 0.9375rem; font-weight: 600; }
-  .how p { margin: 0 0 1rem; color: var(--dim); font-size: 0.875rem; max-width: 68ch; }
-  .how p:last-child { margin-bottom: 0; }
-  .quote {
-    border-left: 2px solid var(--line);
-    padding-left: 0.85rem;
-    font-style: italic;
+  .theme-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted-foreground);
   }
-  footer { margin-top: 3rem; color: var(--dim); font-size: 0.8125rem; }
-  a.plain { color: var(--accent); }
+  .theme-picker-note {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: normal;
+    color: var(--muted-foreground);
+    max-width: 16rem;
+  }
+  .theme-picker-note[hidden] { display: none; }
 
   .tabs {
     display: flex;
     gap: 0.5rem;
     margin-top: 2.5rem;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid var(--border);
   }
   .tab {
     appearance: none;
@@ -194,13 +215,13 @@ const html = `<!doctype html>
     font: inherit;
     font-weight: 600;
     font-size: 0.9375rem;
-    color: var(--dim);
+    color: var(--muted-foreground);
     cursor: pointer;
   }
   .tab + .tab { margin-left: 1.25rem; }
-  .tab:hover { color: var(--fg); }
-  .tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .tab.active { color: var(--fg); border-bottom-color: var(--accent); }
+  .tab:hover { color: var(--foreground); }
+  .tab:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .tab.active { color: var(--foreground); border-bottom-color: var(--primary); }
 
   .tab-panel { display: none; padding-top: 2.5rem; }
   .tab-panel.active { display: block; }
@@ -219,22 +240,24 @@ const html = `<!doctype html>
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--dim);
+    color: var(--muted-foreground);
   }
-  .picker select {
+  .picker select,
+  .theme-picker select {
     font: inherit;
     font-size: 0.9375rem;
     font-weight: 500;
-    color: var(--fg);
-    background: var(--panel);
-    border: 1px solid var(--line);
+    color: var(--foreground);
+    background: var(--card);
+    border: 1px solid var(--border);
     border-radius: 8px;
     padding: 0.6rem 0.75rem;
   }
-  .picker select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .picker select:focus-visible,
+  .theme-picker select:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 
   .output {
-    border: 1px solid var(--line);
+    border: 1px solid var(--border);
     border-radius: 10px;
     overflow: hidden;
   }
@@ -243,14 +266,14 @@ const html = `<!doctype html>
     align-items: center;
     justify-content: space-between;
     padding: 0.6rem 1rem;
-    background: var(--panel);
-    border-bottom: 1px solid var(--line);
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
   }
   .output-label {
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     font-size: 0.8125rem;
     font-weight: 600;
-    color: var(--dim);
+    color: var(--muted-foreground);
   }
   .output-actions { display: flex; gap: 0.5rem; }
   .output-actions button {
@@ -258,15 +281,15 @@ const html = `<!doctype html>
     font: inherit;
     font-size: 0.8125rem;
     font-weight: 600;
-    color: var(--fg);
-    background: var(--bg);
-    border: 1px solid var(--line);
+    color: var(--foreground);
+    background: var(--background);
+    border: 1px solid var(--border);
     border-radius: 6px;
     padding: 0.4rem 0.75rem;
     cursor: pointer;
   }
-  .output-actions button:hover { border-color: var(--accent); }
-  .output-actions button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .output-actions button:hover { border-color: var(--primary); }
+  .output-actions button:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
   .output pre {
     margin: 0;
     padding: 1.25rem;
@@ -283,11 +306,20 @@ const html = `<!doctype html>
 <body>
 <div class="wrap">
 
-  <h1>Design Framework</h1>
-  <p class="lede">
-    A library of web page designs, layouts and voices, written to be consumed by AI coding agents.
-    Pick the ones you want and name them in your prompt.
-  </p>
+  <div class="page-header">
+    <div>
+      <h1>Design Framework</h1>
+      <p class="lede">
+        A library of web page designs, layouts and voices, written to be consumed by AI coding agents.
+        Pick the ones you want and name them in your prompt.
+      </p>
+    </div>
+    <label class="theme-picker">
+      Preview design
+      <select id="preview-design">${designs.map(option).join("")}</select>
+      <span id="preview-note" class="theme-picker-note" role="status" hidden></span>
+    </label>
+  </div>
 
   <div class="tabs" role="tablist">
     <button type="button" class="tab active" role="tab" id="tab-get-started" aria-selected="true" aria-controls="panel-get-started" data-tab="get-started">Get Started</button>
@@ -351,29 +383,6 @@ const html = `<!doctype html>
     </div>
   </section>
 
-  <div class="how">
-    <h3>Using these</h3>
-    <p>The three axes combine freely. Name the ones you want in your prompt:</p>
-    <p class="quote">Build me a settings page. Use the styling and components from the
-      <code>${esc(designs[0]?.name ?? "&lt;design&gt;")}</code> design, the
-      <code>${esc(layouts[0]?.name ?? "&lt;layout&gt;")}</code> layout, and the
-      <code>${esc(voices[0]?.name ?? "&lt;voice&gt;")}</code> voice.</p>
-    <p>The agent reads the <code>DESIGN.md</code>, <code>LAYOUT.md</code> and <code>VOICE.md</code> in the named folders,
-      copies the design's <code>theme.css</code> into the project, and fills the layout's regions with
-      the design's components. <code>CLAUDE.md</code> in the repo root has the full agent instructions.</p>
-    <h3>Adding your own</h3>
-    <p>Point an agent at <code>CREATE-DESIGN.md</code>, <code>CREATE-LAYOUT.md</code> or
-      <code>CREATE-VOICE.md</code> along with what you want. All three are written as complete prompts. Run <code>node scripts/check.mjs</code> and
-      <code>node scripts/build-gallery.mjs</code> when you are done.</p>
-  </div>
-
-  <footer>
-    ${designs.length} design${designs.length === 1 ? "" : "s"} &middot;
-    ${layouts.length} layout${layouts.length === 1 ? "" : "s"} &middot;
-    ${voices.length} voice${voices.length === 1 ? "" : "s"} &middot;
-    generated by <code>scripts/build-gallery.mjs</code>
-  </footer>
-
 </div>
 <script>
 (function () {
@@ -430,6 +439,61 @@ const html = `<!doctype html>
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  });
+
+  // Preview design — swaps this page's own token values for a chosen
+  // design's, so the framework's own landing page can show what each
+  // design looks like without a build step.
+  var DEFAULT_DESIGN = ${JSON.stringify(DEFAULT_DESIGN)};
+  var DESIGN_NAMES = ${JSON.stringify(designs.map((d) => d.name))};
+  var STORAGE_KEY = "design-framework:preview-design";
+
+  var themeSelect = document.getElementById("preview-design");
+  var themeNote = document.getElementById("preview-note");
+  var themeStyle = null;
+
+  function applyThemeVars(cssText) {
+    var light = (cssText.match(/:root\\s*\\{([^}]*)\\}/) || ["", ""])[1];
+    var dark = (cssText.match(/\\.dark\\s*\\{([^}]*)\\}/) || ["", ""])[1];
+    if (!themeStyle) {
+      themeStyle = document.createElement("style");
+      themeStyle.id = "design-vars";
+      document.head.appendChild(themeStyle);
+    }
+    themeStyle.textContent =
+      ":root {" + light + "}\\n@media (prefers-color-scheme: dark) {\\n  :root {" + dark + "}\\n}";
+  }
+
+  var currentDesign = null;
+
+  function loadDesign(name) {
+    fetch("designs/" + name + "/theme.css")
+      .then(function (res) {
+        if (!res.ok) throw new Error("theme.css → " + res.status);
+        return res.text();
+      })
+      .then(function (css) {
+        applyThemeVars(css);
+        currentDesign = name;
+        themeNote.hidden = true;
+      })
+      .catch(function () {
+        if (currentDesign) themeSelect.value = currentDesign;
+        themeNote.textContent = "Couldn't load \\"" + name + "\\" — serve this page over http(s) to preview other designs.";
+        themeNote.hidden = false;
+      });
+  }
+
+  var saved = null;
+  try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+  var initial = saved && DESIGN_NAMES.indexOf(saved) !== -1 ? saved : DEFAULT_DESIGN;
+  themeSelect.value = initial;
+  loadDesign(initial);
+
+  themeSelect.addEventListener("change", function () {
+    var value = themeSelect.value;
+    try { localStorage.setItem(STORAGE_KEY, value); } catch (e) {}
+    loadDesign(value);
   });
 })();
 </script>
