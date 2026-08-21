@@ -28,17 +28,25 @@ The trigger looks like:
    something, find it in the kitchen sink and copy the class list. Do not invent a
    treatment that the kitchen sink already answers.
 
-4. **Install the theme.** Copy `designs/<name>/theme.css` into the target project's
+4. **Update shadcn primitives, not call sites.** If the project already has local
+   shadcn components (`src/components/ui/*.tsx`), copy the kitchen sink's classes
+   into that component's own definition — its `cva` variants, its base className —
+   not into each place it's used. A design's shape (radius, border weight, shadow)
+   is a property of the component, not of any one screen that happens to use it.
+   Copying classes ad hoc into every call site instead means the same shape
+   decision gets re-made, and can drift, at every screen the component appears on.
+
+5. **Install the theme.** Copy `designs/<name>/theme.css` into the target project's
    global stylesheet (`app/globals.css` in a Next.js + shadcn project). It is
    written to be pasted verbatim.
 
-5. **Build using tokens only.** Every colour comes from a semantic token —
+6. **Build using tokens only.** Every colour comes from a semantic token —
    `bg-background`, `text-muted-foreground`, `border-border`. If you find yourself
    writing `bg-blue-600` or `#1a1a1a`, stop: you are hard-coding something that
    will break the moment the user switches designs or toggles dark mode. That is
    the entire failure mode this repo exists to prevent.
 
-6. **Respect the design's prohibitions.** Each `DESIGN.md` has a "Never" section.
+7. **Respect the design's prohibitions.** Each `DESIGN.md` has a "Never" section.
    Those are the rules that make one design distinguishable from another, and they
    are the first thing to erode when an agent is working quickly.
 

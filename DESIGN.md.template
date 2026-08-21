@@ -67,6 +67,11 @@ Copy the theme verbatim into this project's global stylesheet
   `text-muted-foreground`, `border-border`. Never a hex value, never a Tailwind
   palette class like `bg-blue-500`. This is the rule that keeps the design
   swappable, and it is the one most often broken when working quickly.
+- **Update shadcn primitives, not call sites.** If the project already has local
+  shadcn components (`src/components/ui/*.tsx`), copy the kitchen sink's classes
+  into that component's own definition — its `cva` variants, its base className —
+  not into each place it's used. A design's shape (radius, border weight, shadow)
+  is a property of the component, not of any one screen that happens to use it.
 - **The three axes own different things.** The layout decides structure — regions,
   sizes, responsive behaviour, scroll model. The design decides appearance — colour,
   type, spacing, component styling. The voice decides words. If two of them appear
