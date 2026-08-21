@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>&lt;name&gt; — wireframe</title>
 
+<!-- Hides the page until the Tailwind browser compiler has produced real styles,
+     so a reload never flashes unstyled HTML. Reveals on window "load" (fires
+     whether the compiler succeeds, fails, or theme.css 404s) and stays visible
+     with JS disabled, since these pages require JS to render at all. -->
+<style>html{visibility:hidden}</style>
+<noscript><style>html{visibility:visible}</style></noscript>
+<script>addEventListener("load",()=>{document.documentElement.style.visibility="visible";});</script>
+
 <!--
   SCAFFOLD. Copy this folder to layouts/<name>/ and fill it in.
 
