@@ -502,6 +502,17 @@
         </button>
       </div>
     </div>
+
+    <div>
+      <p class="ks-label">Button-styled link (<span class="font-mono">asChild</span>)</p>
+      <p class="ks-note">shadcn's `asChild` renders the Button primitive as an `&lt;a&gt;` when a control navigates, per shared/ACCESSIBILITY.md's "never a button styled as a link if it navigates." The primitive still stamps <span class="font-mono">data-slot="button"</span> on it, which is what this theme keys its slab shadow, label typography, and focus outline to — not the tag. Compare this anchor's slab and press against the "Default" button above; it must match exactly.</p>
+      <div class="flex flex-wrap gap-3">
+        <a href="#" data-slot="button" class="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-md transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 7l5 5m0 0l-5 5m5-5H6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          View docs
+        </a>
+      </div>
+    </div>
     
     <div>
       <p class="ks-label">Button group & split button</p>

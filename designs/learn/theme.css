@@ -186,7 +186,8 @@
   }
   button,
   [type="button"],
-  [type="submit"] {
+  [type="submit"],
+  [data-slot="button"] {
     cursor: pointer;
     font-family: var(--font-display);
     text-transform: uppercase;
@@ -232,7 +233,8 @@
 
 button,
 [type="button"],
-[type="submit"] {
+[type="submit"],
+[data-slot="button"] {
   /* Named explicitly rather than left to `transition-all`, because half these
      buttons carry `transition-colors`, which covers neither `top` nor
      box-shadow.
@@ -250,7 +252,17 @@ button,
 }
 
 /* Which buttons read as keys. Ghost and link buttons are deliberately absent:
-   they have no face to drop, so they stay flat. */
+   they have no face to drop, so they stay flat.
+
+   Keyed to tag AND to [data-slot="button"], not tag alone. shadcn/ui's Button
+   primitive stamps data-slot="button" on whatever it renders as — a real
+   <button>, or an <a> when used with `asChild` for a control that navigates
+   (shared/ACCESSIBILITY.md requires that: "never a button styled as a link
+   if it navigates"). A selector keyed only to `button`/`[type="button"]`
+   silently drops the slab, the label typography, and the focus treatment
+   below from every one of those anchors — same classes, same pixels in the
+   markup, no visible signal that anything is missing. See the button-styled
+   `<a>` in #buttons ("With icons") for the regression this guards against. */
 button.bg-primary,
 button.bg-secondary,
 button.bg-accent,
@@ -264,7 +276,14 @@ button[class*="border-input"],
 [type="button"].bg-destructive,
 [type="button"].border-2,
 [type="button"].border,
-[type="button"][class*="border-input"] {
+[type="button"][class*="border-input"],
+[data-slot="button"].bg-primary,
+[data-slot="button"].bg-secondary,
+[data-slot="button"].bg-accent,
+[data-slot="button"].bg-destructive,
+[data-slot="button"].border-2,
+[data-slot="button"].border,
+[data-slot="button"][class*="border-input"] {
   position: relative;
   top: 0;
   box-shadow: 0 var(--button-lift) 0 0 var(--button-edge, var(--border));
@@ -283,7 +302,14 @@ button[class*="border-input"]:active,
 [type="button"].bg-destructive:active,
 [type="button"].border-2:active,
 [type="button"].border:active,
-[type="button"][class*="border-input"]:active {
+[type="button"][class*="border-input"]:active,
+[data-slot="button"].bg-primary:active,
+[data-slot="button"].bg-secondary:active,
+[data-slot="button"].bg-accent:active,
+[data-slot="button"].bg-destructive:active,
+[data-slot="button"].border-2:active,
+[data-slot="button"].border:active,
+[data-slot="button"][class*="border-input"]:active {
   top: var(--button-lift);
   box-shadow: 0 0 0 0 var(--button-edge, var(--border));
 }
@@ -303,7 +329,15 @@ button[class*="border-input"]:active,
    the `outline-none` the utilities set.
 
    Do not "simplify" this back to a ring. The ring is the thing that does not work
-   here, and it fails silently — nothing renders, no rule is crossed out. */
+   here, and it fails silently — nothing renders, no rule is crossed out.
+
+   If you are reaching for Tailwind's `outline-*` utilities instead of this
+   unlayered rule (e.g. to draw the same treatment somewhere this selector list
+   doesn't reach), never pair `outline-none` with `focus-visible:outline-*` in
+   the same class list: `outline-none` sets `--tw-outline-style: none`
+   permanently, and `focus-visible:outline-2` only *reads* that variable — it
+   never resets it — so the ring renders nothing, in every state, with no
+   visual signal. See shared/ACCESSIBILITY.md §2. */
 
 button.bg-primary:focus-visible,
 button.bg-secondary:focus-visible,
@@ -318,7 +352,14 @@ button[class*="border-input"]:focus-visible,
 [type="button"].bg-destructive:focus-visible,
 [type="button"].border-2:focus-visible,
 [type="button"].border:focus-visible,
-[type="button"][class*="border-input"]:focus-visible {
+[type="button"][class*="border-input"]:focus-visible,
+[data-slot="button"].bg-primary:focus-visible,
+[data-slot="button"].bg-secondary:focus-visible,
+[data-slot="button"].bg-accent:focus-visible,
+[data-slot="button"].bg-destructive:focus-visible,
+[data-slot="button"].border-2:focus-visible,
+[data-slot="button"].border:focus-visible,
+[data-slot="button"][class*="border-input"]:focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
   box-shadow: 0 0 0 0px var(--border);
@@ -327,16 +368,20 @@ button[class*="border-input"]:focus-visible,
 /* The slab shade, derived from whichever fill the button carries so a recoloured
    button keeps its own slab without a second declaration. */
 button.bg-primary,
-[type="button"].bg-primary { --button-edge: color-mix(in srgb, var(--primary) 70%, black); }
+[type="button"].bg-primary,
+[data-slot="button"].bg-primary { --button-edge: color-mix(in srgb, var(--primary) 70%, black); }
 
 button.bg-secondary,
-[type="button"].bg-secondary { --button-edge: color-mix(in srgb, var(--secondary) 70%, black); }
+[type="button"].bg-secondary,
+[data-slot="button"].bg-secondary { --button-edge: color-mix(in srgb, var(--secondary) 70%, black); }
 
 button.bg-accent,
-[type="button"].bg-accent { --button-edge: color-mix(in srgb, var(--accent) 70%, black); }
+[type="button"].bg-accent,
+[data-slot="button"].bg-accent { --button-edge: color-mix(in srgb, var(--accent) 70%, black); }
 
 button.bg-destructive,
-[type="button"].bg-destructive { --button-edge: color-mix(in srgb, var(--destructive) 70%, black); }
+[type="button"].bg-destructive,
+[data-slot="button"].bg-destructive { --button-edge: color-mix(in srgb, var(--destructive) 70%, black); }
 
 @media (prefers-reduced-motion: reduce) {
   *,

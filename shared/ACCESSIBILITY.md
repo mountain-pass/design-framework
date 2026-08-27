@@ -121,6 +121,19 @@ never `outline: none` without an equivalent replacement.
 - Focus order follows DOM order. If the visual order and DOM order disagree, fix
   the DOM, not the `tabindex`. Positive `tabindex` values are banned.
 - Opening an overlay moves focus into it; closing it returns focus to the trigger.
+- **Never combine `outline-none` with a `focus-visible:outline-*` utility in
+  the same class list**, in any framework using Tailwind's outline utilities.
+  `outline-none` sets the CSS variable Tailwind's `outline-*` utilities read
+  from (`--tw-outline-style`) to `none` permanently — a later
+  `focus-visible:outline-2` only reads that variable, it doesn't reset it, so
+  the ring renders nothing in every state, with no crossed-out rule and no
+  other visual signal that anything is wrong. The initial value of
+  `outline-style` is already `none`, so there is nothing to reset: just omit
+  `outline-none` entirely when building a custom outline-based focus style. A
+  design that draws its focus ring with `outline` for its own reasons (e.g. to
+  survive an unlayered box-shadow effect elsewhere on the component) should
+  say so in its `DESIGN.md` and flag this exact trap there — see
+  `designs/learn/DESIGN.md`'s Accessibility section for a worked example.
 
 ---
 
@@ -283,6 +296,13 @@ What a script cannot check, and you must do by hand:
 
 1. **Tab through the kitchen sink.** Every control reachable, ring always visible,
    order matching visual order, nothing trapped except an intentional modal.
+   When verifying a focus ring, check the computed `outline-style` (not only
+   that a colour/width class is present) on an element that does **not** match
+   this design's global unlayered tag selectors — e.g. a button-styled `<a>`,
+   not a literal `<button>`. A literal `<button>` can pass this check for a
+   reason that has nothing to do with the component's own classes, if the
+   design's `theme.css` also draws the same outline via an unlayered rule (see
+   designs that use a pressed-button slab pattern, like `learn`).
 2. **Zoom to 200%** and narrow to 320px. Nothing clipped, nothing overlapping.
 3. **Turn colour off** — a greyscale screenshot. Every status still distinguishable.
 4. **Read the markup as a screen reader would.** Does each control have a name? Is

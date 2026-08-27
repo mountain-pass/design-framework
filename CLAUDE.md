@@ -175,3 +175,18 @@ chose, not one that happens to fall out of inverting the light theme.
 **Token names are fixed.** They match shadcn/ui so that this repo's output drops
 into real projects. Extend the set if a design needs more; never rename or drop
 what is there.
+
+**Key CSS to role, not to tag.** When a design's CSS applies a purely visual effect
+(shadow, colour, typography) to "buttons," "headings," or any other role-based term,
+key the selector to something that identifies the role unambiguously — a
+`data-slot` attribute, a dedicated class — not to the HTML tag. `shared/
+ACCESSIBILITY.md` requires some role-correct elements to render as a *different* tag
+than you'd expect (an `<a href>` for anything that navigates, even if it's styled as
+a button), so a tag-keyed selector (`button.bg-primary`, `h1, h2, h3, h4`) will
+always miss some of them — silently, since the element still carries every class the
+working version has. Verify every such rule against at least one element that
+deliberately violates the "expected" tag, and put it in the kitchen sink so
+`check.mjs` and a visual diff keep catching a regression. `designs/learn` is the
+worked example: its slab shadow and focus outline are keyed to
+`[data-slot="button"]` alongside the `button`/`[type="button"]` tag, and `#buttons`
+in its kitchen sink includes a button-styled `<a>` to prove it.

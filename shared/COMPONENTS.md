@@ -74,6 +74,18 @@ sits on the page background.
 **Accessibility:** every icon-only button needs an `aria-label`. Disabled buttons use
 the `disabled` attribute, not only `opacity-50`. The loading example sets `aria-busy`.
 
+**Tag independence:** `shared/ACCESSIBILITY.md`'s Link row requires "never a button
+styled as a link if it navigates" — so a real app will render some button-styled
+controls as `<a href>` (shadcn's `Button asChild` pattern), not `<button>`. Any
+visual effect a design's `theme.css` applies to "the button" must be keyed to
+something that survives that swap, not to the tag: match `[data-slot="button"]` (the
+attribute shadcn's Button primitive stamps regardless of what it renders as), or
+document explicitly in the design's "Component notes" which tag/attribute the effect
+is keyed to and that `asChild` usage must carry it. State which one your design's
+`theme.css` relies on. Verify by adding one button-styled `<a>` next to the `<button>`
+variants in `#buttons` and confirming it renders identically — see `designs/learn`
+for a worked example.
+
 ### `id="inputs"` — Form controls
 - `Input` — default, with placeholder, disabled, with leading icon, error state
 - `Textarea`

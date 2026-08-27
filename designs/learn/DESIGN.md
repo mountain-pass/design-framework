@@ -245,6 +245,16 @@ so they stay flat and do not travel. See prohibition 7.
 
 **Button** — The primary button is the most important part of the design. It is a round, compact green fill with dark text, a low shadow, and generous horizontal padding. Secondary buttons use a muted dark grey fill. Text buttons are minimal and rely on weight and colour.
 
+This design's slab shadow, uppercase label typography, and focus outline (see
+Accessibility below) are keyed to `[data-slot="button"]` in `theme.css`, alongside
+the `button`/`[type="button"]` tag selectors — not to the tag alone. An
+implementation that renders a button-styled control as something other than
+`<button>` (e.g. shadcn's `Button asChild` onto `<a href>`, required by
+`shared/ACCESSIBILITY.md` for anything that navigates) must carry
+`data-slot="button"` for the slab, typography, and outline to apply. Verify this
+before shipping — the kitchen sink's `#buttons` section has a button-styled `<a>`
+next to the `<button>` variants for exactly this comparison.
+
 **Input** — Fields are dark-filled with a visible stroke and a large radius. They stay compact and easy to scan, with clear focus rings.
 
 **Card** — Cards are dark surfaces with a soft border and almost no shadow, keeping the interface clean and dashboard-like.
@@ -266,7 +276,18 @@ Tailwind draws `ring-*` with `box-shadow`, which on these buttons is the slab, a
 the slab wins; a button whose markup said `focus-visible:ring-2` rendered no
 indicator at all while `focus-visible:outline-none` in the same class list had
 already removed the native one. `outline` is a separate property that the slab
-cannot overwrite. Do not convert it back to a ring — it fails silently. `--ring` is the green primary, which measures 2.09:1 light and 8.05:1
+cannot overwrite. Do not convert it back to a ring — it fails silently.
+
+This design draws the outline as unlayered plain CSS in `theme.css`, not as a
+Tailwind `outline-*` utility in the markup, precisely so it cannot be silently
+defeated the same way the ring was. If you ever do reach for the utility form
+elsewhere (a custom component this design's selectors don't reach, say), never
+pair it with `outline-none` in the same class list — see
+`shared/ACCESSIBILITY.md` §2's `Never` rule for why: `outline-none` sets the
+variable the `outline-*` utility reads from, permanently, and the utility never
+resets it, so it renders nothing in every state with no visual signal at all.
+
+`--ring` is the green primary, which measures 2.09:1 light and 8.05:1
 dark against the page. Dark mode is comfortably past the 3:1 WCAG 1.4.11 asks of
 an indicator; light mode is not, and is one of the shortfalls the waiver above
 covers — the ring is the same green as the primary, so it cannot clear 3:1 on
