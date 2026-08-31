@@ -114,8 +114,13 @@ this waiver travels with the tokens into your project.
 
 The face is rounded, not neutral. That roundness is doing as much work as the
 green: it is what stops a dense grid of controls from reading as a dashboard.
-Buttons, headings and navigation are all set in it at weight 800, uppercase, with
-`0.04em` tracking.
+Buttons carry the full treatment — weight 800, uppercase, `0.04em` tracking —
+and the active sidebar nav item picks up the same bold, uppercase emphasis.
+Headings use the rounded face too, but only the face: weight and tracking
+follow the scale below, and headings are never uppercased. `theme.css` applies
+the button treatment to `button, [type="button"], [type="submit"]` (and
+`[data-slot="button"]`, so it survives `asChild`) — it does not touch
+`h1`–`h4`.
 
 ### Why Baloo 2, and not the reference product's own face
 
