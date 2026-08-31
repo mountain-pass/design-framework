@@ -584,12 +584,15 @@
         
         <div>
           <label class="text-sm font-semibold text-foreground">Select option</label>
-          <select class="mt-2 h-11 w-full rounded-lg border-2 border-input bg-background px-4 text-sm transition-colors focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10">
-            <option>Choose an option...</option>
-            <option>Option one</option>
-            <option>Option two</option>
-            <option>Option three</option>
-          </select>
+          <div class="relative mt-2">
+            <select class="h-11 w-full appearance-none rounded-lg border-2 border-input bg-background pl-4 pr-12 text-sm transition-colors focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10">
+              <option>Choose an option...</option>
+              <option>Option one</option>
+              <option>Option two</option>
+              <option>Option three</option>
+            </select>
+            <svg class="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
         </div>
       </div>
     </div>

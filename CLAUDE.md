@@ -50,6 +50,17 @@ The trigger looks like:
    Those are the rules that make one design distinguishable from another, and they
    are the first thing to erode when an agent is working quickly.
 
+8. **Verify with a `/kitchensink` page.** After updating the shadcn primitives,
+   create a throwaway `/kitchensink` route in the target project that renders the
+   same components, in the same order, as `designs/<name>/index.html` — built from
+   the project's own (now-updated) components, not copied markup. Open it in a
+   browser, or screenshot it, and compare it against the design's kitchen sink.
+   This is what actually confirms a primitive was updated correctly and that the
+   project's real build — fonts, bundler, Tailwind config — renders it as intended,
+   catching drift and render issues before they reach a real screen. Leave it in
+   place rather than deleting it once confirmed — it is cheap to keep and pays for
+   itself the next time a design changes or a primitive drifts.
+
 ### Combining a design, a layout, and a voice
 
 They compose without negotiation, because they own disjoint things:
