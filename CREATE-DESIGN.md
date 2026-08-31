@@ -69,6 +69,26 @@ ratios in this repo have historically been optimistic by 2–4×.
 
 If a pair fails, fix the token — do not note it as a known issue.
 
+**If an effect needs a rule keyed to a tag, not just a class, add a `data-slot`
+selector alongside it — never rely on the tag alone.** Some effects genuinely
+cannot be expressed as a utility class (a per-variant `color-mix()` shadow, an
+unlayered rule that must outrank `@layer utilities` on purpose) and have to be
+written as a real CSS rule targeting `button`, `h1`–`h4`, or similar. The trap:
+`Button`'s `asChild` prop (and any component built on Radix's `Slot`) swaps the
+rendered tag for whatever child it wraps — typically an `<a>`, for a navigation
+action that should not literally be a `<button>` — and a `<CardTitle>` /
+`<AlertTitle>` / similar renders a `<div>`, never an actual heading tag. A
+selector that only matches `button` or `h1, h2, h3, h4` silently drops the
+effect the moment either happens, and it looks identical to a missing class at
+a glance. shadcn's own primitives already carry a stable `data-slot="button"` /
+`data-slot="card-title"` attribute regardless of the tag they render, and
+`Slot` forwards it onto the child — so add `[data-slot="button"]` next to
+`button, [type="button"]`, and `[data-slot$="-title"]` next to `h1, h2, h3, h4`
+(the `$=` suffix match catches every `*Title` primitive — `card-title`,
+`alert-title`, `dialog-title` — without listing them one by one). This is
+additive: it costs nothing for a plain `<button>` or `<h2>`, which keep
+matching the tag selector they always did.
+
 Two pairs are missed almost every time, so check them deliberately:
 
 - **`--input` must clear 3:1 against the surface behind it.** If an outlined field's

@@ -178,15 +178,29 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
+  /* [data-slot$="-title"] catches shadcn's *Title primitives (CardTitle,
+     AlertTitle, DialogTitle, SheetTitle, ...) — every one of them renders a
+     <div> or <h2> depending on the component, never reliably an h1-h4, so the
+     tag selectors above cannot see them. shadcn sets data-slot="card-title" /
+     "alert-title" / etc. on all of them; matching the "-title" suffix instead
+     of an exact value keeps this working as new *Title primitives are added. */
   h1,
   h2,
   h3,
-  h4 {
+  h4,
+  [data-slot$="-title"] {
     font-family: var(--font-display);
   }
+  /* [data-slot="button"] catches shadcn's Button rendered via `asChild` — Radix's
+     Slot forwards the parent's props (data-slot included) onto whatever child
+     tag it swaps in, most often an <a> for a navigation action. The tag/type
+     selectors alone only match a literal <button>, so an asChild link silently
+     lost this entire treatment before this was added. See the "pressed key"
+     block below, which depends on the same fix. */
   button,
   [type="button"],
-  [type="submit"] {
+  [type="submit"],
+  [data-slot="button"] {
     cursor: pointer;
     font-family: var(--font-display);
     text-transform: uppercase;
@@ -232,7 +246,8 @@
 
 button,
 [type="button"],
-[type="submit"] {
+[type="submit"],
+[data-slot="button"] {
   /* Named explicitly rather than left to `transition-all`, because half these
      buttons carry `transition-colors`, which covers neither `top` nor
      box-shadow.
@@ -264,7 +279,14 @@ button[class*="border-input"],
 [type="button"].bg-destructive,
 [type="button"].border-2,
 [type="button"].border,
-[type="button"][class*="border-input"] {
+[type="button"][class*="border-input"],
+[data-slot="button"].bg-primary,
+[data-slot="button"].bg-secondary,
+[data-slot="button"].bg-accent,
+[data-slot="button"].bg-destructive,
+[data-slot="button"].border-2,
+[data-slot="button"].border,
+[data-slot="button"][class*="border-input"] {
   position: relative;
   top: 0;
   box-shadow: 0 var(--button-lift) 0 0 var(--button-edge, var(--border));
@@ -283,7 +305,14 @@ button[class*="border-input"]:active,
 [type="button"].bg-destructive:active,
 [type="button"].border-2:active,
 [type="button"].border:active,
-[type="button"][class*="border-input"]:active {
+[type="button"][class*="border-input"]:active,
+[data-slot="button"].bg-primary:active,
+[data-slot="button"].bg-secondary:active,
+[data-slot="button"].bg-accent:active,
+[data-slot="button"].bg-destructive:active,
+[data-slot="button"].border-2:active,
+[data-slot="button"].border:active,
+[data-slot="button"][class*="border-input"]:active {
   top: var(--button-lift);
   box-shadow: 0 0 0 0 var(--button-edge, var(--border));
 }
@@ -318,7 +347,14 @@ button[class*="border-input"]:focus-visible,
 [type="button"].bg-destructive:focus-visible,
 [type="button"].border-2:focus-visible,
 [type="button"].border:focus-visible,
-[type="button"][class*="border-input"]:focus-visible {
+[type="button"][class*="border-input"]:focus-visible,
+[data-slot="button"].bg-primary:focus-visible,
+[data-slot="button"].bg-secondary:focus-visible,
+[data-slot="button"].bg-accent:focus-visible,
+[data-slot="button"].bg-destructive:focus-visible,
+[data-slot="button"].border-2:focus-visible,
+[data-slot="button"].border:focus-visible,
+[data-slot="button"][class*="border-input"]:focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
   box-shadow: 0 0 0 0px var(--border);
@@ -327,16 +363,20 @@ button[class*="border-input"]:focus-visible,
 /* The slab shade, derived from whichever fill the button carries so a recoloured
    button keeps its own slab without a second declaration. */
 button.bg-primary,
-[type="button"].bg-primary { --button-edge: color-mix(in srgb, var(--primary) 70%, black); }
+[type="button"].bg-primary,
+[data-slot="button"].bg-primary { --button-edge: color-mix(in srgb, var(--primary) 70%, black); }
 
 button.bg-secondary,
-[type="button"].bg-secondary { --button-edge: color-mix(in srgb, var(--secondary) 70%, black); }
+[type="button"].bg-secondary,
+[data-slot="button"].bg-secondary { --button-edge: color-mix(in srgb, var(--secondary) 70%, black); }
 
 button.bg-accent,
-[type="button"].bg-accent { --button-edge: color-mix(in srgb, var(--accent) 70%, black); }
+[type="button"].bg-accent,
+[data-slot="button"].bg-accent { --button-edge: color-mix(in srgb, var(--accent) 70%, black); }
 
 button.bg-destructive,
-[type="button"].bg-destructive { --button-edge: color-mix(in srgb, var(--destructive) 70%, black); }
+[type="button"].bg-destructive,
+[data-slot="button"].bg-destructive { --button-edge: color-mix(in srgb, var(--destructive) 70%, black); }
 
 @media (prefers-reduced-motion: reduce) {
   *,

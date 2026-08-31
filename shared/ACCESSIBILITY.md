@@ -110,6 +110,20 @@ rather than designed. Two specific traps:
 **Every interactive element has a visible focus indicator.** No exceptions, and
 never `outline: none` without an equivalent replacement.
 
+- **Never put `outline-none` in the same class list as a `focus-visible:outline-*`
+  utility — the second does not override the first.** Tailwind's `outline-none`
+  sets `--tw-outline-style: none` as a real, unconditional declaration.
+  `focus-visible:outline-2` only *reads* that variable
+  (`outline-style: var(--tw-outline-style)`); it never writes it back to
+  `solid`. Once `outline-none` has run, the variable stays `none` in every
+  state, so the "replacement" renders nothing — no matter how correct its
+  width, colour, and offset classes look in the markup. This is the same
+  silent-failure shape as the `outline: none` rule above, just one mechanism
+  deeper: don't reach for `outline-none` as a reset before a custom focus
+  style, since the initial value of `outline-style` is already `none`. Verify
+  with computed `outline-style` (devtools or `getComputedStyle`), not the
+  class list — `outline-style: none` with everything else set correctly is
+  indistinguishable from a missing class at a glance.
 - Use `:focus-visible`, not `:focus`, so pointer users do not get a ring on click
   while keyboard users still do.
 - The ring uses `--ring` and clears 3:1 against its surroundings (above).

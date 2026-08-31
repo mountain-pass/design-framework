@@ -91,3 +91,43 @@ Copy the theme verbatim into this project's global stylesheet
 - **Copy is part of the deliverable too.** Buttons, empty states, errors and
   confirmations all get written in the named voice — not filled with placeholder
   text to be cleaned up later.
+
+## Implementation checklist (read before touching `src/components/ui/**`)
+
+The rules above describe what "on-design" means. These describe how components
+actually go wrong in practice — each one below has been found and fixed after
+the fact on a real first pass.
+
+- **shadcn's registry defaults are a starting point, not the target.** A pulled
+  component will compile and look plausible while being off-spec in ways that
+  are easy to miss at a glance — control height, radius, border weight,
+  shadow, and stray non-token colours the registry ships with (e.g.
+  `text-white` on a destructive variant instead of `text-destructive-foreground`).
+  **Before wiring up any primitive, open the matching kitchen-sink section**
+  (`designs/{{DESIGN}}/index.html`, the section whose `id` matches — `#buttons`,
+  `#card`, `#badges`, …) **and diff the pulled component's classes against it
+  line by line.** Don't assume "it's shadcn, it must already match."
+- **The kitchen sink demo outranks this file's own prose when they disagree.**
+  The demo is a rendered answer, not a description of one — treat that
+  literally. If `designs/{{DESIGN}}/DESIGN.md`'s prose says one thing and the
+  rendered kitchen sink (or `theme.css`) does another, copy the demo and flag
+  the mismatch rather than guessing which one is authoritative.
+- **After styling a primitive, verify the rendered output, not just the
+  classes.** Screenshot the page in both themes — the `/kitchensink` page above
+  is what this is for. For anything that supports `asChild`, specifically
+  check an instance rendered through it (e.g. a
+  `<Button asChild><a>…</a></Button>` navigation link, per the "never a
+  button styled as a link if it navigates" rule in `shared/ACCESSIBILITY.md`)
+  — that's the case most likely to silently drop styling a plain instance
+  would have. A class list that "looks right" is not the same as a computed
+  style that matches the kitchen sink.
+- **Radix's `asChild` can leak button-only attributes onto whatever it wraps.**
+  `Dialog.Close` / `Trigger` and similar Radix primitives default to injecting
+  `type="button"` (and forwarding `data-slot`) onto their child via `asChild` —
+  including a plain `<a>`, if that's what's inside. Check the rendered
+  attributes (DOM inspection or `getComputedStyle`, not just the `className`
+  list) on anything wrapped in a Radix `asChild`. Prefer a controlled
+  `open`/`onOpenChange` state with an `onClick` handler over `Dialog.Close
+  asChild` when the thing being closed is a navigation link rather than an
+  actual button — it sidesteps the attribute injection entirely instead of
+  fighting it.
