@@ -57,9 +57,9 @@ The trigger looks like:
    browser, or screenshot it, and compare it against the design's kitchen sink.
    This is what actually confirms a primitive was updated correctly and that the
    project's real build — fonts, bundler, Tailwind config — renders it as intended,
-   catching drift and render issues before they reach a real screen. It is a
-   verification tool, not a deliverable: remove it, or gate it behind a dev-only
-   route, once the comparison is done.
+   catching drift and render issues before they reach a real screen. Leave it in
+   place rather than deleting it once confirmed — it is cheap to keep and pays for
+   itself the next time a design changes or a primitive drifts.
 
 ### Combining a design, a layout, and a voice
 

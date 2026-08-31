@@ -73,10 +73,11 @@ Copy the theme verbatim into this project's global stylesheet
   not into each place it's used. A design's shape (radius, border weight, shadow)
   is a property of the component, not of any one screen that happens to use it.
 - **Verify with a `/kitchensink` page.** After updating the primitives, build a
-  throwaway `/kitchensink` route rendering the same components, in the same order,
-  as the design's own `index.html` — using the project's own updated components,
-  not copied markup. Compare the two visually before calling the work done, then
-  remove the route or gate it behind a dev-only path.
+  `/kitchensink` route rendering the same components, in the same order, as the
+  design's own `index.html` — using the project's own updated components, not
+  copied markup. Compare the two visually before calling the work done. Leave the
+  route in place rather than deleting it — it pays for itself the next time a
+  design changes or a primitive drifts.
 - **The three axes own different things.** The layout decides structure — regions,
   sizes, responsive behaviour, scroll model. The design decides appearance — colour,
   type, spacing, component styling. The voice decides words. If two of them appear
