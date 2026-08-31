@@ -49,6 +49,27 @@ Copy the theme verbatim into this project's global stylesheet
   `text-muted-foreground`, `border-border`. Never a hex value, never a Tailwind
   palette class like `bg-blue-500`. This is the rule that keeps the design
   swappable, and it is the one most often broken when working quickly.
+- **Update shadcn primitives, not call sites.** If the project already has local
+  shadcn components (`src/components/ui/*.tsx`), copy the kitchen sink's classes
+  into that component's own definition — its `cva` variants, its base className —
+  not into each place it's used. A design's shape (radius, border weight, shadow)
+  is a property of the component, not of any one screen that happens to use it.
+- **Verify with a `/kitchensink` page.** After updating the primitives, build a
+  `/kitchensink` route rendering the same components, in the same order, as the
+  design's own `index.html` — using the project's own updated components, not
+  copied markup. This means vendoring every shadcn-mappable primitive the
+  source kitchen sink demos, not only the ones another page in this project
+  already happens to use: **the kitchensink page's own coverage is itself the
+  "page that needs it"** for the "only vendor a primitive when a page actually
+  needs it" rule below, so stopping at whatever's already vendored elsewhere is
+  under-scoping this rule, not correctly deferring to that one. (Foundational
+  sections — tokens, typography, elevation, icons, motion — and marketing/layout
+  compositions shadcn itself has no component for — hero, features, pricing,
+  nav, dataviz, and the like — are out of scope for a component-by-component
+  port; note what's skipped and why instead of forcing a component to exist.)
+  Compare the two visually before calling the work done. Leave the route in
+  place rather than deleting it — it pays for itself the next time a design
+  changes or a primitive drifts.
 - **The three axes own different things.** The layout decides structure — regions,
   sizes, responsive behaviour, scroll model. The design decides appearance — colour,
   type, spacing, component styling. The voice decides words. If two of them appear
