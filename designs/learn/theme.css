@@ -219,30 +219,38 @@
    than above cap-height, so text with no descenders sits visibly high in
    whatever centers it, leaving a gap underneath instead of an even one on
    both sides. Buttons are handled above, inline, because they need the
-   always-on transform.
+   always-on transform, for the reason explained there: text-box-trim cannot
+   reach text centered by flexbox or by `vertical-align`, because both run
+   the actual text through a box author CSS can't target (flexbox wraps it in
+   an anonymous block; table `vertical-align: middle` centers the cell's
+   content box using metrics text-box-trim doesn't change). Both were
+   verified empirically — same pixel-diff method as the button case, not
+   inferred from the spec.
 
-   This rule covers `.uppercase`-classed text set through Tailwind's utility
-   rather than this file's own selectors — captions and labels sitting in
-   plain block flow. text-box-trim genuinely works there: it removes the
-   unused leading using the font's own metrics, so it needs no hand-measured
-   number and keeps working if the vendored font file is ever swapped. Where
-   it isn't supported yet, fall back to the same measured
-   --uppercase-optical-nudge used for buttons.
+   So the split here is not "buttons vs everything else", it's "centered via
+   flex/vertical-align vs plain block flow":
 
-   IN PROGRESS — known incomplete, not yet fixed:
-     - `.uppercase` elements that are themselves flex containers (the
-       sortable table-header button, the sidebar nav item) hit the same
-       anonymous-box problem as buttons: text-box-trim silently no-ops on
-       them. Verified empirically, same method as the button case.
-     - `<th>` table headers are uppercased via Tailwind's `[&_th]:uppercase`
-       arbitrary-variant syntax on `<thead>`, which never puts a literal
-       `.uppercase` class on the `<th>` itself — this rule doesn't reach them
-       at all. Separately, `<th>` centers via `vertical-align: middle`, which
-       text-box-trim was verified (same pixel-diff method) not to affect
-       either, so this needs its own always-on transform rule, not a trim
-       rule keyed to `th`. */
+     - `th` — table headers. Always uppercase in this design's tables, always
+       `vertical-align: middle`. Gets the always-on transform, same as
+       buttons. (They also never carry a literal `.uppercase` class — Tailwind
+       compiles `[&_th]:uppercase` on `<thead>` to a descendant rule — so a
+       class selector wouldn't reach them even if trim did work here.)
+     - `.uppercase.flex`, `.uppercase.inline-flex` — the sortable table-header
+       button and the sidebar nav item both set Tailwind's `.uppercase`
+       utility on a flex container directly. Same always-on transform.
+     - `.uppercase` on anything else — plain block-flow captions and labels.
+       This is where text-box-trim genuinely works: it reads the font's own
+       metrics, so it needs no hand-measured number and keeps working if the
+       vendored font file is ever swapped. Falls back to the same measured
+       --uppercase-optical-nudge where text-box-trim isn't supported yet. */
 @layer base {
-  .uppercase {
+  th,
+  .uppercase.flex,
+  .uppercase.inline-flex {
+    transform: translateY(var(--uppercase-optical-nudge));
+  }
+
+  .uppercase:not(.flex):not(.inline-flex) {
     text-box-trim: trim-both;
     text-box-edge: cap alphabetic;
   }
@@ -250,7 +258,7 @@
 
 @supports not (text-box-trim: trim-both) {
   @layer base {
-    .uppercase {
+    .uppercase:not(.flex):not(.inline-flex) {
       transform: translateY(var(--uppercase-optical-nudge));
     }
   }
