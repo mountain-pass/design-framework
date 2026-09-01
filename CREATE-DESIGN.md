@@ -79,6 +79,103 @@ Two pairs are missed almost every time, so check them deliberately:
   mode usually fails once it is lightened for dark, because the foreground stays
   white while the fill moves. This is the single most common failure in this repo.
 
+#### Uppercase optical centering
+
+If this design sets any text uppercase — buttons, captions, table headers,
+badges, nav labels — check whether it needs an optical-centering correction
+before shipping it. Uppercase text has no descenders, but the font's line box
+still reserves space for them below the baseline; unless the font happens to
+allocate that space evenly, the caps sit visibly high in whatever centers
+them — a button label, a table header — leaving a gap underneath instead of an
+even margin above and below.
+
+**Measure it, don't guess.** Render `SETTINGS` in the design's actual vendored
+sans font at a large size — 200px keeps integer-pixel rounding from hiding the
+real number — with a Canvas 2D context, and compare the glyphs' actual ink to
+the line box the font reports:
+
+```js
+const ctx = document.createElement('canvas').getContext('2d');
+ctx.font = "<weight> 200px '<font family>'";
+const m = ctx.measureText('SETTINGS');
+const inkCenter = (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2;
+const boxCenter = (m.fontBoundingBoxAscent - m.fontBoundingBoxDescent) / 2;
+const shiftEm = (inkCenter - boxCenter) / 200; // positive = push the text down
+```
+
+Check it at the weights this design actually sets uppercase at — most fonts hold
+this constant across weight, but don't assume it without checking (a font with
+an `MVAR` table can vary it). If `shiftEm` is under roughly 0.005em, there's
+nothing worth fixing — don't add a correction for a problem that doesn't exist;
+`slate` and `warm-paper` (Inter) measured at ~0.0025em and ship with no
+treatment for exactly this reason. If it's meaningfully non-zero, record it as
+`--uppercase-optical-nudge` in `:root`, with a comment stating the measured
+value and how you got it, and document it in DESIGN.md's Extensions section.
+Never estimate this number — "roughly centered by eye" and "off by 0.03em" look
+identical in isolation but compound across every button in the product.
+
+**Fix it with the mechanism the text's own centering allows — not one rule for
+everything.** `text-box-trim: trim-both; text-box-edge: cap alphabetic;` reads
+the font's real metrics and needs no hand-measured number, but it does not work
+everywhere. Verify empirically before relying on it: `CSS.supports()` only
+confirms the property parses, not that it does anything — pixel-diff a
+rendered element with and without it (screenshot before, apply the rule,
+screenshot after, diff the two) the way `learn` and `material-design` did.
+
+- **Plain block-flow text** — a caption or label with normal line-height, not
+  inside a flex/grid container, not vertical-align-centered: text-box-trim
+  works. Use it as the primary rule, with an `@supports not (text-box-trim:
+  trim-both)` fallback to `transform: translateY(var(--uppercase-optical-
+  nudge))` for browsers that don't support it yet.
+- **Text centered by flexbox** — almost every icon+label button, since the
+  icon is why it's `flex`/`inline-flex` in the first place: text-box-trim is a
+  proven no-op. A flex container wraps its direct text in an anonymous block
+  box that author CSS cannot select, so a rule on the flex container itself
+  never reaches the text. Use `transform: translateY(var(--uppercase-optical-
+  nudge))` unconditionally — there is nothing to fall back from.
+- **Text centered by `vertical-align: middle`** (table `<th>`) — text-box-trim
+  does not affect this centering either, even though the property applies
+  without error. Same always-on transform as flex.
+- **`<th>` needs its own selector regardless of the above.** If the table
+  markup uses Tailwind's `[&_th]:uppercase` arbitrary-variant syntax on
+  `<thead>` — the pattern every kitchen sink in this repo uses — the compiled
+  rule never puts a literal `.uppercase` class on the `<th>` itself. A
+  `.uppercase` selector will silently skip every table header.
+
+A selector split that works for a `.uppercase`-utility-heavy kitchen sink:
+
+```css
+@layer base {
+  th,
+  .uppercase.flex,
+  .uppercase.inline-flex {
+    transform: translateY(var(--uppercase-optical-nudge));
+  }
+
+  .uppercase:not(.flex):not(.inline-flex) {
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
+  }
+}
+
+@supports not (text-box-trim: trim-both) {
+  @layer base {
+    .uppercase:not(.flex):not(.inline-flex) {
+      transform: translateY(var(--uppercase-optical-nudge));
+    }
+  }
+}
+```
+
+If the design sets `text-transform: uppercase` directly on a role selector
+rather than through the `.uppercase` utility — `learn`'s button rule does
+this, keyed to `[data-slot="button"]` per this repo's "key CSS to role, not
+tag" convention — give that selector the same always-on transform inline
+rather than relying on the block above, since it won't carry the `.uppercase`
+class either. See `designs/learn/theme.css` and `designs/material-design/
+theme.css` for both cases worked through in full, including the comments
+explaining why each selector landed where it did.
+
 ### 2. `index.html`
 
 The kitchen sink. Every section in `shared/COMPONENTS.md`, in order, with the exact
@@ -221,6 +318,9 @@ sections exist; they cannot tell you the design is good. Specifically check that
 - **Take a greyscale screenshot.** Every status, every chart series, and every
   active state must still be distinguishable with hue removed.
 - **Zoom to 200% and narrow to 320px.** Nothing clipped, nothing overlapping.
+- If anything is set uppercase, zoom into a button and a table header and look at
+  the gap above and below the letters. If it isn't even, see "Uppercase optical
+  centering" above — measure it, don't nudge it by eye.
 - It looks meaningfully different from the other designs in `designs/`. If it does
   not, the repository has not gained anything and you should push the choices
   further.
