@@ -225,7 +225,10 @@ Markup requirements:
   through a token. A design that hard-codes colour cannot be swapped, which defeats
   the purpose of the repository.
 - Every interactive element gets a visible focus ring using `--ring`. Tab through
-  the page before you call it done.
+  the page before you call it done — and see "Horizontal tabs and other
+  overflow-x-auto strips" below before you tab through, because a clipped ring on
+  the first or last item in a scrolling row won't show up unless you specifically
+  focus that item.
 - **The markup is part of the deliverable, not just the styling.** Agents copy the
   kitchen sink's markup verbatim, so a missing `<label for>` or an unlabelled
   icon-only button here becomes the same bug in every application built from this
@@ -236,6 +239,54 @@ Markup requirements:
 - Real content, not lorem ipsum. Plausible product copy makes design decisions
   legible in a way that placeholder Latin does not — you cannot judge a table's
   density with fake words in it.
+
+#### Horizontal tabs and other overflow-x-auto strips
+
+This exact bug shipped identically across five designs before anyone caught it,
+because it is invisible unless you tab to the *first or last* item — so check for
+it deliberately rather than trusting a casual tab-through.
+
+The horizontal-tabs pattern needs `overflow-x-auto` on the tab `<nav>` so it
+scrolls on narrow screens. Per the CSS overflow spec, setting `overflow-x` to
+anything but `visible` forces `overflow-y` to compute to `auto` as well — there is
+no way to scroll one axis and leave the other visible on the same box. A focus
+ring drawn with `ring-*` (box-shadow, extending past the element's own border box)
+gets clipped by that computed `overflow-y: auto` the moment the ring has nowhere
+to render into: if the `nav`'s padding box is flush with a tab's own box — which
+it is by default, since nothing reserves any extra space — the ring is clipped
+top and bottom on *every* tab, and left/right on the first and last one, where the
+nav's own edge is flush with the tab's edge. A tab in the middle of the row looks
+fine because its neighbours' `gap` gives its ring room; only the outer edges show
+the bug, which is exactly why it survives a quick tab-through.
+
+**The fix is real padding on the scrolling container for the ring to render into,
+cancelled with an equal negative margin so nothing shifts and no alignment trick
+elsewhere breaks:**
+
+```html
+<nav class="flex gap-1 overflow-x-auto pt-1.5 -mt-1.5 pb-1.5 -mb-[7px] pl-1.5 -ml-1.5 pr-1.5 -mr-1.5">
+```
+
+The `-mb-[7px]` (rather than the more obvious `-mb-1.5`) is `pb-1.5` (6px) plus
+the 1px that this repo's underline-tabs pattern already relies on to fuse the
+active tab's own `border-b-2` with the container's separate `border-b` divider
+line into a single line — recompute that constant if your design's tab bar
+doesn't use the same border-merge trick, or if the container's border width
+differs. Verify the fix, don't eyeball it: check that the tab's own
+`getBoundingClientRect()` is unchanged before/after (confirms no visual shift)
+and that the container's bottom edge still equals the active tab's bottom edge
+(confirms the border-merge still holds), then screenshot the first and last tab
+focused, in both themes.
+
+While you're in this markup, also check that the label isn't sitting flush
+against one edge of its own padding (e.g. `pb-3` with no matching `pt-3`) — that
+reads as fine on its own but becomes visibly lopsided the moment a focus ring
+frames it, and a `gap-6`-plus-`px-1` tab row reads as big gaps between tiny click
+targets rather than a deliberately spaced row of controls.
+
+None of this is specific to tabs — any horizontally-scrolling strip of focusable
+controls (filter chips, a segmented breadcrumb, a toolbar) needs the same padding
+treatment wherever `overflow-x-auto` is load-bearing for narrow screens.
 
 ### 3. `DESIGN.md`
 
@@ -315,6 +366,10 @@ sections exist; they cannot tell you the design is good. Specifically check that
   a sticky header.
 - **Tab through the entire page.** Every control reachable, nothing trapped, order
   matching visual order. This is the check that catches the most real bugs.
+- **In any horizontally-scrolling row (tabs, chips, a toolbar), specifically focus
+  the first and last item, not just one in the middle.** See "Horizontal tabs and
+  other overflow-x-auto strips" above — a clipped ring on the outer edges hides
+  behind a normal-looking middle item.
 - **Take a greyscale screenshot.** Every status, every chart series, and every
   active state must still be distinguishable with hue removed.
 - **Zoom to 200% and narrow to 320px.** Nothing clipped, nothing overlapping.
