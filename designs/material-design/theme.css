@@ -69,6 +69,15 @@
   --font-serif: "Roboto Slab", ui-serif, Georgia, Cambria, serif;
   --font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
+  /* Optical-centering correction for uppercase Roboto text — see the
+     "Uppercase optical centering" rule under `@layer base`. Measured, not
+     guessed: rendered "SETTINGS" in Roboto (Canvas, 200px, weight 500) and
+     compared the glyphs' actual ink box (actualBoundingBoxAscent/Descent)
+     against the line box the font reports (fontBoundingBoxAscent/Descent).
+     The gap is 0.015em of the line box and held constant across the weights
+     this design uses (400–700), so one constant covers all of them. */
+  --uppercase-optical-nudge: 0.015em;
+
   /* Material Design 2 light theme - traditional blue (#2196F3) */
   --background: oklch(0.99 0.002 245);
   --foreground: oklch(0.18 0.015 200);
@@ -221,6 +230,55 @@
   }
   button {
     cursor: pointer;
+  }
+}
+
+/* Uppercase optical centering.
+   -----------------------------------------------------------------------------
+   Roboto's line box reserves more room below the baseline (for descenders)
+   than above cap-height, so uppercase text — this design's filled and
+   outlined CTA buttons, per Material's convention — sits visibly high in
+   whatever centers it, leaving a gap underneath instead of an even one on
+   both sides.
+
+   The correct fix depends on how the text is centered, not on which
+   component it is — verified empirically (pixel-diffed a fix against an
+   unpatched render, in headless Chromium) rather than assumed from the spec:
+
+     - Centered by flexbox (every button here is `inline-flex`, for the
+       icon) or by table `vertical-align: middle` (`<th>`): text-box-trim is
+       a proven no-op. Flexbox wraps direct text in an anonymous block
+       author CSS can't select; vertical-align's centering doesn't respond
+       to text-box-trim either. These get an always-on transform — there is
+       nothing to fall back from.
+     - Plain block-flow text (captions, labels via Tailwind's `.uppercase`
+       utility, not inside a flex container): text-box-trim genuinely works
+       here. It reads the font's own metrics, so it needs no hand-measured
+       number and keeps working if the vendored font file is ever swapped.
+       Falls back to the same measured --uppercase-optical-nudge where
+       text-box-trim isn't supported yet.
+
+   `<th>` never carries a literal `.uppercase` class — Tailwind compiles
+   `[&_th]:uppercase` on `<thead>` to a descendant rule — so it needs its own
+   selector regardless of which fix applies. */
+@layer base {
+  th,
+  .uppercase.flex,
+  .uppercase.inline-flex {
+    transform: translateY(var(--uppercase-optical-nudge));
+  }
+
+  .uppercase:not(.flex):not(.inline-flex) {
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
+  }
+}
+
+@supports not (text-box-trim: trim-both) {
+  @layer base {
+    .uppercase:not(.flex):not(.inline-flex) {
+      transform: translateY(var(--uppercase-optical-nudge));
+    }
   }
 }
 
