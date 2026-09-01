@@ -452,6 +452,14 @@ This is baked into the tokens, so consumers get it automatically.
 **Snackbar dismiss timing** — 4–7s instead of the typical 3s. Documented in
 component notes.
 
+**`--uppercase-optical-nudge: 0.015em`** corrects Roboto's uppercase CTA button
+text (Material's convention) for sitting visibly high in whatever centers it —
+measured on the actual vendored font, not guessed; see the "Uppercase optical
+centering" rule in `theme.css` for the full explanation and the measurement
+method. If a consumer ignores it, uppercase text renders correctly in every
+other respect, just with a sub-pixel-to-1px gap under the baseline instead of
+an even margin.
+
 ---
 
 ## Accessibility
