@@ -331,10 +331,21 @@ tight on" under Colour. Re-run the check after any palette change, however small
 
 ## Extensions
 
-No custom tokens beyond the standard set. Everything this design needs exists in `shared/TOKENS.md`. The only addition is a CSS custom property for the display font:
+Two additions beyond the standard set in `shared/TOKENS.md`:
 
 ```css
 --font-display: "Fredoka", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+--uppercase-optical-nudge: 0.0125em;
 ```
 
-Used in the theme block as `font-family: var(--font-display)` for h1–h4. If a consumer ignores `--font-display`, headings fall back to `--font-sans` and the design still works — it just loses some personality.
+`--font-display` is used in the theme block as `font-family: var(--font-display)`
+for h1–h4. If a consumer ignores it, headings fall back to `--font-sans` and the
+design still works — it just loses some personality.
+
+`--uppercase-optical-nudge` corrects DM Sans's uppercase text (the sortable
+table-header button, table headers, captions) for sitting visibly high in
+whatever centers it — measured on the actual vendored font, not guessed; see
+the "Uppercase optical centering" rule in `theme.css` for the full explanation
+and the measurement method. If a consumer ignores it, uppercase text renders
+correctly in every other respect, just with a sub-pixel gap under the baseline
+instead of an even margin.
