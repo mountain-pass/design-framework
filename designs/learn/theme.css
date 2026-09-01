@@ -51,6 +51,16 @@
      when pressed. Every button collapses by exactly this much. */
   --button-lift: 4px;
 
+  /* Optical-centering correction for uppercase Baloo 2 text — see the
+     "Uppercase optical centering" rule below `@layer base`. Measured, not
+     guessed: rendered "SETTINGS" in Baloo 2 (Canvas, 200px, weight 800) and
+     compared the glyphs' actual ink box (actualBoundingBoxAscent/Descent)
+     against the line box the font reports (fontBoundingBoxAscent/Descent).
+     The gap is 0.025em of the line box and doesn't move with weight (Baloo 2
+     has no MVAR table, so its metrics don't respond to the variable axis),
+     so one constant covers every weight and size this design uses it at. */
+  --uppercase-optical-nudge: 0.025em;
+
   --background: oklch(1 0 89.88);
   --foreground: oklch(0.4128 0 89.88);
   --card: oklch(1 0 89.88);
@@ -193,6 +203,56 @@
     text-transform: uppercase;
     letter-spacing: 0.04em;
     font-weight: 800;
+    /* Optical centering, see the "Uppercase optical centering" comment below —
+       always on, not behind @supports. text-box-trim cannot reach this text:
+       button is `inline-flex` (for the icon), and a flex container's direct
+       text is laid out in an anonymous box author CSS cannot select, so
+       text-box-trim on the button itself is a proven no-op. The measured
+       nudge is the only mechanism that actually moves this text. */
+    transform: translateY(var(--uppercase-optical-nudge));
+  }
+}
+
+/* Uppercase optical centering.
+   -----------------------------------------------------------------------------
+   Baloo 2's line box reserves more room below the baseline (for descenders)
+   than above cap-height, so text with no descenders sits visibly high in
+   whatever centers it, leaving a gap underneath instead of an even one on
+   both sides. Buttons are handled above, inline, because they need the
+   always-on transform.
+
+   This rule covers `.uppercase`-classed text set through Tailwind's utility
+   rather than this file's own selectors — captions and labels sitting in
+   plain block flow. text-box-trim genuinely works there: it removes the
+   unused leading using the font's own metrics, so it needs no hand-measured
+   number and keeps working if the vendored font file is ever swapped. Where
+   it isn't supported yet, fall back to the same measured
+   --uppercase-optical-nudge used for buttons.
+
+   IN PROGRESS — known incomplete, not yet fixed:
+     - `.uppercase` elements that are themselves flex containers (the
+       sortable table-header button, the sidebar nav item) hit the same
+       anonymous-box problem as buttons: text-box-trim silently no-ops on
+       them. Verified empirically, same method as the button case.
+     - `<th>` table headers are uppercased via Tailwind's `[&_th]:uppercase`
+       arbitrary-variant syntax on `<thead>`, which never puts a literal
+       `.uppercase` class on the `<th>` itself — this rule doesn't reach them
+       at all. Separately, `<th>` centers via `vertical-align: middle`, which
+       text-box-trim was verified (same pixel-diff method) not to affect
+       either, so this needs its own always-on transform rule, not a trim
+       rule keyed to `th`. */
+@layer base {
+  .uppercase {
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
+  }
+}
+
+@supports not (text-box-trim: trim-both) {
+  @layer base {
+    .uppercase {
+      transform: translateY(var(--uppercase-optical-nudge));
+    }
   }
 }
 
