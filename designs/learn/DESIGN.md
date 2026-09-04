@@ -414,22 +414,33 @@ Popovers and dropdowns use `rounded-xl` and `shadow-lg`.
 Toasts appear in the bottom-right, `rounded-xl`, with the same tinted-background treatment as alerts.
 
 ### Progress & loading
-Progress bars are chunky `h-8` pills, not thin rules — a recessed track
-(`inset box-shadow`) under a glossy fill, the same tactile-slab language the
-buttons use, sized to carry a value label (`68%`, `24 / 35`) centred inside
-the bar rather than written underneath it. The fill (`[data-slot="progress-
-indicator"]`) is full width and slides in with `transform: translateX()`,
-clipped by the track's own `overflow-hidden` + `rounded-full`, rather than
-being resized with `width` — see prohibition 7, and the rationale comment
-above `[data-slot="progress-indicator"]` in `theme.css`.
+Progress bars are `h-6` pills sized tight to the label they carry — a
+recessed track (`inset box-shadow`) behind a flat, solid-colour fill, sized
+to hold a value label (`68%`, `24 / 35`) centred inside the bar rather than
+written underneath it. The fill (`[data-slot="progress-indicator"]`) is full
+width and slides in with `transform: translateX()`, clipped by the track's
+own `overflow-hidden` + `rounded-full`, rather than being resized with
+`width` — see prohibition 7, and the rationale comment above
+`[data-slot="progress-indicator"]` in `theme.css`.
 
-A centred label crosses both the track and the fill, so it is set in
-`text-foreground`, never `text-primary-foreground`: the track is near-white
-in light mode, where a white label would fail outright, and `text-foreground`
-is the one colour already measured against both `background` and the
-mid-lightness primary/secondary fills. A compact `h-2` variant with no inner
-label remains for tight inline contexts — a quota meter inside a stat card,
-a mini bar inside a table row — where there isn't room for a label anyway.
+The glossy read comes from a `::before` highlight on the fill, not a
+gradient: a short, heavily-transparent white capsule inset near the top —
+a reflection sitting on a solid surface, not a shaded bevel across the whole
+fill. Set the track's `data-tone` (`primary`, `secondary`, …) to match
+whichever colour the indicator fills with; it feeds `--progress-tone` on the
+label below.
+
+A centred label crosses both the track and the fill. White text is legal
+here — prohibition 4's own exception, "pure white as a foreground on a
+saturated fill" — but white-on-white-ish track in light mode is not, so the
+label doesn't lean on fill colour for contrast at all: it carries a
+`-webkit-text-stroke` in a tone darkened 60% toward black (the same mix
+`--button-edge` uses), keyed to `--progress-tone` from `data-tone`. The
+stroke is what stays legible over the track; the white fill is what stays
+legible over the indicator. A compact `h-2` variant with no inner label and
+no stroke remains for tight inline contexts — a quota meter inside a stat
+card, a mini bar inside a table row — where there isn't room for a label
+anyway.
 
 Circular spinners use a partial arc with `stroke-primary` at 2px weight.
 
