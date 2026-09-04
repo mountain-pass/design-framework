@@ -584,22 +584,33 @@ button.bg-destructive,
 }
 
 /* Centred value labels (e.g. "68%", "24 / 35") sit across both the track and
-   the fill. White is fine on both now that the track is a fixed dark colour
-   in every theme (prohibition 4's own exception covers the fill: pure white
-   as a foreground on a saturated fill). */
+   the fill, and default to `--foreground` — this theme's own body-text
+   colour, dark in light mode and near-white in dark mode. Measured against
+   the light-mode track (`--progress-track`, Tailwind's gray-200): 7.06:1,
+   clears AA. A darker *stroke* was tried for this case instead and
+   rejected: WCAG 1.4.3 is about the text's own fill colour against its
+   background, and a stroke is only the letterforms' outline — the interior
+   of each glyph would still be whatever colour failed to begin with, so no
+   stroke color fixes this without also changing the fill. */
 [data-slot="progress-label"] {
-  color: #fff;
+  color: var(--foreground);
 }
 
-/* A text-stroke in the bar's own tone (`--progress-tone`, set by [data-tone]
-   above — the same token the indicator itself is filled with, not a
-   darkened mix of it) is reserved for bars markup has marked `data-stroke`
-   (the >=60%-complete ones in #progress) — a finishing touch, not a
-   contrast fix now that the track no longer goes near-white in light mode.
-   `paint-order: stroke` draws the stroke under the fill, so a stroke this
-   thick doesn't eat into the glyph — a progressive enhancement; browsers
-   that ignore it on HTML text still render a (slightly heavier) outline. */
+/* White with a text-stroke in the bar's own tone (`--progress-tone`, set by
+   [data-tone] above — the same token the indicator itself is filled with,
+   not a darkened mix of it) replaces the default above once a bar is
+   markup-flagged `data-stroke` (the >=60%-complete ones in #progress).
+   White is legal here under prohibition 4's own exception ("pure white as
+   a foreground on a saturated fill"); `--foreground` would work just as
+   well for contrast at this point (it's ~white in dark mode and reads
+   fine on the fill in light mode too — see the label's default rule
+   above), but white is what makes the "nearly there" moment read as a
+   finishing touch rather than just switching colour. `paint-order: stroke`
+   draws the stroke under the fill, so a stroke this thick doesn't eat into
+   the glyph — a progressive enhancement; browsers that ignore it on HTML
+   text still render a (slightly heavier) outline. */
 [data-slot="progress"][data-stroke] [data-slot="progress-label"] {
+  color: #fff;
   -webkit-text-stroke: 3px var(--progress-tone);
   paint-order: stroke fill;
 }

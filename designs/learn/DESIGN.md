@@ -495,34 +495,25 @@ does elsewhere in this design (see "Uppercase optical centering" in
 `theme.css`) — it gets the same always-on
 `translateY(var(--uppercase-optical-nudge))` correction.
 
-A `-webkit-text-stroke` in the bar's own tone (`--progress-tone`, the same
-token the indicator is filled with, not a darkened mix of it) is reserved
-for bars markup marks `data-stroke` — by convention, ones at 60% or past
-it. Over the indicator the stroke all but disappears into the fill it
-matches; it only becomes visible where a labelled-but-unstroked low bar
-would otherwise look identical, which is the point — it reads as "nearly
-there" rather than "half done."
-
-**Known shortfall, not yet a waiver:** in dark mode the track (`--muted`) is
-dark enough that a plain white label reads fine anywhere on the bar, stroke
-or not. In light mode the track is `bg-gray-200` — light enough that an
-*unstroked* white label sitting on bare track (a low-fill bar under the 60%
-`data-stroke` threshold, like `#progress`'s `6 / 60` example) does not clear
-AA. This wasn't true of the previous dark-track-in-both-themes version, and
-reappeared when the track's light-mode colour changed back to a literal
-grey; it isn't yet resolved, and isn't declared via `check:contrast=waived`
-because that marker covers this file's *token pairs*, not a component-level,
-value-dependent case like this — a bar's contrast here depends on both its
-theme and how full it is. Options for actually fixing it: stroke every
-label regardless of `data-stroke` (loses the "nearly there" signal the
-stroke is otherwise for), swap the label to a dark, theme-aware colour
-below the threshold instead of white, or accept it and document the
-threshold as the reason low, light-mode bars need a caption underneath
-rather than relying on the in-bar label alone. Pick one before shipping
-this component with real (as opposed to demo) low-progress data in light
-mode. A compact `h-2` variant with no inner label and no stroke remains for
-tight inline contexts — a quota meter inside a stat card, a mini bar inside
-a table row — where there isn't room for a label anyway.
+Below that threshold the label is `--foreground` — this theme's own
+body-text colour, not white — specifically because white failed here: in
+light mode the track (`bg-gray-200`, see Extensions) is light enough that
+an unstroked white label sitting on bare track (a low-fill bar, like
+`#progress`'s `6 / 60` example) didn't clear AA, and a *darker stroke* was
+the tempting quick fix but the wrong one — WCAG 1.4.3 measures the text's
+own fill colour against its background, and a stroke is only the
+letterforms' outline, so no stroke colour fixes a background failing
+against the fill colour underneath it. Swapping the fill colour itself to
+`--foreground` does: measured against the light-mode track, 7.06:1 (up from
+white's failing ratio there), and dark mode's `--foreground` is close
+enough to white that its track reading (already fine) doesn't change.
+`--progress-tone`'s stroke is reserved for `data-stroke` bars specifically
+because it lets those two states — "nearly there" (white, stroked) vs.
+still filling up (`--foreground`, plain) — read as distinct at a glance,
+not because `--foreground` needed the stroke to pass contrast; it already
+doesn't. A compact `h-2` variant with no inner label and no stroke remains
+for tight inline contexts — a quota meter inside a stat card, a mini bar
+inside a table row — where there isn't room for a label anyway.
 
 Circular spinners use a partial arc with `stroke-primary` at 2px weight.
 
