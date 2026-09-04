@@ -367,12 +367,13 @@ is a deliberate asymmetry rather than an oversight.
 
 ## Extensions
 
-Three additions beyond the standard set in `shared/TOKENS.md`:
+Four additions beyond the standard set in `shared/TOKENS.md`:
 
 ```css
 --font-display: "Baloo 2", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;
 --button-lift: 4px;
 --uppercase-optical-nudge: 0.025em;
+--progress-track: oklch(0.928 0.006 264.531); /* redeclared under .dark, see below */
 ```
 
 `--font-display` is used in the theme block as `font-family: var(--font-display)`
@@ -388,6 +389,21 @@ the actual vendored font, not guessed; see the "Uppercase optical centering" rul
 in `theme.css` for the full explanation and the measurement method. If a consumer
 ignores it, uppercase text renders correctly in every other respect, just with a
 sub-pixel-to-1px gap under the baseline instead of an even margin.
+
+`--progress-track` is the quest bar's track colour — Tailwind's own default
+`gray-200` in light mode, redeclared under `.dark` to this theme's own dark
+`--muted` (already the right dark navy there). It's a token, not a
+`bg-gray-200` utility class in markup, specifically so a consumer who only
+copies the `:root`/`.dark` blocks still gets the right colour in both themes;
+`check.mjs` also flags a raw Tailwind palette class in the markup as a
+tokens-only violation, which a literal `bg-gray-200 dark:bg-muted` in markup
+was. See Progress & loading, including a known contrast shortfall this
+colour choice reopens for un-stroked, low-fill bars in light mode.
+
+Progress bars also read two per-instance custom properties, `--progress-value`
+and `--progress-height`, but those are set inline per bar in markup (not a
+Tailwind arbitrary-property class — see Progress & loading for why), not part
+of the token set above a consumer pastes once.
 
 ### Navigation
 Top nav bar is `h-16` (64px) vs slate's h-14 (56px). The extra height accommodates the more prominent logo typography (the rounded face at 18px bold) and makes touch targets more comfortable.
@@ -414,7 +430,96 @@ Popovers and dropdowns use `rounded-xl` and `shadow-lg`.
 Toasts appear in the bottom-right, `rounded-xl`, with the same tinted-background treatment as alerts.
 
 ### Progress & loading
-Progress bars have a `rounded-full` track (full pill shape) filled with `bg-primary`. Circular spinners use a partial arc with `stroke-primary` at 2px weight.
+Progress bars are `h-3.5` pills, sized tight to the label they carry rather
+than to a generic touch target — this is the one control in the design
+that's deliberately *not* `h-11`, because it isn't interactive. The track
+has no inset shadow — this is game chrome, not a recessed page surface —
+and its colour comes from `--progress-track` (see Extensions), not this
+theme's own `--muted`: `--muted` is nearly white in light mode, the wrong
+role for a track that needs to read as a visible grey chip, so this token
+borrows Tailwind's own default `gray-200` for light mode instead, and falls
+back to this theme's dark `--muted` — already the right navy — under
+`.dark`. The fill (`[data-slot="progress-indicator"]`) is a flat, solid
+token colour — no gradient — full width and slid into view with
+`transform: translateX()`, clipped by the track's own `overflow-hidden` +
+`rounded-full` rather than resized with `width` — see prohibition 7, and
+the rationale comment above `[data-slot="progress-indicator"]` in
+`theme.css`.
+
+Markup drives all of this from two custom properties set once per bar, as
+plain inline `style` (not a Tailwind arbitrary-property class — the
+vendored Tailwind browser build doesn't reliably apply those for this
+case, which is worth knowing before reaching for that shorthand elsewhere
+in a kitchen sink): `--progress-value` (a bare number, 0-100) and
+`--progress-height` (the bar's own height as a length). The translateX
+percentage and the `::before` highlight's geometry are both computed from
+these in CSS — nothing else in `theme.css` needs to change per bar.
+
+The glossy read comes from that `::before` highlight, not a gradient: a
+thin, very transparent (17.5%) white capsule, `calc(var(--progress-height)
+* 0.2)` tall, sitting the same distance down from the top — a reflection
+sitting on a solid surface, not a shaded bevel across the whole fill. Both
+lengths are computed from `--progress-height` rather than written as plain
+percentages, because percentage `height` on an absolutely-positioned box
+needs its containing block's height to be treated as definite, which held
+up inconsistently between the two indicator variants in practice, and are
+wrapped in `round(…, 1px)`: the raw calc is sub-pixel (2.8px on the h-3.5
+bars), and painting a box that thin at a sub-pixel position measurably
+shrank it in testing — computed style reported the correct 2.8px, but the
+actual pixels showed a visibly shorter band, closer to a seventh of the bar
+than the intended fifth. Snapping to a whole pixel first removes that
+ambiguity; it also means the ratio is never exactly 20% (2.8px rounds to
+3px, which is 21% of a 14px bar) — a whole-pixel constraint a bar height
+that isn't a multiple of five can't avoid. The highlight's ends are inset
+by half the bar's own height so it clears the
+track's rounded caps on both sides. The right inset is the easy half —
+measured from the indicator's own right edge, which always coincides with
+the fill's visible right edge regardless of value. The left inset is not: a
+naive mirror-image `left: <inset>` measures from the indicator's own left
+edge, and since the indicator is full width and translated, that edge sits
+off in the hidden, translated-away region for anything under 100% fill — an
+earlier pass shipped exactly that bug (cleared the right cap, ran straight
+over the left one). The fix reads the inset off `--progress-value` too:
+expressed in the indicator's own pre-transform coordinate space, the
+track's left edge is `100% - value%` in from the indicator's left edge, so
+that's where the highlight's `left` is anchored, inset by the same
+half-height. Set the track's `data-tone` (`primary`, `secondary`, …) to
+match whichever colour the indicator fills with; it feeds `--progress-tone`
+on the label below.
+
+A centred label crosses both the track and the fill, in white — legal on
+the fill under prohibition 4's own exception ("pure white as a foreground
+on a saturated fill"). Digits, "%" and "/" have no descenders, so the label
+sits visibly high in a flex-centred box for the same reason uppercase text
+does elsewhere in this design (see "Uppercase optical centering" in
+`theme.css`) — it gets the same always-on
+`translateY(var(--uppercase-optical-nudge))` correction.
+
+Below that threshold the label is `--muted-foreground`, not white: in light
+mode the track (`bg-gray-200`, see Extensions) is light enough that an
+unstroked white label sitting on bare track (a low-fill bar, like
+`#progress`'s `6 / 60` example) didn't clear AA, and a *darker stroke* was
+the tempting quick fix but the wrong one — WCAG 1.4.3 measures the text's
+own fill colour against its background, and a stroke is only the
+letterforms' outline, so no stroke colour fixes a fill colour that's
+already failing. `--foreground` (this theme's full-strength body text)
+fixed that — 7.06:1 against the light-mode track, 12.78:1 in dark — but
+read as too heavy for a bar that isn't done yet: too dark in light mode,
+too stark white in dark mode. `--muted-foreground` is the softer version of
+the same fix, and it's a real trade, not a free one: 3.62:1 in light mode,
+5.27:1 in dark. Dark mode still clears AA; **light mode does not** — a
+known, deliberately accepted shortfall of choosing the muted weight over
+`--foreground`, the same way this design already accepts light-mode
+shortfalls elsewhere (see the contrast waiver above). `--progress-tone`'s
+stroke is reserved for `data-stroke` bars so "nearly there" (white,
+stroked, full-strength) reads as visually distinct from "still filling up"
+(muted, plain) — not because the stroke is what makes the muted state
+legible; it doesn't touch it. A compact `h-2` variant with no inner label
+and no stroke remains for tight inline contexts — a quota meter inside a
+stat card, a mini bar inside a table row — where there isn't room for a
+label anyway.
+
+Circular spinners use a partial arc with `stroke-primary` at 2px weight.
 
 Skeletons use `bg-muted animate-pulse`, with `rounded-lg` to match the shapes they're standing in for (avatar skeletons are `rounded-full`).
 

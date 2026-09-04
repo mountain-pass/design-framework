@@ -61,6 +61,13 @@
      so one constant covers every weight and size this design uses it at. */
   --uppercase-optical-nudge: 0.025em;
 
+  /* Quest-bar track colour. Tailwind's own default `gray-200` (not one of
+     this theme's semantic tokens — this design's own --muted is nearly
+     white in light mode, the wrong role for a track that needs to read as
+     a visible grey chip). Redeclared under .dark below, to this theme's
+     own dark --muted, which is already the right dark navy there. */
+  --progress-track: oklch(0.928 0.006 264.531);
+
   --background: oklch(1 0 89.88);
   --foreground: oklch(0.4128 0 89.88);
   --card: oklch(1 0 89.88);
@@ -108,6 +115,10 @@
   --secondary-foreground: oklch(0.2304 0.0195 225.76);
   --muted: oklch(0.2949 0.0237 228.44);
   --muted-foreground: oklch(0.7032 0.0269 229.31);
+  /* Same value as --muted above: dark mode's own muted is already the dark
+     navy the quest-bar track wants. See the light-mode declaration in
+     :root for why this can't just be --muted in both themes. */
+  --progress-track: oklch(0.2949 0.0237 228.44);
   --accent: oklch(0.8575 0.1752 88.49);
   --accent-foreground: oklch(0.2304 0.0195 225.76);
   --destructive: oklch(0.6708 0.2165 25.19);
@@ -242,11 +253,17 @@
        This is where text-box-trim genuinely works: it reads the font's own
        metrics, so it needs no hand-measured number and keeps working if the
        vendored font file is ever swapped. Falls back to the same measured
-       --uppercase-optical-nudge where text-box-trim isn't supported yet. */
+       --uppercase-optical-nudge where text-box-trim isn't supported yet.
+     - `[data-slot="progress-label"]` — the quest bar's centred value label.
+       Not uppercase text, but digits, "%" and "/" have no descenders
+       either, so the same gap opens up under the same flex-centering
+       (`.flex.items-center`); same always-on transform for the same
+       reason. */
 @layer base {
   th,
   .uppercase.flex,
-  .uppercase.inline-flex {
+  .uppercase.inline-flex,
+  [data-slot="progress-label"] {
     transform: translateY(var(--uppercase-optical-nudge));
   }
 
@@ -450,6 +467,159 @@ button.bg-accent,
 button.bg-destructive,
 [type="button"].bg-destructive,
 [data-slot="button"].bg-destructive { --button-edge: color-mix(in srgb, var(--destructive) 70%, black); }
+
+/* The quest bar.
+   -----------------------------------------------------------------------------
+   Progress fills are translated, not resized. [data-slot="progress-indicator"]
+   is full width and slides in from the left with `transform: translateX()`;
+   the track's own `overflow-hidden` + `rounded-full` clips it to a rounded cap
+   at whatever point it reaches. Resizing `width` instead would be the more
+   obvious way to draw this, but width is a layout property — see prohibition 7
+   — while transform is compositor-only and touches no other pixel on the page.
+
+   The translateX percentage and the highlight's end inset (below) both need
+   the same "how full is this bar" number, so it's the one thing markup sets:
+   `--progress-value` (a bare number, 0-100), alongside `--progress-height`
+   (the bar's own height, as a length — percentages on `left`/`right` can't
+   express "half the bar's height" because they resolve against the
+   containing block's *width*, not its height). Everything else — the
+   transform, the highlight geometry — is computed from those two.
+
+   The track has no inset shadow — this is game chrome, not a recessed page
+   surface — and its colour (`--progress-track`) is Tailwind's own default
+   `gray-200` in light mode, not this design's semantic `--muted`, which in
+   light mode is nearly white: a visible grey track needs an actual grey,
+   not the token this theme reserves for that role. Dark mode redeclares
+   `--progress-track` back to this theme's own dark `--muted`, which is
+   already the right tone there. The fill itself stays a flat, solid token
+   colour — no gradient —
+   and the glossy look comes from a `::before` highlight instead: a short,
+   heavily-transparent white capsule inset near the top of the fill. Painting
+   the highlight as its own rounded shape (rather than a gradient wash across
+   the whole fill) is what makes it read as a reflection sitting on top of a
+   solid surface instead of a shaded 3D bevel — the same distinction as a
+   glass highlight vs. an emboss. */
+
+[data-slot="progress"] {
+  background-color: var(--progress-track);
+  /* Falls back to a neutral stroke for any indicator that doesn't declare a
+     tone; set to a real value by the [data-tone] rules below. */
+  --progress-tone: var(--foreground);
+  /* See the file-level comment above. Defaults match the labelled bars'
+     own h-3.5 / 0% so a bar that forgets to set either still renders
+     something plausible (an empty bar) rather than something broken. */
+  --progress-height: 0.875rem;
+  --progress-value: 0;
+}
+
+[data-slot="progress"][data-tone="primary"] {
+  --progress-tone: var(--primary);
+}
+
+[data-slot="progress"][data-tone="secondary"] {
+  --progress-tone: var(--secondary);
+}
+
+[data-slot="progress-indicator"] {
+  /* Full width, always — translateX slides it left by (100 - value)%, and
+     the track's own overflow-hidden + rounded-full clips whatever's left
+     visible into a rounded cap. No `position` declared here: the compact
+     variant relies on normal flow (`h-full w-full`), while the labelled
+     variant relies on the markup's own `absolute` utility (`inset-y-0
+     left-0`). This rule is unlayered, so it would beat either utility
+     outright and collapse the fill to zero height if it touched `position`
+     — see the two variants in #progress if you need to check this again.
+
+     The highlight below needs `position: absolute` on its own box, which
+     needs *some* containing block on the indicator — but not necessarily
+     `position`. This transform establishes one on its own, per the CSS
+     Transforms spec, so the highlight anchors correctly on both variants
+     without this rule ever touching `position` and re-triggering the bug
+     above. */
+  transform: translateX(calc((var(--progress-value) * 1%) - 100%));
+  transition: transform 300ms cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+[data-slot="progress-indicator"]::before {
+  content: "";
+  position: absolute;
+  /* Lengths derived from --progress-height, not percentages: percentage
+     `height` on an absolutely-positioned box needs its containing block's
+     height to be treated as definite, which held up inconsistently across
+     the two indicator variants in practice — this sidesteps the question
+     entirely.
+
+     Wrapped in `round(..., 1px)`: the raw calc is a sub-pixel value (2.8px
+     on the h-3.5 bars), and painting a ~3px-tall, semi-transparent, fully
+     rounded box at a sub-pixel position measurably shrank it in testing —
+     computed style reported the correct 2.8px box, but the actual pixels
+     showed a visibly shorter band (roughly 2px, a fifth of the bar reading
+     closer to a seventh). Snapping to a whole pixel before the renderer's
+     own anti-aliasing gets to it removes the ambiguity that was producing
+     that gap. */
+  top: round(calc(var(--progress-height) * 0.2), 1px);
+  height: round(calc(var(--progress-height) * 0.2), 1px);
+  /* The right edge is inset from the indicator's own right edge, which
+     always coincides with the fill's visible right edge regardless of
+     value — so a plain `right` works. The left edge can't use the mirror
+     `left: <inset>`, though: the indicator is full width and translated,
+     so its own *left* edge sits off in the hidden, translated-away region
+     for anything under 100%, and an inset measured from it lands nowhere
+     near the track's actual left cap (this is the bug a prior pass shipped
+     — cleared on the right, ran straight over the rounded corner on the
+     left). What we actually want is an inset from the *track's* left edge,
+     which stays put under the translate: expressed in the indicator's own
+     (untranslated, pre-transform) coordinate space, that point is
+     `100% - value%` in from the indicator's left edge, plus the inset
+     itself. */
+  left: calc(100% - (var(--progress-value) * 1%) + (var(--progress-height) * 0.5));
+  right: calc(var(--progress-height) * 0.5);
+  /* Half the highlight's own height rather than a flat 9999px — not the
+     fix for the shrinkage above (that turned out to be unrelated: a
+     9999px radius on a box this thin gets clamped down to the same
+     effective half-height stadium shape regardless), just avoids relying
+     on that clamp doing the right thing at all. */
+  border-radius: calc(var(--progress-height) * 0.1);
+  background: rgb(255 255 255 / 0.175);
+}
+
+/* Centred value labels (e.g. "68%", "24 / 35") sit across both the track and
+   the fill, and default to `--muted-foreground` — softer than plain
+   `--foreground`, by request (full-strength foreground read as too dark in
+   light mode and too stark white in dark mode for a label that isn't
+   "done" yet).
+
+   Contrast against the track (`--progress-track`): 3.62:1 in light mode,
+   5.27:1 in dark. Dark mode clears AA (4.5:1); light mode does not — this
+   is a known, accepted shortfall of the muted weight, not an oversight.
+   `--foreground` measured 7.06:1 / 12.78:1 in the same spot and remains
+   the accessible-but-more-visually-heavy option if that trade needs
+   revisiting. A darker *stroke* was also tried for the original (pre-
+   muted) version of this problem and rejected regardless of weight: WCAG
+   1.4.3 is about the text's own fill colour against its background, and a
+   stroke is only the letterforms' outline — the interior of each glyph is
+   still whatever colour it was, so no stroke fixes a fill that's already
+   failing. */
+[data-slot="progress-label"] {
+  color: var(--muted-foreground);
+}
+
+/* White with a text-stroke in the bar's own tone (`--progress-tone`, set by
+   [data-tone] above — the same token the indicator itself is filled with,
+   not a darkened mix of it) replaces the muted default above once a bar
+   is markup-flagged `data-stroke` (the >=60%-complete ones in #progress).
+   White is legal here under prohibition 4's own exception ("pure white as
+   a foreground on a saturated fill") — deliberately the one place this
+   component still goes full-strength rather than muted, so the "nearly
+   there" moment reads as a finishing touch, not just a colour switch.
+   `paint-order: stroke` draws the stroke under the fill, so a stroke this
+   thick doesn't eat into the glyph — a progressive enhancement; browsers
+   that ignore it on HTML text still render a (slightly heavier) outline. */
+[data-slot="progress"][data-stroke] [data-slot="progress-label"] {
+  color: #fff;
+  -webkit-text-stroke: 3px var(--progress-tone);
+  paint-order: stroke fill;
+}
 
 @media (prefers-reduced-motion: reduce) {
   *,
