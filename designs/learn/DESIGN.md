@@ -424,22 +424,29 @@ own `overflow-hidden` + `rounded-full`, rather than being resized with
 `[data-slot="progress-indicator"]` in `theme.css`.
 
 The glossy read comes from a `::before` highlight on the fill, not a
-gradient: a short, heavily-transparent white capsule inset near the top —
-a reflection sitting on a solid surface, not a shaded bevel across the whole
-fill. Set the track's `data-tone` (`primary`, `secondary`, …) to match
-whichever colour the indicator fills with; it feeds `--progress-tone` on the
-label below.
+gradient: a thin, very transparent (15%) white capsule, 20% of the bar's
+height, sitting 20% down from its top — a reflection sitting on a solid
+surface, not a shaded bevel across the whole fill. Its ends are inset by
+half the bar's own height so it never overlaps the track's rounded caps;
+because that inset is a fraction of the bar's *height* and plain CSS can't
+express that for a horizontal property (`left`/`right` percentages resolve
+against width), the markup sets `--progress-height` alongside whichever
+`h-*` utility the bar uses. Set the track's `data-tone` (`primary`,
+`secondary`, …) to match whichever colour the indicator fills with; it feeds
+`--progress-tone` on the label below.
 
 A centred label crosses both the track and the fill. White text is legal
 here — prohibition 4's own exception, "pure white as a foreground on a
 saturated fill" — but white-on-white-ish track in light mode is not, so the
 label doesn't lean on fill colour for contrast at all: it carries a
-`-webkit-text-stroke` in a tone darkened 60% toward black (the same mix
-`--button-edge` uses), keyed to `--progress-tone` from `data-tone`. The
-stroke is what stays legible over the track; the white fill is what stays
-legible over the indicator. A compact `h-2` variant with no inner label and
-no stroke remains for tight inline contexts — a quota meter inside a stat
-card, a mini bar inside a table row — where there isn't room for a label
+`-webkit-text-stroke` in the bar's own tone, keyed to `--progress-tone` from
+`data-tone` — the same token the indicator is filled with, not a darkened
+mix of it. Over the indicator the stroke all but disappears into the fill it
+matches; over the bare track it's the only thing separating the letterforms
+from the background, which is where it actually does its job. A compact
+`h-2` variant with no inner label and no stroke remains for tight inline
+contexts — a quota meter inside a stat card, a mini bar inside a table row
+— where there isn't room for a label
 anyway.
 
 Circular spinners use a partial arc with `stroke-primary` at 2px weight.

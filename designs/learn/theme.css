@@ -475,14 +475,22 @@ button.bg-destructive,
   /* Falls back to a neutral stroke for any indicator that doesn't declare a
      tone; set to a real value by the [data-tone] rules below. */
   --progress-tone: var(--foreground);
+  /* Read by the ::before highlight below to size its end insets as a
+     fraction of the bar's own height, which plain CSS can't express
+     directly — percentages on `left`/`right` resolve against the
+     containing block's *width*, not its height. Markup sets this via a
+     `[--progress-height:_]` arbitrary-property class alongside whichever
+     `h-*` utility it uses; it defaults to the h-6 bars' height so a bar
+     that forgets to set it still gets a plausible inset rather than none. */
+  --progress-height: 1.5rem;
 }
 
 [data-slot="progress"][data-tone="primary"] {
-  --progress-tone: color-mix(in srgb, var(--primary) 60%, black);
+  --progress-tone: var(--primary);
 }
 
 [data-slot="progress"][data-tone="secondary"] {
-  --progress-tone: color-mix(in srgb, var(--secondary) 60%, black);
+  --progress-tone: var(--secondary);
 }
 
 [data-slot="progress-indicator"] {
@@ -504,22 +512,29 @@ button.bg-destructive,
 [data-slot="progress-indicator"]::before {
   content: "";
   position: absolute;
-  inset: 2px 2px auto 2px;
-  height: 30%;
+  top: 20%;
+  height: 20%;
+  /* Half the bar's own height, not a fixed pixel value, so the highlight
+     never overlaps the track's rounded end caps at any bar size — see
+     --progress-height above. */
+  left: calc(var(--progress-height) * 0.5);
+  right: calc(var(--progress-height) * 0.5);
   border-radius: 9999px;
-  background: rgb(255 255 255 / 0.35);
+  background: rgb(255 255 255 / 0.175);
 }
 
 /* Centred value labels (e.g. "68%", "24 / 35") sit across both the track and
    the fill. White text (allowed here under prohibition 4 — pure white as a
    foreground on a saturated fill is the named exception) is unreadable on
    its own against the near-white track in light mode, so the label carries
-   an outline instead of relying on fill colour alone: a text-stroke in a
-   darkened tint of whichever tone the bar is (`--progress-tone`, set by
-   [data-tone] above), the same "darken 60% toward black" the button slab
-   uses for --button-edge. The stroke is what stays legible over the track;
-   the white fill is what stays legible over the saturated indicator. Neither
-   half depends on which segment it happens to sit over.
+   an outline instead of relying on fill colour alone: a text-stroke in the
+   bar's own tone (`--progress-tone`, set by [data-tone] above — the same
+   token the indicator itself is filled with, not a darkened mix of it). Over
+   the indicator the stroke all but disappears into the fill it matches,
+   reading as a soft-edged white label; over the bare track it is the only
+   thing separating the letterforms from the background, so that is where it
+   does its actual work. Neither half depends on which segment it happens to
+   sit over.
 
    `paint-order: stroke` draws the stroke under the fill, so a stroke this
    thick doesn't eat into the glyph — a progressive enhancement; browsers
