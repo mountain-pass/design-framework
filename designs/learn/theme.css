@@ -61,12 +61,12 @@
      so one constant covers every weight and size this design uses it at. */
   --uppercase-optical-nudge: 0.025em;
 
-  /* Quest-bar track colour. Deliberately declared only here, never
-     re-declared under .dark: the track reads as game chrome, not page
-     surface, so it stays this same solid dark tone in both themes instead
-     of following --muted into light mode's near-white. Same value as
-     dark mode's own --muted below. */
-  --progress-track: oklch(0.2949 0.0237 228.44);
+  /* Quest-bar track colour. Tailwind's own default `gray-200` (not one of
+     this theme's semantic tokens — this design's own --muted is nearly
+     white in light mode, the wrong role for a track that needs to read as
+     a visible grey chip). Redeclared under .dark below, to this theme's
+     own dark --muted, which is already the right dark navy there. */
+  --progress-track: oklch(0.928 0.006 264.531);
 
   --background: oklch(1 0 89.88);
   --foreground: oklch(0.4128 0 89.88);
@@ -115,6 +115,10 @@
   --secondary-foreground: oklch(0.2304 0.0195 225.76);
   --muted: oklch(0.2949 0.0237 228.44);
   --muted-foreground: oklch(0.7032 0.0269 229.31);
+  /* Same value as --muted above: dark mode's own muted is already the dark
+     navy the quest-bar track wants. See the light-mode declaration in
+     :root for why this can't just be --muted in both themes. */
+  --progress-track: oklch(0.2949 0.0237 228.44);
   --accent: oklch(0.8575 0.1752 88.49);
   --accent-foreground: oklch(0.2304 0.0195 225.76);
   --destructive: oklch(0.6708 0.2165 25.19);
@@ -481,11 +485,14 @@ button.bg-destructive,
    containing block's *width*, not its height). Everything else — the
    transform, the highlight geometry — is computed from those two.
 
-   The track is a fixed, always-dark token (`--progress-track`, declared once
-   under `:root` in the tokens block and never redeclared under `.dark`) with
-   no inset shadow: this is game chrome, not a page surface, so it doesn't
-   follow `--muted` into light mode's near-white and doesn't need to look
-   recessed. The fill itself stays a flat, solid token colour — no gradient —
+   The track has no inset shadow — this is game chrome, not a recessed page
+   surface — and its colour (`--progress-track`) is Tailwind's own default
+   `gray-200` in light mode, not this design's semantic `--muted`, which in
+   light mode is nearly white: a visible grey track needs an actual grey,
+   not the token this theme reserves for that role. Dark mode redeclares
+   `--progress-track` back to this theme's own dark `--muted`, which is
+   already the right tone there. The fill itself stays a flat, solid token
+   colour — no gradient —
    and the glossy look comes from a `::before` highlight instead: a short,
    heavily-transparent white capsule inset near the top of the fill. Painting
    the highlight as its own rounded shape (rather than a gradient wash across
@@ -540,9 +547,18 @@ button.bg-destructive,
      `height` on an absolutely-positioned box needs its containing block's
      height to be treated as definite, which held up inconsistently across
      the two indicator variants in practice — this sidesteps the question
-     entirely. */
-  top: calc(var(--progress-height) * 0.2);
-  height: calc(var(--progress-height) * 0.2);
+     entirely.
+
+     Wrapped in `round(..., 1px)`: the raw calc is a sub-pixel value (2.8px
+     on the h-3.5 bars), and painting a ~3px-tall, semi-transparent, fully
+     rounded box at a sub-pixel position measurably shrank it in testing —
+     computed style reported the correct 2.8px box, but the actual pixels
+     showed a visibly shorter band (roughly 2px, a fifth of the bar reading
+     closer to a seventh). Snapping to a whole pixel before the renderer's
+     own anti-aliasing gets to it removes the ambiguity that was producing
+     that gap. */
+  top: round(calc(var(--progress-height) * 0.2), 1px);
+  height: round(calc(var(--progress-height) * 0.2), 1px);
   /* The right edge is inset from the indicator's own right edge, which
      always coincides with the fill's visible right edge regardless of
      value — so a plain `right` works. The left edge can't use the mirror
@@ -558,7 +574,12 @@ button.bg-destructive,
      itself. */
   left: calc(100% - (var(--progress-value) * 1%) + (var(--progress-height) * 0.5));
   right: calc(var(--progress-height) * 0.5);
-  border-radius: 9999px;
+  /* Half the highlight's own height rather than a flat 9999px — not the
+     fix for the shrinkage above (that turned out to be unrelated: a
+     9999px radius on a box this thin gets clamped down to the same
+     effective half-height stadium shape regardless), just avoids relying
+     on that clamp doing the right thing at all. */
+  border-radius: calc(var(--progress-height) * 0.1);
   background: rgb(255 255 255 / 0.175);
 }
 
