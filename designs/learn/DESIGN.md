@@ -495,25 +495,29 @@ does elsewhere in this design (see "Uppercase optical centering" in
 `theme.css`) — it gets the same always-on
 `translateY(var(--uppercase-optical-nudge))` correction.
 
-Below that threshold the label is `--foreground` — this theme's own
-body-text colour, not white — specifically because white failed here: in
-light mode the track (`bg-gray-200`, see Extensions) is light enough that
-an unstroked white label sitting on bare track (a low-fill bar, like
+Below that threshold the label is `--muted-foreground`, not white: in light
+mode the track (`bg-gray-200`, see Extensions) is light enough that an
+unstroked white label sitting on bare track (a low-fill bar, like
 `#progress`'s `6 / 60` example) didn't clear AA, and a *darker stroke* was
 the tempting quick fix but the wrong one — WCAG 1.4.3 measures the text's
 own fill colour against its background, and a stroke is only the
-letterforms' outline, so no stroke colour fixes a background failing
-against the fill colour underneath it. Swapping the fill colour itself to
-`--foreground` does: measured against the light-mode track, 7.06:1 (up from
-white's failing ratio there), and dark mode's `--foreground` is close
-enough to white that its track reading (already fine) doesn't change.
-`--progress-tone`'s stroke is reserved for `data-stroke` bars specifically
-because it lets those two states — "nearly there" (white, stroked) vs.
-still filling up (`--foreground`, plain) — read as distinct at a glance,
-not because `--foreground` needed the stroke to pass contrast; it already
-doesn't. A compact `h-2` variant with no inner label and no stroke remains
-for tight inline contexts — a quota meter inside a stat card, a mini bar
-inside a table row — where there isn't room for a label anyway.
+letterforms' outline, so no stroke colour fixes a fill colour that's
+already failing. `--foreground` (this theme's full-strength body text)
+fixed that — 7.06:1 against the light-mode track, 12.78:1 in dark — but
+read as too heavy for a bar that isn't done yet: too dark in light mode,
+too stark white in dark mode. `--muted-foreground` is the softer version of
+the same fix, and it's a real trade, not a free one: 3.62:1 in light mode,
+5.27:1 in dark. Dark mode still clears AA; **light mode does not** — a
+known, deliberately accepted shortfall of choosing the muted weight over
+`--foreground`, the same way this design already accepts light-mode
+shortfalls elsewhere (see the contrast waiver above). `--progress-tone`'s
+stroke is reserved for `data-stroke` bars so "nearly there" (white,
+stroked, full-strength) reads as visually distinct from "still filling up"
+(muted, plain) — not because the stroke is what makes the muted state
+legible; it doesn't touch it. A compact `h-2` variant with no inner label
+and no stroke remains for tight inline contexts — a quota meter inside a
+stat card, a mini bar inside a table row — where there isn't room for a
+label anyway.
 
 Circular spinners use a partial arc with `stroke-primary` at 2px weight.
 

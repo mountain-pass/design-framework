@@ -584,31 +584,37 @@ button.bg-destructive,
 }
 
 /* Centred value labels (e.g. "68%", "24 / 35") sit across both the track and
-   the fill, and default to `--foreground` — this theme's own body-text
-   colour, dark in light mode and near-white in dark mode. Measured against
-   the light-mode track (`--progress-track`, Tailwind's gray-200): 7.06:1,
-   clears AA. A darker *stroke* was tried for this case instead and
-   rejected: WCAG 1.4.3 is about the text's own fill colour against its
-   background, and a stroke is only the letterforms' outline — the interior
-   of each glyph would still be whatever colour failed to begin with, so no
-   stroke color fixes this without also changing the fill. */
+   the fill, and default to `--muted-foreground` — softer than plain
+   `--foreground`, by request (full-strength foreground read as too dark in
+   light mode and too stark white in dark mode for a label that isn't
+   "done" yet).
+
+   Contrast against the track (`--progress-track`): 3.62:1 in light mode,
+   5.27:1 in dark. Dark mode clears AA (4.5:1); light mode does not — this
+   is a known, accepted shortfall of the muted weight, not an oversight.
+   `--foreground` measured 7.06:1 / 12.78:1 in the same spot and remains
+   the accessible-but-more-visually-heavy option if that trade needs
+   revisiting. A darker *stroke* was also tried for the original (pre-
+   muted) version of this problem and rejected regardless of weight: WCAG
+   1.4.3 is about the text's own fill colour against its background, and a
+   stroke is only the letterforms' outline — the interior of each glyph is
+   still whatever colour it was, so no stroke fixes a fill that's already
+   failing. */
 [data-slot="progress-label"] {
-  color: var(--foreground);
+  color: var(--muted-foreground);
 }
 
 /* White with a text-stroke in the bar's own tone (`--progress-tone`, set by
    [data-tone] above — the same token the indicator itself is filled with,
-   not a darkened mix of it) replaces the default above once a bar is
-   markup-flagged `data-stroke` (the >=60%-complete ones in #progress).
+   not a darkened mix of it) replaces the muted default above once a bar
+   is markup-flagged `data-stroke` (the >=60%-complete ones in #progress).
    White is legal here under prohibition 4's own exception ("pure white as
-   a foreground on a saturated fill"); `--foreground` would work just as
-   well for contrast at this point (it's ~white in dark mode and reads
-   fine on the fill in light mode too — see the label's default rule
-   above), but white is what makes the "nearly there" moment read as a
-   finishing touch rather than just switching colour. `paint-order: stroke`
-   draws the stroke under the fill, so a stroke this thick doesn't eat into
-   the glyph — a progressive enhancement; browsers that ignore it on HTML
-   text still render a (slightly heavier) outline. */
+   a foreground on a saturated fill") — deliberately the one place this
+   component still goes full-strength rather than muted, so the "nearly
+   there" moment reads as a finishing touch, not just a colour switch.
+   `paint-order: stroke` draws the stroke under the fill, so a stroke this
+   thick doesn't eat into the glyph — a progressive enhancement; browsers
+   that ignore it on HTML text still render a (slightly heavier) outline. */
 [data-slot="progress"][data-stroke] [data-slot="progress-label"] {
   color: #fff;
   -webkit-text-stroke: 3px var(--progress-tone);
