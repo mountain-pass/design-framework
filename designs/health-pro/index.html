@@ -1,0 +1,2172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>health-pro — kitchen sink</title>
+
+<style>html{visibility:hidden}</style>
+<noscript><style>html{visibility:visible}</style></noscript>
+<script>addEventListener("load",()=>{document.documentElement.style.visibility="visible";});</script>
+
+<link rel="preload" as="script" href="../../vendor/tailwind-browser-4.3.3.js">
+<script>
+  fetch("theme.css")
+    .then((res) => {
+      if (!res.ok) throw new Error(`theme.css → ${res.status} ${res.statusText}`);
+      return res.text();
+    })
+    .then((css) => {
+      const theme = document.createElement("style");
+      theme.type = "text/tailwindcss";
+      theme.textContent = '@import "tailwindcss";\n' + css;
+      document.head.prepend(theme);
+
+      const tailwind = document.createElement("script");
+      tailwind.src = "../../vendor/tailwind-browser-4.3.3.js";
+      document.head.append(tailwind);
+    })
+    .catch((err) => {
+      document.addEventListener("DOMContentLoaded", () => {
+        const banner = document.createElement("p");
+        banner.setAttribute("role", "alert");
+        banner.style.cssText =
+          "margin:0;padding:1rem 1.25rem;font:700 14px/1.5 ui-sans-serif,system-ui,sans-serif;" +
+          "background:#7f1d1d;color:#fff";
+        banner.textContent =
+          "This page could not load theme.css (" + err.message + "), so it is " +
+          "rendering unstyled. Kitchen sinks read their theme over http(s) — " +
+          "serve the folder rather than opening the file directly.";
+        document.body.prepend(banner);
+      });
+    });
+</script>
+
+<style type="text/tailwindcss">
+@layer base {
+  html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+}
+
+@layer components {
+  .ks-section { @apply scroll-mt-20 border-t border-border py-12; }
+  .ks-title   { @apply text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground; }
+  .ks-lede    { @apply mt-2 text-2xl font-extrabold tracking-tight; }
+  .ks-note    { @apply mt-1 max-w-[65ch] text-sm text-muted-foreground; }
+  .ks-grid    { @apply mt-8 grid gap-8; }
+  .ks-label   { @apply mb-3 text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground; }
+}
+</style>
+
+<script>
+  (function () {
+    var s = localStorage.getItem("health-pro-theme");
+    if (s === "dark" || (!s && matchMedia("(prefers-color-scheme: dark)").matches)) {
+      document.documentElement.classList.add("dark");
+    }
+  })();
+</script>
+</head>
+
+<body class="bg-background text-foreground">
+
+<a href="#tokens" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:uppercase focus:tracking-[0.05em] focus:text-primary-foreground">Skip to content</a>
+
+<!-- ==========================================================================
+     PAGE HEADER + TABLE OF CONTENTS  (demo chrome)
+     ======================================================================= -->
+<header class="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
+  <div class="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:px-6">
+    <div class="flex items-center gap-3">
+      <div class="flex h-9 w-9 items-center justify-center bg-primary text-primary-foreground">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
+      </div>
+      <div class="leading-tight">
+        <div class="text-sm font-extrabold uppercase tracking-[0.03em]">health-pro</div>
+        <div class="hidden text-xs text-muted-foreground sm:block">Institutional design for professional health bodies</div>
+      </div>
+    </div>
+
+    <div class="ml-auto flex items-center gap-2">
+      <a href="./DESIGN.md" class="hidden h-9 items-center px-3 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground transition-colors duration-150 hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:inline-flex">DESIGN.md</a>
+      <button id="theme-toggle" type="button" aria-label="Toggle dark mode"
+        class="inline-flex h-9 w-9 items-center justify-center border border-input bg-background transition-colors duration-150 hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+        <svg class="h-4 w-4 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        <svg class="hidden h-4 w-4 dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <details class="mx-auto max-w-6xl border-t border-border px-4 sm:px-6">
+    <summary class="cursor-pointer list-none py-2.5 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground transition-colors hover:text-foreground">
+      Contents — 30 sections
+    </summary>
+    <nav class="grid grid-cols-2 gap-x-6 gap-y-1 pb-4 text-sm sm:grid-cols-4 lg:grid-cols-5">
+      <a href="#tokens" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Tokens</a>
+      <a href="#typography" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Typography</a>
+      <a href="#elevation" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Elevation</a>
+      <a href="#buttons" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Buttons</a>
+      <a href="#inputs" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Inputs</a>
+      <a href="#form" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Form</a>
+      <a href="#card" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Card</a>
+      <a href="#table" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Table</a>
+      <a href="#list" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">List &amp; feed</a>
+      <a href="#badges" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Badges</a>
+      <a href="#avatar" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Avatar</a>
+      <a href="#dataviz" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Data viz</a>
+      <a href="#nav" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Navigation</a>
+      <a href="#tabs" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Tabs</a>
+      <a href="#breadcrumb" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Breadcrumb</a>
+      <a href="#menu" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Menus</a>
+      <a href="#alerts" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Alerts</a>
+      <a href="#dialog" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Dialog</a>
+      <a href="#progress" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Progress</a>
+      <a href="#toast" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Toast</a>
+      <a href="#empty" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Empty states</a>
+      <a href="#page-header" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Page header</a>
+      <a href="#hero" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Hero</a>
+      <a href="#features" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Features</a>
+      <a href="#pricing" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Pricing</a>
+      <a href="#testimonial" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Testimonial</a>
+      <a href="#cta" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">CTA</a>
+      <a href="#footer" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Footer</a>
+      <a href="#icons" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Icons</a>
+      <a href="#motion" class="px-1 py-0.5 text-muted-foreground hover:text-foreground">Motion</a>
+    </nav>
+  </details>
+</header>
+
+<main class="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
+
+<!-- ========================= 1. FOUNDATIONS ============================== -->
+
+<!-- ---------- tokens ---------- -->
+<section id="tokens" class="ks-section border-t-0">
+  <p class="ks-title">01 · Foundations</p>
+  <h2 class="ks-lede">Colour tokens</h2>
+  <p class="ks-note">Every colour in this design comes from one of these. Brand red is used decisively but sparingly — button fills, dividers, the active nav indicator, and the action-card CTA strip. Toggle dark mode in the header to see each token's dark counterpart.</p>
+
+  <div class="ks-grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+    <div>
+      <div class="flex h-16 items-end border border-border bg-background p-2">
+        <span class="text-xs font-bold text-foreground">Aa</span>
+      </div>
+      <p class="mt-2 font-mono text-xs font-bold">--background</p>
+      <p class="font-mono text-xs text-muted-foreground">page surface</p>
+    </div>
+    <div>
+      <div class="flex h-16 items-end border border-border bg-card p-2">
+        <span class="text-xs font-bold text-card-foreground">Aa</span>
+      </div>
+      <p class="mt-2 font-mono text-xs font-bold">--card</p>
+      <p class="font-mono text-xs text-muted-foreground">raised surface</p>
+    </div>
+    <div>
+      <div class="flex h-16 items-end border border-border bg-popover p-2 shadow-sm">
+        <span class="text-xs font-bold text-popover-foreground">Aa</span>
+      </div>
+      <p class="mt-2 font-mono text-xs font-bold">--popover</p>
+      <p class="font-mono text-xs text-muted-foreground">floating surface</p>
+    </div>
+    <div>
+      <div class="flex h-16 items-end bg-primary p-2">
+        <span class="text-xs font-bold text-primary-foreground">Aa</span>
+      </div>
+      <p class="mt-2 font-mono text-xs font-bold">--primary</p>
+      <p class="font-mono text-xs text-muted-foreground">7.57:1 light · 5.79:1 dark</p>
+    </div>
+    <div>
+      <div class="flex h-16 items-end bg-secondary p-2">
+        <span class="text-xs font-bold text-secondary-foreground">Aa</span>
+      </div>
+      <p class="mt-2 font-mono text-xs font-bold">--secondary</p>
+      <p class="font-mono text-xs text-muted-foreground">low-emphasis fill</p>
+    </div>
+    <div>
+      <div class="flex h-16 items-end bg-muted p-2">
+        <span class="text-xs font-bold text-muted-foreground">Aa</span>
+      </div>
+      <p class="mt-2 font-mono text-xs font-bold">--muted</p>
+      <p class="font-mono text-xs text-muted-foreground">subdued surface</p>
+    </div>
+    <div>
+      <div class="flex h-16 items-end bg-accent p-2">
+        <span class="text-xs font-bold text-accent-foreground">Aa</span>
+      </div>
+      <p class="mt-2 font-mono text-xs font-bold">--accent</p>
+      <p class="font-mono text-xs text-muted-foreground">11.84:1 light · 11.57:1 dark</p>
+    </div>
+    <div>
+      <div class="flex h-16 items-end bg-destructive p-2">
+        <span class="text-xs font-bold text-destructive-foreground">Aa</span>
+      </div>
+      <p class="mt-2 font-mono text-xs font-bold">--destructive</p>
+      <p class="font-mono text-xs text-muted-foreground">6.52:1 light · 4.86:1 dark</p>
+    </div>
+    <div>
+      <div class="h-16 border-2 border-border bg-background"></div>
+      <p class="mt-2 font-mono text-xs font-bold">--border</p>
+      <p class="font-mono text-xs text-muted-foreground">hairlines</p>
+    </div>
+    <div>
+      <div class="h-16 border-2 border-input bg-background"></div>
+      <p class="mt-2 font-mono text-xs font-bold">--input</p>
+      <p class="font-mono text-xs text-muted-foreground">control border</p>
+    </div>
+    <div>
+      <div class="h-16 border border-border bg-background ring-2 ring-ring ring-offset-2 ring-offset-background"></div>
+      <p class="mt-2 font-mono text-xs font-bold">--ring</p>
+      <p class="font-mono text-xs text-muted-foreground">focus ring</p>
+    </div>
+    <div>
+      <div class="flex h-16 items-end border border-sidebar-border bg-sidebar p-2">
+        <span class="text-xs font-bold text-sidebar-foreground">Aa</span>
+      </div>
+      <p class="mt-2 font-mono text-xs font-bold">--sidebar</p>
+      <p class="font-mono text-xs text-muted-foreground">persistent dark chrome</p>
+    </div>
+  </div>
+
+  <p class="ks-label mt-10">Chart series — use in order</p>
+  <div class="grid grid-cols-5 gap-3">
+    <div><div class="h-12 bg-chart-1"></div><p class="mt-1.5 font-mono text-xs text-muted-foreground">chart-1</p></div>
+    <div><div class="h-12 bg-chart-2"></div><p class="mt-1.5 font-mono text-xs text-muted-foreground">chart-2</p></div>
+    <div><div class="h-12 bg-chart-3"></div><p class="mt-1.5 font-mono text-xs text-muted-foreground">chart-3</p></div>
+    <div><div class="h-12 bg-chart-4"></div><p class="mt-1.5 font-mono text-xs text-muted-foreground">chart-4</p></div>
+    <div><div class="h-12 bg-chart-5"></div><p class="mt-1.5 font-mono text-xs text-muted-foreground">chart-5</p></div>
+  </div>
+
+  <p class="ks-label mt-10">Sidebar chrome — persistent dark, used regardless of theme</p>
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div><div class="flex h-12 items-center justify-center bg-sidebar-primary text-sidebar-primary-foreground text-xs font-bold uppercase tracking-[0.05em]">Active</div><p class="mt-1.5 font-mono text-xs text-muted-foreground">--sidebar-primary</p></div>
+    <div><div class="flex h-12 items-center justify-center bg-sidebar-accent text-sidebar-accent-foreground text-xs">Hover</div><p class="mt-1.5 font-mono text-xs text-muted-foreground">--sidebar-accent</p></div>
+    <div><div class="h-12 border border-sidebar-border bg-sidebar"></div><p class="mt-1.5 font-mono text-xs text-muted-foreground">--sidebar-border</p></div>
+    <div><div class="h-12 border border-sidebar-border bg-sidebar ring-2 ring-sidebar-ring ring-offset-2 ring-offset-sidebar"></div><p class="mt-1.5 font-mono text-xs text-muted-foreground">--sidebar-ring</p></div>
+  </div>
+</section>
+
+<!-- ---------- typography ---------- -->
+<section id="typography" class="ks-section">
+  <p class="ks-title">02 · Foundations</p>
+  <h2 class="ks-lede">Typography</h2>
+  <p class="ks-note">Public Sans for everything, JetBrains Mono for figures and code. Three weights only — 400, 700, 800. Buttons, nav labels and eyebrows are uppercase and tracked; body copy is 16px, not 14px — this is a membership site as much as a tool.</p>
+
+  <div class="ks-grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_18rem]">
+    <div class="space-y-6">
+      <div class="flex flex-wrap items-baseline gap-4 border-b border-border pb-5">
+        <p class="text-[3rem] font-extrabold leading-[1.05] tracking-[-0.02em]">Display</p>
+        <span class="font-mono text-xs text-muted-foreground">48 / 800 / 1.05 / -0.02em</span>
+      </div>
+      <div class="flex flex-wrap items-baseline gap-4 border-b border-border pb-5">
+        <h1 class="text-4xl font-extrabold leading-[1.1] tracking-[-0.015em]">Heading one</h1>
+        <span class="font-mono text-xs text-muted-foreground">36 / 800 / 1.1 / -0.015em</span>
+      </div>
+      <div class="flex flex-wrap items-baseline gap-4 border-b border-border pb-5">
+        <h2 class="text-[1.75rem] font-bold leading-[1.2] tracking-[-0.01em]">Heading two</h2>
+        <span class="font-mono text-xs text-muted-foreground">28 / 700 / 1.2 / -0.01em</span>
+      </div>
+      <div class="flex flex-wrap items-baseline gap-4 border-b border-border pb-5">
+        <h3 class="text-xl font-bold leading-[1.3]">Heading three</h3>
+        <span class="font-mono text-xs text-muted-foreground">20 / 700 / 1.3 / 0</span>
+      </div>
+      <div class="flex flex-wrap items-baseline gap-4 border-b border-border pb-5">
+        <h4 class="text-base font-bold uppercase leading-[1.4] tracking-[0.03em]">Section eyebrow</h4>
+        <span class="font-mono text-xs text-muted-foreground">16 / 700 / 1.4 / uppercase 0.03em</span>
+      </div>
+
+      <div class="space-y-3 border-b border-border pb-5">
+        <p class="max-w-[65ch] text-lg leading-[1.6] text-muted-foreground">Lead paragraph. Used once, directly beneath a page title, to say what a page or programme is for before the detail starts.</p>
+        <span class="font-mono text-xs text-muted-foreground">18 / 400 / 1.6</span>
+      </div>
+
+      <div class="space-y-3 border-b border-border pb-5">
+        <p class="max-w-[65ch] text-base leading-[1.65]">Body copy is 16px, not 14px — this design reads as much as it is used. Body text is capped at 65 characters — you can <a href="#typography" class="font-bold text-primary underline-offset-4 hover:underline">link inline</a> and set <code class="border border-border bg-muted px-1.5 py-0.5 font-mono text-[0.8125rem]">inline code</code> without breaking the line rhythm.</p>
+        <span class="font-mono text-xs text-muted-foreground">16 / 400 / 1.65 — the default</span>
+      </div>
+
+      <div class="space-y-3 border-b border-border pb-5">
+        <p class="text-sm text-muted-foreground">Small text. Help text beneath a field, timestamps, secondary metadata.</p>
+        <span class="font-mono text-xs text-muted-foreground">14 / 400 / 1.5</span>
+      </div>
+
+      <div class="space-y-3 border-b border-border pb-5">
+        <p class="text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground">Caption / eyebrow label</p>
+        <span class="font-mono text-xs text-muted-foreground">12 / 700 / 1.4 / uppercase 0.08em</span>
+      </div>
+
+      <blockquote class="border-l-2 border-border pl-4 text-sm italic text-muted-foreground">
+        A blockquote. Left rule, no background fill, italic. Used to cite practice guidelines or external standards, never as a testimonial device.
+      </blockquote>
+
+      <div class="grid gap-6 sm:grid-cols-2">
+        <div>
+          <p class="ks-label">Unordered</p>
+          <ul class="ml-4 list-disc space-y-1.5 text-sm marker:text-muted-foreground">
+            <li>Annual practice declaration</li>
+            <li>Continuing professional development log</li>
+            <li>Peer review every three years</li>
+          </ul>
+        </div>
+        <div>
+          <p class="ks-label">Ordered</p>
+          <ol class="ml-4 list-decimal space-y-1.5 text-sm marker:text-muted-foreground marker:tabular-nums">
+            <li>Submit your application</li>
+            <li>Complete the assessment panel</li>
+            <li>Receive your credential</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <aside class="space-y-4 self-start border border-border bg-muted/40 p-5 text-sm">
+      <div>
+        <p class="ks-label mb-1">Sans</p>
+        <p class="font-mono text-xs leading-relaxed text-muted-foreground">"Public Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif</p>
+      </div>
+      <div>
+        <p class="ks-label mb-1">Mono</p>
+        <p class="font-mono text-xs leading-relaxed text-muted-foreground">"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace</p>
+      </div>
+      <div>
+        <p class="ks-label mb-1">Serif</p>
+        <p class="font-mono text-xs leading-relaxed text-muted-foreground">Present for contract compliance only — <span class="font-mono normal-case">health-pro</span> uses no serif anywhere.</p>
+      </div>
+      <div>
+        <p class="ks-label mb-1">Weights</p>
+        <p class="font-mono text-xs leading-relaxed text-muted-foreground">400 regular · 700 bold (uppercase labels, headings 2–4) · 800 extrabold (Display, h1)</p>
+      </div>
+      <div>
+        <p class="ks-label mb-1">Tabular numerals</p>
+        <p class="font-mono text-sm tabular-nums text-muted-foreground">1,284,003.00<br>  99,120.45<br>   1,000.10</p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ---------- elevation ---------- -->
+<section id="elevation" class="ks-section">
+  <p class="ks-title">03 · Foundations</p>
+  <h2 class="ks-lede">Surface &amp; elevation</h2>
+  <p class="ks-note">Depth is borders only. Cards, buttons, inputs and tables are flat with a border and carry no shadow. Only floating overlays — dropdown, popover, dialog, sheet, toast, tooltip — use a shadow, and always alongside a border.</p>
+
+  <div class="ks-grid grid-cols-2 lg:grid-cols-4">
+    <div><div class="h-20 border border-border bg-card"></div><p class="mt-2 font-mono text-xs text-muted-foreground">border only — cards, buttons, inputs, tables</p></div>
+    <div><div class="h-20 border border-border bg-popover shadow-xs"></div><p class="mt-2 font-mono text-xs text-muted-foreground">shadow-xs — reserved, unused by default</p></div>
+    <div><div class="h-20 border border-border bg-popover shadow-md"></div><p class="mt-2 font-mono text-xs text-muted-foreground">shadow-md — menus, popovers</p></div>
+    <div><div class="h-20 border border-border bg-popover shadow-lg"></div><p class="mt-2 font-mono text-xs text-muted-foreground">shadow-lg — dialogs, sheets</p></div>
+  </div>
+
+  <p class="ks-label mt-10">Radius ramp — everything derives from <span class="font-mono normal-case">--radius: 0.25rem</span></p>
+  <div class="flex flex-wrap gap-4">
+    <div><div class="h-16 w-16 rounded-sm border border-border bg-muted"></div><p class="mt-2 font-mono text-xs text-muted-foreground">sm · 0px — buttons, inputs, cards, tables</p></div>
+    <div><div class="h-16 w-16 rounded-md border border-border bg-muted"></div><p class="mt-2 font-mono text-xs text-muted-foreground">md · 2px — unused</p></div>
+    <div><div class="h-16 w-16 rounded-lg border border-border bg-muted"></div><p class="mt-2 font-mono text-xs text-muted-foreground">lg · 4px — unused</p></div>
+    <div><div class="h-16 w-16 rounded-xl border border-border bg-muted"></div><p class="mt-2 font-mono text-xs text-muted-foreground">xl · 8px — unused</p></div>
+    <div><div class="h-16 w-16 rounded-full border border-border bg-muted"></div><p class="mt-2 font-mono text-xs text-muted-foreground">full · badges, avatars — the one exception</p></div>
+  </div>
+  <p class="mt-4 max-w-[65ch] text-sm text-muted-foreground">This is the boxiest design in the repository: buttons, inputs, cards and tables render with literally square corners (<span class="font-mono">rounded-none</span>). Only badges and avatars stay fully round.</p>
+</section>
+
+<!-- ========================= 2. PRIMITIVES =============================== -->
+
+<!-- ---------- buttons ---------- -->
+<section id="buttons" class="ks-section">
+  <p class="ks-title">04 · Primitives</p>
+  <h2 class="ks-lede">Button</h2>
+  <p class="ks-note">Six variants, four sizes. Square corners, uppercase, bold, tracked <span class="font-mono">0.05em</span> — this is the single most identity-defining trait in the design. Default height is 40px (<span class="font-mono">h-10</span>). No drop shadow, ever.</p>
+
+  <div class="ks-grid">
+    <div>
+      <p class="ks-label">Variants</p>
+      <div class="flex flex-wrap items-center gap-3">
+        <button data-slot="button" class="inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-none bg-primary px-6 text-sm font-bold uppercase tracking-[0.05em] text-primary-foreground transition-colors duration-150 hover:bg-primary/90 active:bg-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Default</button>
+        <button data-slot="button" class="inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-none bg-secondary px-6 text-sm font-bold uppercase tracking-[0.05em] text-secondary-foreground transition-colors duration-150 hover:bg-secondary/80 active:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Secondary</button>
+        <button data-slot="button" class="inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-none bg-destructive px-6 text-sm font-bold uppercase tracking-[0.05em] text-destructive-foreground transition-colors duration-150 hover:bg-destructive/90 active:bg-destructive/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Destructive</button>
+        <button data-slot="button" class="inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-none border border-input bg-background px-6 text-sm font-bold uppercase tracking-[0.05em] transition-colors duration-150 hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Outline</button>
+        <button data-slot="button" class="inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-none px-6 text-sm font-bold uppercase tracking-[0.05em] transition-colors duration-150 hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Ghost</button>
+        <button data-slot="button" class="inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-none px-2 text-sm font-bold uppercase tracking-[0.05em] text-primary underline-offset-4 transition-colors duration-150 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Link</button>
+      </div>
+    </div>
+
+    <div>
+      <p class="ks-label">Sizes</p>
+      <div class="flex flex-wrap items-center gap-3">
+        <button data-slot="button" class="inline-flex h-9 items-center justify-center gap-2 rounded-none bg-primary px-4 text-xs font-bold uppercase tracking-[0.05em] text-primary-foreground transition-colors duration-150 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Small · h-9</button>
+        <button data-slot="button" class="inline-flex h-10 items-center justify-center gap-2 rounded-none bg-primary px-6 text-sm font-bold uppercase tracking-[0.05em] text-primary-foreground transition-colors duration-150 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Default · h-10</button>
+        <button data-slot="button" class="inline-flex h-11 items-center justify-center gap-2 rounded-none bg-primary px-8 text-sm font-bold uppercase tracking-[0.05em] text-primary-foreground transition-colors duration-150 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Large · h-11</button>
+        <button data-slot="button" aria-label="Settings" class="inline-flex h-10 w-10 items-center justify-center rounded-none border border-input bg-background transition-colors duration-150 hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+        </button>
+        <span class="font-mono text-xs text-muted-foreground">icon · h-10 w-10</span>
+      </div>
+    </div>
+
+    <div>
+      <p class="ks-label">States</p>
+      <div class="flex flex-wrap items-center gap-3">
+        <button data-slot="button" class="inline-flex h-10 items-center justify-center gap-2 rounded-none bg-primary px-6 text-sm font-bold uppercase tracking-[0.05em] text-primary-foreground">Rest</button>
+        <button data-slot="button" class="inline-flex h-10 items-center justify-center gap-2 rounded-none bg-primary/90 px-6 text-sm font-bold uppercase tracking-[0.05em] text-primary-foreground">Hover</button>
+        <button data-slot="button" class="inline-flex h-10 items-center justify-center gap-2 rounded-none bg-primary/80 px-6 text-sm font-bold uppercase tracking-[0.05em] text-primary-foreground">Active</button>
+        <button data-slot="button" class="inline-flex h-10 items-center justify-center gap-2 rounded-none bg-primary px-6 text-sm font-bold uppercase tracking-[0.05em] text-primary-foreground ring-2 ring-ring ring-offset-2 ring-offset-background">Focused</button>
+        <button data-slot="button" disabled class="pointer-events-none inline-flex h-10 items-center justify-center gap-2 rounded-none bg-primary px-6 text-sm font-bold uppercase tracking-[0.05em] text-primary-foreground opacity-50">Disabled</button>
+        <button data-slot="button" aria-busy="true" class="inline-flex h-10 items-center justify-center gap-2 rounded-none bg-primary px-6 text-sm font-bold uppercase tracking-[0.05em] text-primary-foreground">
+          <svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-6.219-8.56" opacity="0.9"/></svg>
+          Saving…
+        </button>
+      </div>
+      <p class="mt-3 font-mono text-xs text-muted-foreground">Hover and active are shown statically here. No transform, no scale — targets never move.</p>
+    </div>
+
+    <div>
+      <p class="ks-label">With icons, button group &amp; tag independence</p>
+      <div class="flex flex-wrap items-center gap-3">
+        <button data-slot="button" class="inline-flex h-10 items-center justify-center gap-2 rounded-none bg-primary px-6 text-sm font-bold uppercase tracking-[0.05em] text-primary-foreground transition-colors duration-150 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5v14"/></svg>
+          New application
+        </button>
+        <button data-slot="button" class="inline-flex h-10 items-center justify-center gap-2 rounded-none border border-input bg-background px-6 text-sm font-bold uppercase tracking-[0.05em] transition-colors duration-150 hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+          Continue
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <a href="#buttons" data-slot="button" class="inline-flex h-10 items-center justify-center gap-2 rounded-none border border-input bg-background px-6 text-sm font-bold uppercase tracking-[0.05em] transition-colors duration-150 hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+          Continue (as &lt;a&gt;)
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+
+        <div class="inline-flex items-center border border-input bg-background">
+          <button data-slot="button" class="inline-flex h-10 items-center px-4 text-sm font-bold uppercase tracking-[0.05em] transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Fellows</button>
+          <span class="h-5 w-px bg-border" aria-hidden="true"></span>
+          <button data-slot="button" class="inline-flex h-10 items-center bg-accent px-4 text-sm font-bold uppercase tracking-[0.05em] text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Trainees</button>
+          <span class="h-5 w-px bg-border" aria-hidden="true"></span>
+          <button data-slot="button" class="inline-flex h-10 items-center px-4 text-sm font-bold uppercase tracking-[0.05em] transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Public</button>
+        </div>
+
+        <div class="inline-flex items-center">
+          <button data-slot="button" class="inline-flex h-10 items-center bg-primary px-6 text-sm font-bold uppercase tracking-[0.05em] text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Submit</button>
+          <button data-slot="button" aria-label="More submit options" class="inline-flex h-10 w-9 items-center justify-center border-l border-primary-foreground/20 bg-primary text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+        </div>
+      </div>
+      <p class="mt-3 max-w-[65ch] font-mono text-xs text-muted-foreground">The "Continue" button and its "Continue (as &lt;a&gt;)" neighbour share the exact class list and both carry <span class="text-foreground">data-slot="button"</span> — this design keys no visual effect to the <span class="text-foreground">&lt;button&gt;</span> tag, so a link that navigates renders identically to a button that acts.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- inputs ---------- -->
+<section id="inputs" class="ks-section">
+  <p class="ks-title">05 · Primitives</p>
+  <h2 class="ks-lede">Form controls</h2>
+  <p class="ks-note">All controls are 40px tall to match buttons. <span class="font-mono">--input</span> is a visibly darker grey than <span class="font-mono">--border</span> so a field's edge clears 3:1 as a UI boundary. The error state changes colour only — the border does not thicken.</p>
+
+  <div class="ks-grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+    <div class="space-y-2">
+      <label for="ks-i1" class="text-sm font-bold leading-none">Registration number</label>
+      <input id="ks-i1" type="text" placeholder="HP-104829" class="flex h-10 w-full rounded-none border border-input bg-background px-3 py-2 text-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+      <p class="text-sm text-muted-foreground">Printed on your membership card.</p>
+    </div>
+
+    <div class="space-y-2">
+      <label for="ks-i2" class="text-sm font-bold leading-none">Search the guidelines library</label>
+      <div class="relative">
+        <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="ks-i2" type="search" placeholder="Search practice standards…" class="flex h-10 w-full rounded-none border border-input bg-background py-2 pl-9 pr-3 text-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+      </div>
+      <p class="text-sm text-muted-foreground">With a leading icon at 16px, inset 12px.</p>
+    </div>
+
+    <div class="space-y-2">
+      <label for="ks-i3" class="text-sm font-bold leading-none text-destructive">Contact email</label>
+      <input id="ks-i3" type="email" value="not-an-email" aria-invalid="true" aria-describedby="ks-i3-err" class="flex h-10 w-full rounded-none border border-destructive bg-background px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+      <p id="ks-i3-err" class="flex items-center gap-1.5 text-sm text-destructive">
+        <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+        Enter a valid email address.
+      </p>
+    </div>
+
+    <div class="space-y-2">
+      <label for="ks-i4" class="text-sm font-bold leading-none text-muted-foreground">Member ID</label>
+      <input id="ks-i4" type="text" value="MHC-0042917" disabled class="flex h-10 w-full cursor-not-allowed rounded-none border border-input bg-muted px-3 py-2 font-mono text-sm opacity-50">
+      <p class="text-sm text-muted-foreground">Disabled — 50% opacity, muted fill.</p>
+    </div>
+
+    <div class="space-y-2">
+      <label for="ks-i5" class="text-sm font-bold leading-none">Practice region</label>
+      <div class="relative">
+        <select id="ks-i5" class="flex h-10 w-full appearance-none rounded-none border border-input bg-background py-2 pl-3 pr-9 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+          <option>Northern region</option>
+          <option>Central region</option>
+          <option>Southern region</option>
+        </select>
+        <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <p class="text-sm text-muted-foreground">Determines your local branch and panel.</p>
+    </div>
+
+    <div class="space-y-2">
+      <label for="ks-i6" class="text-sm font-bold leading-none">Scope of practice statement</label>
+      <textarea id="ks-i6" rows="3" class="flex w-full rounded-none border border-input bg-background px-3 py-2 text-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Outpatient clinical practice, general adult
+population, with a supervised trainee list.</textarea>
+      <p class="text-sm text-muted-foreground">Reviewed at each re-credentialing cycle.</p>
+    </div>
+  </div>
+
+  <div class="ks-grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+    <div>
+      <p class="ks-label">Checkbox</p>
+      <div class="space-y-3">
+        <div class="flex items-center gap-2">
+          <span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border border-input bg-background"></span>
+          <label class="text-sm leading-none">Unchecked</label>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border border-primary bg-primary text-primary-foreground">
+            <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </span>
+          <label class="text-sm leading-none">Checked</label>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border border-primary bg-primary text-primary-foreground" role="checkbox" aria-checked="mixed">
+            <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14"/></svg>
+          </span>
+          <label class="text-sm leading-none">Indeterminate</label>
+        </div>
+        <div class="flex items-center gap-2 opacity-50">
+          <span class="flex h-4 w-4 shrink-0 rounded-sm border border-input bg-muted"></span>
+          <label class="text-sm leading-none">Disabled</label>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <p class="ks-label">Radio group</p>
+      <fieldset>
+        <legend class="sr-only">Renewal cadence</legend>
+        <div class="space-y-3">
+          <div class="flex items-center gap-2">
+            <span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-input bg-background"></span>
+            <label class="text-sm leading-none">Annual renewal</label>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-primary bg-background">
+              <span class="h-2 w-2 rounded-full bg-primary"></span>
+            </span>
+            <label class="text-sm leading-none">Three-year cycle</label>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="flex h-4 w-4 shrink-0 rounded-full border border-input bg-background"></span>
+            <label class="text-sm leading-none">Honorary — no renewal</label>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
+    <div>
+      <p class="ks-label">Switch</p>
+      <div class="space-y-3.5">
+        <div class="flex items-center gap-2.5">
+          <span role="switch" aria-checked="false" class="inline-flex h-5 w-9 shrink-0 items-center rounded-full border border-transparent bg-input p-0.5 transition-colors">
+            <span class="h-4 w-4 rounded-full bg-background transition-transform"></span>
+          </span>
+          <label class="text-sm leading-none">Off</label>
+        </div>
+        <div class="flex items-center gap-2.5">
+          <span role="switch" aria-checked="true" class="inline-flex h-5 w-9 shrink-0 items-center rounded-full border border-transparent bg-primary p-0.5 transition-colors">
+            <span class="h-4 w-4 translate-x-4 rounded-full bg-background transition-transform"></span>
+          </span>
+          <label class="text-sm leading-none">On</label>
+        </div>
+        <div class="flex items-center gap-2.5 opacity-50">
+          <span role="switch" aria-checked="false" aria-disabled="true" class="inline-flex h-5 w-9 shrink-0 items-center rounded-full border border-transparent bg-input p-0.5">
+            <span class="h-4 w-4 rounded-full bg-background"></span>
+          </span>
+          <label class="text-sm leading-none">Disabled</label>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <p class="ks-label">Slider</p>
+      <div class="pt-1">
+        <input type="range" min="0" max="100" value="62" aria-label="CPD hours completed" class="w-full accent-primary">
+        <div class="mt-2 flex justify-between font-mono text-xs text-muted-foreground">
+          <span>0</span><span class="tabular-nums text-foreground">31 hrs</span><span>50 hrs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- form ---------- -->
+<section id="form" class="ks-section">
+  <p class="ks-title">06 · Primitives</p>
+  <h2 class="ks-lede">Composed form</h2>
+  <p class="ks-note">Individual controls do not show spacing or rhythm. This does. Sibling fields sit <span class="font-mono">gap-4</span> apart, groups <span class="font-mono">gap-6</span>.</p>
+
+  <form class="mt-8 max-w-3xl rounded-none border border-border bg-card">
+    <div class="border-b border-border p-6">
+      <h3 class="text-xl font-bold leading-[1.3]">Annual practice declaration</h3>
+      <p class="mt-1 text-sm text-muted-foreground">Required to keep your registration current for this cycle.</p>
+    </div>
+
+    <div class="space-y-6 p-6">
+      <fieldset class="space-y-4">
+        <legend class="text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground">Practitioner details</legend>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="space-y-2">
+            <label for="f1" class="text-sm font-bold leading-none">Full name <span class="text-destructive" aria-hidden="true">*</span></label>
+            <input id="f1" required value="Priya Nakamura" class="flex h-10 w-full rounded-none border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+          </div>
+          <div class="space-y-2">
+            <label for="f2" class="text-sm font-bold leading-none">Membership category</label>
+            <div class="relative">
+              <select id="f2" class="flex h-10 w-full appearance-none rounded-none border border-input bg-background py-2 pl-3 pr-9 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                <option>Fellow</option><option>Trainee</option><option>Associate</option>
+              </select>
+              <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+          <div class="space-y-2 sm:col-span-2">
+            <label for="f3" class="text-sm font-bold leading-none text-destructive">Primary practice email <span aria-hidden="true">*</span></label>
+            <input id="f3" value="p.nakamura@@clinic.example" aria-invalid="true" aria-describedby="f3-err" class="flex h-10 w-full rounded-none border border-destructive bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+            <p id="f3-err" class="flex items-center gap-1.5 text-sm text-destructive">
+              <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+              Not a valid email address — check for the repeated @.
+            </p>
+          </div>
+        </div>
+      </fieldset>
+
+      <hr class="border-border">
+
+      <fieldset class="space-y-4">
+        <legend class="text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground">Declarations</legend>
+        <div class="flex items-start justify-between gap-6">
+          <div class="space-y-0.5">
+            <label class="text-sm font-bold leading-none">Fit to practise</label>
+            <p class="text-sm text-muted-foreground">I declare no unmanaged condition affecting my ability to practise safely.</p>
+          </div>
+          <span role="switch" aria-checked="true" class="mt-1 inline-flex h-5 w-9 shrink-0 items-center rounded-full border border-transparent bg-primary p-0.5">
+            <span class="h-4 w-4 translate-x-4 rounded-full bg-background"></span>
+          </span>
+        </div>
+        <div class="flex items-start justify-between gap-6">
+          <div class="space-y-0.5">
+            <label class="text-sm font-bold leading-none">Indemnity insurance current</label>
+            <p class="text-sm text-muted-foreground">Required for renewal to be approved.</p>
+          </div>
+          <span role="switch" aria-checked="false" class="mt-1 inline-flex h-5 w-9 shrink-0 items-center rounded-full border border-transparent bg-input p-0.5">
+            <span class="h-4 w-4 rounded-full bg-background"></span>
+          </span>
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="flex items-center justify-end gap-3 border-t border-border bg-muted/40 px-6 py-4">
+      <button data-slot="button" type="button" class="inline-flex h-10 items-center rounded-none px-6 text-sm font-bold uppercase tracking-[0.05em] transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Cancel</button>
+      <button data-slot="button" type="submit" class="inline-flex h-10 items-center rounded-none bg-primary px-6 text-sm font-bold uppercase tracking-[0.05em] text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Submit declaration</button>
+    </div>
+  </form>
+</section>
+
+<!-- ========================= 3. DATA DISPLAY ============================= -->
+
+<!-- ---------- card ---------- -->
+<section id="card" class="ks-section">
+  <p class="ks-title">07 · Data display</p>
+  <h2 class="ks-lede">Card</h2>
+  <p class="ks-note">Square corners, border, no shadow. Padding is <span class="font-mono">p-6</span>.</p>
+
+  <div class="ks-grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+    <div data-slot="card" class="rounded-none border border-border bg-card">
+      <div class="p-6 pb-4">
+        <h3 class="text-xl font-bold leading-[1.3]">Basic card</h3>
+        <p class="mt-1 text-sm text-muted-foreground">Header, content, footer. The default container for everything.</p>
+      </div>
+      <div class="px-6 pb-6 text-sm">
+        <p>Content sits at 16px with a 1.65 line height. Card titles use the h3 scale so they do not compete with the page title.</p>
+      </div>
+      <div class="flex items-center justify-end gap-2 border-t border-border px-6 py-4">
+        <button data-slot="button" class="inline-flex h-9 items-center rounded-none px-4 text-xs font-bold uppercase tracking-[0.05em] transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Dismiss</button>
+        <button data-slot="button" class="inline-flex h-9 items-center rounded-none bg-primary px-4 text-xs font-bold uppercase tracking-[0.05em] text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Confirm</button>
+      </div>
+    </div>
+
+    <div data-slot="card" class="rounded-none border border-border bg-card">
+      <div class="flex items-start justify-between gap-4 p-6 pb-4">
+        <div>
+          <h3 class="text-xl font-bold leading-[1.3]">With header action</h3>
+          <p class="mt-1 text-sm text-muted-foreground">The action is a ghost icon button, aligned to the title baseline.</p>
+        </div>
+        <button data-slot="button" aria-label="More options" class="-mr-2 -mt-1 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+        </button>
+      </div>
+      <div class="space-y-3 px-6 pb-6">
+        <div class="flex items-center justify-between text-sm">
+          <span class="text-muted-foreground">Region</span><span class="font-bold">Central region</span>
+        </div>
+        <div class="flex items-center justify-between text-sm">
+          <span class="text-muted-foreground">Category</span><span class="font-mono">Fellow</span>
+        </div>
+        <div class="flex items-center justify-between text-sm">
+          <span class="text-muted-foreground">Next renewal</span><span class="tabular-nums">14 Mar 2027</span>
+        </div>
+      </div>
+    </div>
+
+    <div data-slot="card" class="overflow-hidden rounded-none border border-border bg-card">
+      <div class="flex h-32 items-center justify-center bg-muted">
+        <svg class="h-8 w-8 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.35-4.35a2 2 0 0 0-2.83 0L3 21"/></svg>
+      </div>
+      <div class="p-6">
+        <h3 class="text-xl font-bold leading-[1.3]">Media card</h3>
+        <p class="mt-1 text-sm text-muted-foreground">Media is flush to the card edge — no radius to clip against.</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="ks-label mt-10">Stat cards</p>
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div data-slot="card" class="rounded-none border border-border bg-card p-4">
+      <p class="text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground">Active members</p>
+      <p class="mt-2 text-3xl font-extrabold tabular-nums tracking-[-0.02em]">18,204</p>
+      <p class="mt-1.5 flex items-center gap-1 text-[0.8125rem]">
+        <svg class="h-3.5 w-3.5 text-chart-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        <span class="font-bold text-chart-4 tabular-nums">3.1%</span>
+        <span class="text-muted-foreground">vs last year</span>
+      </p>
+    </div>
+    <div data-slot="card" class="rounded-none border border-border bg-card p-4">
+      <p class="text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground">Applications overdue</p>
+      <p class="mt-2 text-3xl font-extrabold tabular-nums tracking-[-0.02em]">42</p>
+      <p class="mt-1.5 flex items-center gap-1 text-[0.8125rem]">
+        <svg class="h-3.5 w-3.5 text-destructive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7l10 10M17 9v8H9"/></svg>
+        <span class="font-bold text-destructive tabular-nums">11%</span>
+        <span class="text-muted-foreground">vs last quarter</span>
+      </p>
+    </div>
+    <div data-slot="card" class="rounded-none border border-border bg-card p-4">
+      <p class="text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground">Complaints closed</p>
+      <p class="mt-2 text-3xl font-extrabold tabular-nums tracking-[-0.02em]">97<span class="ml-0.5 text-lg text-muted-foreground">%</span></p>
+      <p class="mt-1.5 text-[0.8125rem] text-muted-foreground">Within the 60-day service standard</p>
+    </div>
+    <div data-slot="card" class="rounded-none border border-border bg-card p-4">
+      <p class="text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground">CPD hours logged</p>
+      <p class="mt-2 text-3xl font-extrabold tabular-nums tracking-[-0.02em]">31</p>
+      <div class="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-muted">
+        <div class="h-full w-[62%] rounded-full bg-primary"></div>
+      </div>
+      <p class="mt-1.5 text-[0.8125rem] text-muted-foreground tabular-nums">of 50 required this cycle</p>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- table ---------- -->
+<section id="table" class="ks-section">
+  <p class="ks-title">08 · Data display</p>
+  <h2 class="ks-lede">Table</h2>
+  <p class="ks-note">Rows are 44px. Numeric columns are right-aligned with <span class="font-mono">tabular-nums</span> — always. Header is <span class="font-mono">bg-muted</span> with uppercase caption type.</p>
+
+  <div class="mt-8 overflow-hidden rounded-none border border-border bg-card">
+    <div class="flex flex-wrap items-center gap-3 border-b border-border p-4">
+      <div class="relative min-w-56 flex-1">
+        <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="search" placeholder="Filter applications…" class="flex h-10 w-full rounded-none border border-input bg-background py-2 pl-9 pr-3 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+      </div>
+      <button data-slot="button" class="inline-flex h-10 items-center gap-2 rounded-none border border-input bg-background px-4 text-sm font-bold uppercase tracking-[0.05em] transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
+        Status
+      </button>
+      <button data-slot="button" class="inline-flex h-10 items-center gap-2 rounded-none border border-input bg-background px-4 text-sm font-bold uppercase tracking-[0.05em] transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M3 9h18"/></svg>
+        Columns
+      </button>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full caption-bottom text-sm">
+        <caption class="sr-only">Membership applications, most recent first</caption>
+        <thead class="bg-muted [&_th]:h-11 [&_th]:px-4 [&_th]:text-left [&_th]:align-middle [&_th]:text-xs [&_th]:font-bold [&_th]:uppercase [&_th]:tracking-[0.08em] [&_th]:text-muted-foreground">
+          <tr class="border-b border-border">
+            <th class="w-10">
+              <span class="flex h-4 w-4 items-center justify-center rounded-sm border border-primary bg-primary text-primary-foreground">
+                <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14"/></svg>
+              </span>
+            </th>
+            <th>Applicant</th>
+            <th>Status</th>
+            <th>Reviewer</th>
+            <th aria-sort="descending">
+              <button class="inline-flex items-center gap-1 uppercase tracking-[0.08em] transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                Submitted
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 15 7-7 7 7"/></svg>
+              </button>
+            </th>
+            <th class="text-right">CPD hrs</th>
+            <th class="w-12"></th>
+          </tr>
+        </thead>
+        <tbody class="[&_td]:h-11 [&_td]:px-4 [&_td]:align-middle">
+          <tr class="border-b border-border bg-accent">
+            <td><span class="flex h-4 w-4 items-center justify-center rounded-sm border border-primary bg-primary text-primary-foreground"><svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span></td>
+            <td class="font-mono text-[0.8125rem]">Priya Nakamura</td>
+            <td><span class="inline-flex items-center gap-1.5 rounded-full bg-chart-4/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em] text-chart-4"><span class="h-1.5 w-1.5 rounded-full bg-chart-4"></span>Approved</span></td>
+            <td><span class="flex items-center gap-2"><span class="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-[0.6875rem] font-bold text-muted-foreground">RK</span>Rosa Klein</span></td>
+            <td class="text-muted-foreground tabular-nums">4 Feb 2026</td>
+            <td class="text-right tabular-nums">31</td>
+            <td><button data-slot="button" aria-label="Row actions: Priya Nakamura" class="inline-flex h-8 w-8 items-center justify-center rounded-none transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+          </tr>
+          <tr class="border-b border-border transition-colors hover:bg-muted/50">
+            <td><span class="flex h-4 w-4 rounded-sm border border-input bg-background"></span></td>
+            <td class="font-mono text-[0.8125rem]">Tomás Okafor</td>
+            <td><span class="inline-flex items-center gap-1.5 rounded-full bg-chart-3/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em] text-chart-3"><span class="h-1.5 w-1.5 rounded-full bg-chart-3"></span>Under review</span></td>
+            <td><span class="flex items-center gap-2"><span class="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-[0.6875rem] font-bold text-muted-foreground">JW</span>Joan Whitfield</span></td>
+            <td class="text-muted-foreground tabular-nums">29 Jan 2026</td>
+            <td class="text-right tabular-nums">18</td>
+            <td><button data-slot="button" aria-label="Row actions: Tomás Okafor" class="inline-flex h-8 w-8 items-center justify-center rounded-none transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+          </tr>
+          <tr class="border-b border-border transition-colors hover:bg-muted/50">
+            <td><span class="flex h-4 w-4 rounded-sm border border-input bg-background"></span></td>
+            <td class="font-mono text-[0.8125rem]">Adaeze Nwosu</td>
+            <td><span class="inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em] text-destructive"><span class="h-1.5 w-1.5 rounded-full bg-destructive"></span>Declined</span></td>
+            <td><span class="flex items-center gap-2"><span class="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-[0.6875rem] font-bold text-muted-foreground">RK</span>Rosa Klein</span></td>
+            <td class="text-muted-foreground tabular-nums">22 Jan 2026</td>
+            <td class="text-right tabular-nums">9</td>
+            <td><button data-slot="button" aria-label="Row actions: Adaeze Nwosu" class="inline-flex h-8 w-8 items-center justify-center rounded-none transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+          </tr>
+          <tr class="border-b border-border transition-colors hover:bg-muted/50">
+            <td><span class="flex h-4 w-4 rounded-sm border border-input bg-background"></span></td>
+            <td class="font-mono text-[0.8125rem]">Liam Fitzgerald</td>
+            <td><span class="inline-flex items-center gap-1.5 rounded-full bg-chart-4/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em] text-chart-4"><span class="h-1.5 w-1.5 rounded-full bg-chart-4"></span>Approved</span></td>
+            <td><span class="flex items-center gap-2"><span class="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-[0.6875rem] font-bold text-muted-foreground">JW</span>Joan Whitfield</span></td>
+            <td class="text-muted-foreground tabular-nums">15 Jan 2026</td>
+            <td class="text-right tabular-nums">40</td>
+            <td><button data-slot="button" aria-label="Row actions: Liam Fitzgerald" class="inline-flex h-8 w-8 items-center justify-center rounded-none transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+          </tr>
+          <tr class="transition-colors hover:bg-muted/50">
+            <td><span class="flex h-4 w-4 rounded-sm border border-input bg-background"></span></td>
+            <td class="font-mono text-[0.8125rem]">Sofia Marchetti</td>
+            <td><span class="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground"><span class="h-1.5 w-1.5 rounded-full bg-muted-foreground"></span>Withdrawn</span></td>
+            <td><span class="flex items-center gap-2"><span class="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-[0.6875rem] font-bold text-muted-foreground">RK</span>Rosa Klein</span></td>
+            <td class="text-muted-foreground tabular-nums">3 Jan 2026</td>
+            <td class="text-right tabular-nums">6</td>
+            <td><button data-slot="button" aria-label="Row actions: Sofia Marchetti" class="inline-flex h-8 w-8 items-center justify-center rounded-none transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-3">
+      <p class="text-[0.8125rem] text-muted-foreground"><span class="tabular-nums">1</span> of <span class="tabular-nums">5</span> rows selected</p>
+      <div class="flex items-center gap-1">
+        <button data-slot="button" class="inline-flex h-9 items-center rounded-none border border-input bg-background px-4 text-xs font-bold uppercase tracking-[0.05em] transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Previous</button>
+        <button data-slot="button" class="inline-flex h-9 items-center rounded-none border border-input bg-background px-4 text-xs font-bold uppercase tracking-[0.05em] transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Next</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- list ---------- -->
+<section id="list" class="ks-section">
+  <p class="ks-title">09 · Data display</p>
+  <h2 class="ks-lede">List &amp; feed</h2>
+  <p class="ks-note">Three list shapes that carry most of a member portal: a settings-style list, an activity feed, and a description list.</p>
+
+  <div class="ks-grid grid-cols-1 lg:grid-cols-3">
+    <div data-slot="card" class="rounded-none border border-border bg-card">
+      <div class="border-b border-border px-6 py-4">
+        <h3 class="text-base font-bold">Notification preferences</h3>
+      </div>
+      <div class="divide-y divide-border">
+        <div class="flex items-start justify-between gap-4 px-6 py-4">
+          <div class="space-y-0.5">
+            <p class="text-sm font-bold">Renewal reminders</p>
+            <p class="text-sm text-muted-foreground">Email me 60 days before my registration lapses.</p>
+          </div>
+          <span role="switch" aria-checked="true" class="mt-0.5 inline-flex h-5 w-9 shrink-0 items-center rounded-full bg-primary p-0.5"><span class="h-4 w-4 translate-x-4 rounded-full bg-background"></span></span>
+        </div>
+        <div class="flex items-start justify-between gap-4 px-6 py-4">
+          <div class="space-y-0.5">
+            <p class="text-sm font-bold">Guideline updates</p>
+            <p class="text-sm text-muted-foreground">Notify me when a practice standard I follow changes.</p>
+          </div>
+          <span role="switch" aria-checked="true" class="mt-0.5 inline-flex h-5 w-9 shrink-0 items-center rounded-full bg-primary p-0.5"><span class="h-4 w-4 translate-x-4 rounded-full bg-background"></span></span>
+        </div>
+        <div class="flex items-start justify-between gap-4 px-6 py-4">
+          <div class="space-y-0.5">
+            <p class="text-sm font-bold">Newsletter</p>
+            <p class="text-sm text-muted-foreground">Quarterly update from the council.</p>
+          </div>
+          <span role="switch" aria-checked="false" class="mt-0.5 inline-flex h-5 w-9 shrink-0 items-center rounded-full bg-input p-0.5"><span class="h-4 w-4 rounded-full bg-background"></span></span>
+        </div>
+      </div>
+    </div>
+
+    <div data-slot="card" class="rounded-none border border-border bg-card">
+      <div class="border-b border-border px-6 py-4">
+        <h3 class="text-base font-bold">Activity</h3>
+      </div>
+      <div class="space-y-5 p-6">
+        <div class="flex gap-3">
+          <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-[0.6875rem] font-bold text-muted-foreground">RK</span>
+          <div class="min-w-0 space-y-0.5">
+            <p class="text-sm"><span class="font-bold">Rosa Klein</span> approved <span class="font-mono text-[0.8125rem]">Priya Nakamura</span>'s application</p>
+            <p class="text-xs text-muted-foreground tabular-nums">4 minutes ago</p>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-[0.6875rem] font-bold text-muted-foreground">JW</span>
+          <div class="min-w-0 space-y-0.5">
+            <p class="text-sm"><span class="font-bold">Joan Whitfield</span> requested more evidence on <span class="font-bold text-primary">Application #412</span></p>
+            <p class="text-xs text-muted-foreground tabular-nums">22 minutes ago</p>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-[0.6875rem] font-bold text-muted-foreground">RK</span>
+          <div class="min-w-0 space-y-0.5">
+            <p class="text-sm"><span class="font-bold">Rosa Klein</span> published a revised <span class="font-mono text-[0.8125rem]">practice-standards-v4</span></p>
+            <p class="text-xs text-muted-foreground tabular-nums">3 hours ago</p>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground">
+            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8 4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8 4.2-4.2"/></svg>
+          </span>
+          <div class="min-w-0 space-y-0.5">
+            <p class="text-sm text-muted-foreground">Automatic reminder sent for 12 upcoming renewals</p>
+            <p class="text-xs text-muted-foreground tabular-nums">Yesterday at 23:41</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div data-slot="card" class="rounded-none border border-border bg-card">
+      <div class="border-b border-border px-6 py-4">
+        <h3 class="text-base font-bold">Application detail</h3>
+      </div>
+      <dl class="divide-y divide-border text-sm">
+        <div class="flex items-center justify-between gap-4 px-6 py-3">
+          <dt class="text-muted-foreground">Reference</dt><dd class="font-mono text-[0.8125rem]">APP-8214</dd>
+        </div>
+        <div class="flex items-center justify-between gap-4 px-6 py-3">
+          <dt class="text-muted-foreground">Category</dt><dd class="font-mono text-[0.8125rem]">Fellow</dd>
+        </div>
+        <div class="flex items-center justify-between gap-4 px-6 py-3">
+          <dt class="text-muted-foreground">Panel</dt><dd class="font-mono text-[0.8125rem]">Central region</dd>
+        </div>
+        <div class="flex items-center justify-between gap-4 px-6 py-3">
+          <dt class="text-muted-foreground">CPD hours</dt><dd class="tabular-nums">31 of 50</dd>
+        </div>
+        <div class="flex items-center justify-between gap-4 px-6 py-3">
+          <dt class="text-muted-foreground">Decision due</dt><dd class="tabular-nums">14 Mar 2026</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- badges ---------- -->
+<section id="badges" class="ks-section">
+  <p class="ks-title">10 · Data display</p>
+  <h2 class="ks-lede">Badge &amp; status</h2>
+  <p class="ks-note">Status colours signal <em>state</em>. They are never used decoratively. Badges and avatars are the one shape exception in this design and stay fully round.</p>
+
+  <div class="ks-grid grid-cols-1 md:grid-cols-3">
+    <div>
+      <p class="ks-label">Badge variants</p>
+      <div class="flex flex-wrap items-center gap-2">
+        <span data-slot="badge" class="inline-flex items-center rounded-full bg-primary px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em] text-primary-foreground">Fellow</span>
+        <span data-slot="badge" class="inline-flex items-center rounded-full bg-secondary px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em] text-secondary-foreground">Trainee</span>
+        <span data-slot="badge" class="inline-flex items-center rounded-full bg-destructive px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em] text-destructive-foreground">Suspended</span>
+        <span data-slot="badge" class="inline-flex items-center rounded-full border border-border px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em]">Associate</span>
+      </div>
+    </div>
+
+    <div>
+      <p class="ks-label">Status pills</p>
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 rounded-full bg-chart-4/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em] text-chart-4"><span class="h-1.5 w-1.5 rounded-full bg-chart-4"></span>Current</span>
+        <span class="inline-flex items-center gap-1.5 rounded-full bg-chart-3/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em] text-chart-3"><span class="h-1.5 w-1.5 rounded-full bg-chart-3"></span>Under review</span>
+        <span class="inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em] text-destructive"><span class="h-1.5 w-1.5 rounded-full bg-destructive"></span>Lapsed</span>
+        <span class="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em] text-primary"><span class="h-1.5 w-1.5 rounded-full bg-primary"></span>Processing</span>
+        <span class="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground"><span class="h-1.5 w-1.5 rounded-full bg-muted-foreground"></span>Archived</span>
+      </div>
+    </div>
+
+    <div>
+      <p class="ks-label">Counters</p>
+      <div class="flex flex-wrap items-center gap-6">
+        <button data-slot="button" aria-label="Notifications, 5 unread" class="relative inline-flex h-10 w-10 items-center justify-center rounded-none border border-input bg-background transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          <span class="absolute -right-1.5 -top-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[0.625rem] font-bold tabular-nums text-destructive-foreground">5</span>
+        </button>
+        <span class="inline-flex items-center gap-2 text-sm">Open cases <span class="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-muted px-1.5 text-xs font-bold tabular-nums text-muted-foreground">12</span></span>
+        <span class="inline-flex items-center gap-2 text-sm">Overdue <span class="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive/10 px-1.5 text-xs font-bold tabular-nums text-destructive">3</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- avatar ---------- -->
+<section id="avatar" class="ks-section">
+  <p class="ks-title">11 · Data display</p>
+  <h2 class="ks-lede">Avatar</h2>
+  <p class="ks-note">Initials on <span class="font-mono">bg-muted</span> are the fallback. No generated colours per member — that would reintroduce uncontrolled colour into the palette.</p>
+
+  <div class="ks-grid grid-cols-2 md:grid-cols-4">
+    <div>
+      <p class="ks-label">Sizes</p>
+      <div class="flex items-center gap-3">
+        <span class="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-[0.6875rem] font-bold text-muted-foreground">RK</span>
+        <span class="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground">RK</span>
+        <span class="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-sm font-bold text-muted-foreground">RK</span>
+        <span class="flex h-14 w-14 items-center justify-center rounded-full bg-muted text-base font-bold text-muted-foreground">RK</span>
+      </div>
+    </div>
+    <div>
+      <p class="ks-label">With image</p>
+      <div class="flex items-center gap-3">
+        <span class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-muted text-muted-foreground">
+          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+        </span>
+        <span class="text-sm text-muted-foreground">Image slot, icon fallback</span>
+      </div>
+    </div>
+    <div>
+      <p class="ks-label">With status</p>
+      <div class="flex items-center gap-4">
+        <span class="relative inline-flex">
+          <span class="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-sm font-bold text-muted-foreground">JW</span>
+          <span class="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-chart-4"></span>
+        </span>
+        <span class="relative inline-flex">
+          <span class="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-sm font-bold text-muted-foreground">TO</span>
+          <span class="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-muted-foreground"></span>
+        </span>
+      </div>
+    </div>
+    <div>
+      <p class="ks-label">Group</p>
+      <div class="flex -space-x-2">
+        <span class="flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-muted text-xs font-bold text-muted-foreground">RK</span>
+        <span class="flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-muted text-xs font-bold text-muted-foreground">TO</span>
+        <span class="flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-muted text-xs font-bold text-muted-foreground">JW</span>
+        <span class="flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-secondary text-xs font-bold tabular-nums text-secondary-foreground">+3</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- dataviz ---------- -->
+<section id="dataviz" class="ks-section">
+  <p class="ks-title">12 · Data display</p>
+  <h2 class="ks-lede">Data visualisation</h2>
+  <p class="ks-note">Chart series are used in order: a two-series chart uses <span class="font-mono">chart-1</span> and <span class="font-mono">chart-2</span>, never <span class="font-mono">chart-1</span> and <span class="font-mono">chart-4</span>. Gridlines are <span class="font-mono">border</span>, labels are <span class="font-mono">muted-foreground</span>.</p>
+
+  <div class="ks-grid grid-cols-1 lg:grid-cols-3">
+    <div data-slot="card" class="rounded-none border border-border bg-card p-6 lg:col-span-2">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h3 class="text-base font-bold">Applications by category</h3>
+          <p class="mt-0.5 text-[0.8125rem] text-muted-foreground">Last 7 intake weeks</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+          <span class="inline-flex items-center gap-1.5"><span class="h-2 w-2 bg-chart-1"></span>Fellow</span>
+          <span class="inline-flex items-center gap-1.5"><span class="h-2 w-2 bg-chart-2"></span>Trainee</span>
+        </div>
+      </div>
+
+      <svg viewBox="0 0 560 200" class="mt-6 w-full" role="img" aria-label="Grouped bar chart of Fellow and Trainee applications received over seven weeks">
+        <g stroke="currentColor" class="text-border" stroke-width="1">
+          <line x1="40" y1="10"  x2="552" y2="10"/>
+          <line x1="40" y1="55"  x2="552" y2="55"/>
+          <line x1="40" y1="100" x2="552" y2="100"/>
+          <line x1="40" y1="145" x2="552" y2="145"/>
+          <line x1="40" y1="170" x2="552" y2="170"/>
+        </g>
+        <g class="fill-current text-muted-foreground" font-size="10" font-family="var(--font-mono)" text-anchor="end">
+          <text x="32" y="14">120</text><text x="32" y="59">90</text><text x="32" y="104">60</text><text x="32" y="149">30</text><text x="32" y="174">0</text>
+        </g>
+        <g>
+          <rect x="56"  y="78"  width="18" height="92"  class="fill-chart-1"/><rect x="78"  y="112" width="18" height="58" class="fill-chart-2"/>
+          <rect x="128" y="62"  width="18" height="108" class="fill-chart-1"/><rect x="150" y="104" width="18" height="66" class="fill-chart-2"/>
+          <rect x="200" y="86"  width="18" height="84"  class="fill-chart-1"/><rect x="222" y="120" width="18" height="50" class="fill-chart-2"/>
+          <rect x="272" y="40"  width="18" height="130" class="fill-chart-1"/><rect x="294" y="92"  width="18" height="78" class="fill-chart-2"/>
+          <rect x="344" y="30"  width="18" height="140" class="fill-chart-1"/><rect x="366" y="84"  width="18" height="86" class="fill-chart-2"/>
+          <rect x="416" y="96"  width="18" height="74"  class="fill-chart-1"/><rect x="438" y="130" width="18" height="40" class="fill-chart-2"/>
+          <rect x="488" y="70"  width="18" height="100" class="fill-chart-1"/><rect x="510" y="108" width="18" height="62" class="fill-chart-2"/>
+        </g>
+        <g class="fill-current text-muted-foreground" font-size="10" font-family="var(--font-mono)" text-anchor="middle">
+          <text x="76" y="188">W1</text><text x="148" y="188">W2</text><text x="220" y="188">W3</text><text x="292" y="188">W4</text><text x="364" y="188">W5</text><text x="436" y="188">W6</text><text x="508" y="188">W7</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="space-y-6">
+      <div data-slot="card" class="rounded-none border border-border bg-card p-6">
+        <h3 class="text-base font-bold">Median decision time</h3>
+        <p class="mt-0.5 text-[0.8125rem] text-muted-foreground">Area chart, single series</p>
+        <svg viewBox="0 0 280 110" class="mt-4 w-full" role="img" aria-label="Area chart of median application decision time in days">
+          <defs>
+            <linearGradient id="areaFade" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" class="text-chart-1" stop-color="currentColor" stop-opacity="0.20"/>
+              <stop offset="100%" class="text-chart-1" stop-color="currentColor" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <g stroke="currentColor" class="text-border" stroke-width="1">
+            <line x1="0" y1="25" x2="280" y2="25"/><line x1="0" y1="60" x2="280" y2="60"/><line x1="0" y1="95" x2="280" y2="95"/>
+          </g>
+          <path d="M0 78 L40 66 L80 72 L120 44 L160 52 L200 30 L240 40 L280 34 L280 95 L0 95 Z" fill="url(#areaFade)"/>
+          <path d="M0 78 L40 66 L80 72 L120 44 L160 52 L200 30 L240 40 L280 34" fill="none" stroke="currentColor" class="text-chart-1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="280" cy="34" r="3.5" class="fill-chart-1"/>
+        </svg>
+      </div>
+
+      <div data-slot="card" class="rounded-none border border-border bg-card p-6">
+        <h3 class="text-base font-bold">Sparklines</h3>
+        <div class="mt-4 space-y-3">
+          <div class="flex items-center gap-3">
+            <svg viewBox="0 0 120 24" class="h-6 w-28 shrink-0"><path d="M0 18 L15 14 L30 16 L45 8 L60 12 L75 5 L90 9 L105 4 L120 6" fill="none" stroke="currentColor" class="text-chart-1" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="text-sm tabular-nums">18,204</span>
+            <span class="ml-auto text-xs font-bold text-chart-4 tabular-nums">+3.1%</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <svg viewBox="0 0 120 24" class="h-6 w-28 shrink-0"><path d="M0 6 L15 9 L30 7 L45 13 L60 11 L75 16 L90 14 L105 19 L120 18" fill="none" stroke="currentColor" class="text-chart-5" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="text-sm tabular-nums">42 days</span>
+            <span class="ml-auto text-xs font-bold text-destructive tabular-nums">−11%</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <svg viewBox="0 0 120 24" class="h-6 w-28 shrink-0"><path d="M0 12 L15 11 L30 13 L45 12 L60 10 L75 12 L90 11 L105 12 L120 11" fill="none" stroke="currentColor" class="text-chart-3" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="text-sm tabular-nums">97%</span>
+            <span class="ml-auto text-xs font-bold text-muted-foreground">flat</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= 4. NAVIGATION =============================== -->
+
+<!-- ---------- nav ---------- -->
+<section id="nav" class="ks-section">
+  <p class="ks-title">13 · Navigation</p>
+  <h2 class="ks-lede">Navigation</h2>
+  <p class="ks-note">Shown here as components only. <em>Where</em> these go on a page is a layout decision — see <span class="font-mono">layouts/</span>. The top bar, sidebar and mobile bar all use the persistent dark <span class="font-mono">--sidebar-*</span> chrome — deliberately the same regardless of light/dark theme, matching the reference's always-dark navigation.</p>
+
+  <p class="ks-label mt-8">Top bar — utility strip + primary nav</p>
+  <div class="overflow-hidden border border-sidebar-border">
+    <div class="flex h-9 items-center gap-4 bg-sidebar/60 px-4 text-xs text-sidebar-foreground/70">
+      <span>Member portal</span>
+      <a href="#nav" class="ml-auto transition-colors hover:text-sidebar-foreground">Contact</a>
+      <a href="#nav" class="transition-colors hover:text-sidebar-foreground">Help</a>
+    </div>
+    <div class="flex h-16 items-center gap-4 border-t border-sidebar-border bg-sidebar px-4 text-sidebar-foreground">
+      <div class="flex items-center gap-2.5">
+        <div class="flex h-8 w-8 items-center justify-center bg-sidebar-primary text-sidebar-primary-foreground">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
+        </div>
+        <span class="text-sm font-extrabold uppercase tracking-[0.03em]">Meridian Council</span>
+      </div>
+      <nav aria-label="Primary" class="hidden items-center gap-1 md:flex">
+        <a href="#nav" aria-current="page" class="inline-flex h-10 items-center bg-sidebar-primary px-4 text-xs font-bold uppercase tracking-[0.05em] text-sidebar-primary-foreground">Overview</a>
+        <a href="#nav" class="inline-flex h-10 items-center px-4 text-xs font-bold uppercase tracking-[0.05em] text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">Membership</a>
+        <a href="#nav" class="inline-flex h-10 items-center px-4 text-xs font-bold uppercase tracking-[0.05em] text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">Guidelines</a>
+        <a href="#nav" class="inline-flex h-10 items-center px-4 text-xs font-bold uppercase tracking-[0.05em] text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">CPD</a>
+      </nav>
+      <div class="ml-auto flex items-center gap-2">
+        <div class="relative hidden sm:block">
+          <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-sidebar-foreground/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="search" placeholder="Search…" class="h-9 w-48 rounded-none border border-sidebar-border bg-sidebar-accent/40 pl-9 pr-3 text-sm text-sidebar-foreground placeholder:text-sidebar-foreground/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar">
+        </div>
+        <button data-slot="button" aria-label="Notifications" class="relative inline-flex h-9 w-9 items-center justify-center rounded-none text-sidebar-foreground transition-colors hover:bg-sidebar-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          <span class="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-primary"></span>
+        </button>
+        <span class="flex h-8 w-8 items-center justify-center rounded-full bg-sidebar-accent text-xs font-bold text-sidebar-accent-foreground">RK</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-8 grid gap-8 lg:grid-cols-[16rem_1fr]">
+    <div>
+      <p class="ks-label">Sidebar</p>
+      <nav aria-label="Sidebar" class="w-64 border border-sidebar-border bg-sidebar p-2 text-sidebar-foreground">
+        <p class="px-2 py-1.5 text-xs font-bold uppercase tracking-[0.08em] text-sidebar-foreground/60">Registration</p>
+        <a href="#nav" aria-current="page" class="flex h-10 items-center gap-2.5 bg-sidebar-primary px-2 text-sm font-bold uppercase tracking-[0.05em] text-sidebar-primary-foreground">
+          <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+          Overview
+        </a>
+        <a href="#nav" class="flex h-10 items-center gap-2.5 px-2 text-sm text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+          <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+          Applications
+          <span class="ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-sidebar-accent px-1.5 text-xs font-bold tabular-nums text-sidebar-accent-foreground">3</span>
+        </a>
+        <a href="#nav" class="flex h-10 items-center gap-2.5 px-2 text-sm text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+          <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+          Reports
+        </a>
+
+        <p class="mt-3 px-2 py-1.5 text-xs font-bold uppercase tracking-[0.08em] text-sidebar-foreground/60">Standards</p>
+        <button type="button" aria-expanded="true" aria-controls="ks-nav-group" class="flex h-10 w-full items-center gap-2.5 px-2 text-sm text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar">
+          <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2Z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7Z"/></svg>
+          Guidelines
+          <svg class="ml-auto h-3.5 w-3.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div id="ks-nav-group" class="ml-[1.4rem] border-l border-sidebar-border pl-2">
+          <a href="#nav" class="flex h-9 items-center rounded-none px-2 text-sm text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">Clinical practice</a>
+          <a href="#nav" class="flex h-9 items-center rounded-none px-2 text-sm text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">Supervision</a>
+          <a href="#nav" class="flex h-9 items-center rounded-none px-2 text-sm text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">Telehealth</a>
+        </div>
+
+        <div class="mt-3 border-t border-sidebar-border pt-2">
+          <a href="#nav" class="flex h-10 items-center gap-2.5 px-2 text-sm text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+            <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+            Settings
+          </a>
+        </div>
+      </nav>
+      <p class="mt-3 font-mono text-xs text-muted-foreground">Items h-10 · active is <span class="text-foreground">bg-sidebar-primary</span> — the one place red fills a nav item — plus <span class="text-foreground">aria-current="page"</span>.</p>
+    </div>
+
+    <div>
+      <p class="ks-label">Collapsed / icon rail (below <span class="font-mono normal-case">md</span>)</p>
+      <div class="flex flex-col gap-6 sm:flex-row">
+        <nav aria-label="Collapsed sidebar" class="flex w-14 flex-col items-center gap-1 border border-sidebar-border bg-sidebar p-2">
+          <span aria-current="page" class="flex h-10 w-10 items-center justify-center bg-sidebar-primary text-sidebar-primary-foreground">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+          </span>
+          <span class="flex h-10 w-10 items-center justify-center text-sidebar-foreground/70">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+          </span>
+          <span class="flex h-10 w-10 items-center justify-center text-sidebar-foreground/70">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+          </span>
+          <span class="mt-auto flex h-10 w-10 items-center justify-center text-sidebar-foreground/70">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+          </span>
+        </nav>
+
+        <div class="flex-1">
+          <p class="ks-label">Mobile bottom bar</p>
+          <nav aria-label="Mobile" class="flex items-center justify-around border border-sidebar-border bg-sidebar px-2 py-2">
+            <a href="#nav" aria-current="page" class="flex flex-col items-center gap-1 px-3 py-1 text-sidebar-primary-foreground">
+              <span class="flex h-7 w-9 items-center justify-center bg-sidebar-primary">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+              </span>
+              <span class="text-[0.6875rem] font-bold uppercase tracking-[0.03em] text-sidebar-foreground">Home</span>
+            </a>
+            <a href="#nav" class="flex flex-col items-center gap-1 px-3 py-1 text-sidebar-foreground/70">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+              <span class="text-[0.6875rem] uppercase tracking-[0.03em]">Apps</span>
+            </a>
+            <a href="#nav" class="flex flex-col items-center gap-1 px-3 py-1 text-sidebar-foreground/70">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+              <span class="text-[0.6875rem] uppercase tracking-[0.03em]">Reports</span>
+            </a>
+            <a href="#nav" class="flex flex-col items-center gap-1 px-3 py-1 text-sidebar-foreground/70">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+              <span class="text-[0.6875rem] uppercase tracking-[0.03em]">You</span>
+            </a>
+          </nav>
+          <p class="mt-3 font-mono text-xs text-muted-foreground">Targets grow to 44px below <span class="text-foreground">md</span>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- tabs ---------- -->
+<section id="tabs" class="ks-section">
+  <p class="ks-title">14 · Navigation</p>
+  <h2 class="ks-lede">Tabs &amp; segmented control</h2>
+  <p class="ks-note">Tabs are uppercase, tracked, and use a 2px underline — the same red as the active nav indicator, never the filled-pill treatment shadcn ships by default.</p>
+
+  <div class="ks-grid grid-cols-1 lg:grid-cols-2">
+    <div>
+      <p class="ks-label">Horizontal tabs</p>
+      <div class="border-b border-border">
+        <div role="tablist" aria-label="Application sections" class="flex gap-1 overflow-x-auto pt-1.5 -mt-1.5 pb-1.5 -mb-[7px] pl-1.5 -ml-1.5 pr-1.5 -mr-1.5">
+          <button role="tab" aria-selected="true" aria-controls="ks-tabpanel-1" id="ks-tab-1" tabindex="0" class="shrink-0 whitespace-nowrap border-b-2 border-primary px-4 pt-3 pb-3 text-xs font-bold uppercase tracking-[0.05em] text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Overview</button>
+          <button role="tab" aria-selected="false" aria-controls="ks-tabpanel-2" id="ks-tab-2" tabindex="-1" class="shrink-0 whitespace-nowrap border-b-2 border-transparent px-4 pt-3 pb-3 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground transition-colors hover:border-border hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Evidence</button>
+          <button role="tab" aria-selected="false" aria-controls="ks-tabpanel-3" id="ks-tab-3" tabindex="-1" class="shrink-0 whitespace-nowrap border-b-2 border-transparent px-4 pt-3 pb-3 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground transition-colors hover:border-border hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Panel notes</button>
+          <button role="tab" aria-selected="false" aria-controls="ks-tabpanel-4" id="ks-tab-4" tabindex="-1" class="shrink-0 whitespace-nowrap border-b-2 border-transparent px-4 pt-3 pb-3 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground transition-colors hover:border-border hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">History</button>
+        </div>
+      </div>
+      <div role="tabpanel" id="ks-tabpanel-1" aria-labelledby="ks-tab-1" class="pt-5 text-sm">
+        <p class="max-w-[65ch] text-muted-foreground">The active panel renders below the bar with no additional container. A tab panel that adds its own border doubles the rule already drawn by the tab bar.</p>
+      </div>
+    </div>
+
+    <div class="space-y-8">
+      <div>
+        <p class="ks-label">Segmented control</p>
+        <div role="group" aria-label="View" class="inline-flex items-center border border-input bg-muted p-1">
+          <button class="inline-flex h-8 items-center bg-background px-4 text-xs font-bold uppercase tracking-[0.05em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Fellows</button>
+          <button class="inline-flex h-8 items-center px-4 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Trainees</button>
+          <button class="inline-flex h-8 items-center px-4 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">All</button>
+        </div>
+      </div>
+
+      <div>
+        <p class="ks-label">Vertical tabs</p>
+        <div class="flex gap-6">
+          <nav aria-label="Settings sections" class="flex w-40 shrink-0 flex-col gap-0.5">
+            <a href="#tabs" aria-current="page" class="flex h-10 items-center bg-accent px-2.5 text-xs font-bold uppercase tracking-[0.05em] text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">General</a>
+            <a href="#tabs" class="flex h-10 items-center px-2.5 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Credentials</a>
+            <a href="#tabs" class="flex h-10 items-center px-2.5 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Notifications</a>
+            <a href="#tabs" class="flex h-10 items-center px-2.5 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Billing</a>
+          </nav>
+          <p class="text-sm text-muted-foreground">Vertical tabs use the sidebar item treatment rather than an underline, because a vertical rule reads as a container edge.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- breadcrumb ---------- -->
+<section id="breadcrumb" class="ks-section">
+  <p class="ks-title">15 · Navigation</p>
+  <h2 class="ks-lede">Breadcrumb &amp; pagination</h2>
+
+  <div class="ks-grid grid-cols-1 lg:grid-cols-2">
+    <div>
+      <p class="ks-label">Breadcrumb</p>
+      <nav aria-label="Breadcrumb">
+        <ol class="flex flex-wrap items-center gap-1.5 text-sm">
+          <li><a href="#breadcrumb" class="text-muted-foreground transition-colors hover:text-foreground">Meridian Council</a></li>
+          <li aria-hidden="true" class="text-muted-foreground"><svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></li>
+          <li><button class="text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label="Show hidden levels">…</button></li>
+          <li aria-hidden="true" class="text-muted-foreground"><svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></li>
+          <li><a href="#breadcrumb" class="text-muted-foreground transition-colors hover:text-foreground">Applications</a></li>
+          <li aria-hidden="true" class="text-muted-foreground"><svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></li>
+          <li><span aria-current="page" class="font-bold">APP-8214</span></li>
+        </ol>
+      </nav>
+      <p class="mt-3 font-mono text-xs text-muted-foreground">Current page is <span class="text-foreground">font-bold</span>, not a link. Separator is a chevron, never a slash.</p>
+    </div>
+
+    <div>
+      <p class="ks-label">Pagination</p>
+      <nav aria-label="Pagination" class="flex flex-wrap items-center gap-1">
+        <button class="inline-flex h-10 items-center gap-1 px-3 text-xs font-bold uppercase tracking-[0.05em] transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          Previous
+        </button>
+        <button class="inline-flex h-10 w-10 items-center justify-center text-sm tabular-nums transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">1</button>
+        <button aria-current="page" class="inline-flex h-10 w-10 items-center justify-center border border-input bg-background text-sm font-bold tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">2</button>
+        <button class="inline-flex h-10 w-10 items-center justify-center text-sm tabular-nums transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">3</button>
+        <span class="inline-flex h-10 w-10 items-center justify-center text-sm text-muted-foreground">…</span>
+        <button class="inline-flex h-10 w-10 items-center justify-center text-sm tabular-nums transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">24</button>
+        <button class="inline-flex h-10 items-center gap-1 px-3 text-xs font-bold uppercase tracking-[0.05em] transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          Next
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </nav>
+      <p class="mt-3 font-mono text-xs text-muted-foreground">Current page is outlined, not filled — a filled page number reads as a primary action.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- menu ---------- -->
+<section id="menu" class="ks-section">
+  <p class="ks-title">16 · Navigation</p>
+  <h2 class="ks-lede">Menus</h2>
+  <p class="ks-note">Rendered open and inline. An agent reading this file must be able to see a menu without executing anything, so nothing here is behind a click.</p>
+
+  <div class="ks-grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+    <div>
+      <p class="ks-label">Dropdown menu</p>
+      <div class="w-60 rounded-none border border-border bg-popover p-1 text-popover-foreground shadow-md">
+        <p class="px-2 py-1.5 text-xs font-bold text-muted-foreground">r.klein@meridian.example</p>
+        <div class="my-1 h-px bg-border"></div>
+        <button class="flex h-9 w-full items-center gap-2.5 rounded-none bg-accent px-2 text-sm text-accent-foreground">
+          <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+          My profile
+          <span class="ml-auto font-mono text-xs tracking-widest text-muted-foreground">⇧⌘P</span>
+        </button>
+        <button class="flex h-9 w-full items-center gap-2.5 rounded-none px-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground">
+          <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+          My applications
+          <span class="ml-auto font-mono text-xs tracking-widest text-muted-foreground">⌘A</span>
+        </button>
+        <button class="flex h-9 w-full items-center gap-2.5 rounded-none px-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground">
+          <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
+          Invite a colleague
+          <svg class="ml-auto h-3.5 w-3.5 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+        <div class="my-1 h-px bg-border"></div>
+        <button class="flex h-9 w-full items-center gap-2.5 rounded-none px-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground">
+          <svg class="h-4 w-4 shrink-0 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          Compact rows
+        </button>
+        <button class="flex h-9 w-full items-center gap-2.5 rounded-none px-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground">
+          <span class="h-4 w-4 shrink-0" aria-hidden="true"></span>
+          Show reference numbers
+        </button>
+        <div class="my-1 h-px bg-border"></div>
+        <button class="flex h-9 w-full items-center gap-2.5 rounded-none px-2 text-sm text-destructive transition-colors hover:bg-destructive/10">
+          <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg>
+          Sign out
+        </button>
+      </div>
+    </div>
+
+    <div class="lg:col-span-2">
+      <p class="ks-label">Command palette</p>
+      <div class="max-w-xl overflow-hidden rounded-none border border-border bg-popover text-popover-foreground shadow-lg">
+        <div class="flex items-center gap-2.5 border-b border-border px-3">
+          <svg class="h-4 w-4 shrink-0 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" role="combobox" aria-expanded="true" aria-controls="ks-cmd-list" aria-activedescendant="ks-cmd-1" value="renewal" class="h-11 w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset">
+          <kbd class="border border-border bg-muted px-1.5 py-0.5 font-mono text-[0.6875rem] text-muted-foreground">esc</kbd>
+        </div>
+        <div id="ks-cmd-list" role="listbox" class="max-h-72 overflow-y-auto p-1">
+          <p class="px-2 py-1.5 text-xs font-bold text-muted-foreground">Actions</p>
+          <div id="ks-cmd-1" role="option" aria-selected="true" class="flex h-9 w-full items-center gap-2.5 rounded-none bg-accent px-2 text-sm text-accent-foreground">
+            <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5m0 0-7 7m7-7 7 7"/></svg>
+            Start renewal application
+            <span class="ml-auto font-mono text-xs tracking-widest text-muted-foreground">⌘⏎</span>
+          </div>
+          <div role="option" aria-selected="false" class="flex h-9 w-full items-center gap-2.5 rounded-none px-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground">
+            <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+            View renewal history
+          </div>
+          <div role="option" aria-selected="false" class="flex h-9 w-full items-center gap-2.5 rounded-none px-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground">
+            <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>
+            Download renewal certificate
+          </div>
+          <div class="my-1 h-px bg-border"></div>
+          <p class="px-2 py-1.5 text-xs font-bold text-muted-foreground">Recent applications</p>
+          <div role="option" aria-selected="false" class="flex h-9 w-full items-center gap-2.5 rounded-none px-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground">
+            <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-chart-4"></span>
+            <span class="font-mono text-[0.8125rem]">APP-8214</span>
+            <span class="ml-auto text-xs text-muted-foreground tabular-nums">4 min ago</span>
+          </div>
+          <div role="option" aria-selected="false" class="flex h-9 w-full items-center gap-2.5 rounded-none px-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground">
+            <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-destructive"></span>
+            <span class="font-mono text-[0.8125rem]">APP-8107</span>
+            <span class="ml-auto text-xs text-muted-foreground tabular-nums">1 hr ago</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 border-t border-border px-3 py-2 text-xs text-muted-foreground">
+          <span class="inline-flex items-center gap-1.5"><kbd class="border border-border bg-muted px-1.5 py-0.5 font-mono text-[0.6875rem]">↑↓</kbd> navigate</span>
+          <span class="inline-flex items-center gap-1.5"><kbd class="border border-border bg-muted px-1.5 py-0.5 font-mono text-[0.6875rem]">⏎</kbd> select</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 5. FEEDBACK & OVERLAYS =========================== -->
+
+<!-- ---------- alerts ---------- -->
+<section id="alerts" class="ks-section">
+  <p class="ks-title">17 · Feedback</p>
+  <h2 class="ks-lede">Alert &amp; callout</h2>
+  <p class="ks-note">Intent is carried by the icon and a <span class="font-mono">/10</span> tinted background — not by a heavy coloured left bar, which fights the card border for the same job.</p>
+
+  <div class="ks-grid grid-cols-1 lg:grid-cols-2">
+    <div class="flex gap-3 border border-border bg-muted/40 p-4">
+      <svg class="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+      <div class="min-w-0 space-y-1">
+        <p class="text-sm font-bold">Practice standards v4 is now in effect</p>
+        <p class="text-sm text-muted-foreground">All Fellows and Trainees must attest to the revised standards by the next renewal.</p>
+      </div>
+    </div>
+
+    <div class="flex gap-3 border border-chart-4/30 bg-chart-4/10 p-4">
+      <svg class="mt-0.5 h-4 w-4 shrink-0 text-chart-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+      <div class="min-w-0 space-y-1">
+        <p class="text-sm font-bold">Registration confirmed</p>
+        <p class="text-sm text-muted-foreground">Your Fellowship is current until 14 Mar 2027.</p>
+      </div>
+    </div>
+
+    <div class="flex gap-3 border border-chart-3/30 bg-chart-3/10 p-4">
+      <svg class="mt-0.5 h-4 w-4 shrink-0 text-chart-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><path d="M12 9v4m0 4h.01"/></svg>
+      <div class="min-w-0 space-y-1">
+        <p class="text-sm font-bold">CPD hours below target</p>
+        <p class="text-sm text-muted-foreground">You have logged 31 of 50 required hours with 90 days left in this cycle.</p>
+        <a href="#alerts" class="inline-block text-sm font-bold text-primary underline-offset-4 hover:underline">Log CPD activity</a>
+      </div>
+    </div>
+
+    <div class="flex gap-3 border border-destructive/30 bg-destructive/10 p-4">
+      <svg class="mt-0.5 h-4 w-4 shrink-0 text-destructive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6m0-6 6 6"/></svg>
+      <div class="min-w-0 space-y-1">
+        <p class="text-sm font-bold">Application declined</p>
+        <p class="text-sm text-muted-foreground">Reference <span class="font-mono text-[0.8125rem]">APP-8107</span> did not meet the evidence requirement. Resubmission is open for 30 days.</p>
+        <a href="#alerts" class="inline-block text-sm font-bold text-primary underline-offset-4 hover:underline">View panel notes</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- dialog ---------- -->
+<section id="dialog" class="ks-section">
+  <p class="ks-title">18 · Overlays</p>
+  <h2 class="ks-lede">Dialog, sheet &amp; popover</h2>
+  <p class="ks-note">All shown inline rather than as real overlays. Floating surfaces get <em>both</em> a shadow and a border — the only surfaces in this design that carry a shadow at all.</p>
+
+  <div class="ks-grid grid-cols-1 lg:grid-cols-2">
+    <div>
+      <p class="ks-label">Dialog</p>
+      <div role="dialog" aria-modal="true" aria-labelledby="ks-dialog-title" class="max-w-md rounded-none border border-border bg-popover text-popover-foreground shadow-lg">
+        <div class="p-6 pb-4">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h3 id="ks-dialog-title" class="text-lg font-bold">Submit for peer review</h3>
+              <p class="mt-1.5 text-sm text-muted-foreground">Your file will be assigned to a reviewer from your region's panel.</p>
+            </div>
+            <button data-slot="button" aria-label="Close" class="-mr-2 -mt-2 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-none text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="space-y-4 px-6 pb-6">
+          <div class="space-y-2">
+            <label for="d1" class="text-sm font-bold leading-none">Reviewer note</label>
+            <input id="d1" placeholder="Optional context for the panel" class="flex h-10 w-full rounded-none border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border border-primary bg-primary text-primary-foreground"><svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+            <label class="text-sm leading-none">Notify me of the panel's decision</label>
+          </div>
+        </div>
+        <div class="flex items-center justify-end gap-3 border-t border-border px-6 py-4">
+          <button data-slot="button" class="inline-flex h-10 items-center rounded-none px-6 text-sm font-bold uppercase tracking-[0.05em] transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Cancel</button>
+          <button data-slot="button" class="inline-flex h-10 items-center rounded-none bg-primary px-6 text-sm font-bold uppercase tracking-[0.05em] text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Submit</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-8">
+      <div>
+        <p class="ks-label">Alert dialog — destructive</p>
+        <div role="alertdialog" aria-modal="true" aria-labelledby="ks-alertdialog-title" class="max-w-md rounded-none border border-border bg-popover p-6 text-popover-foreground shadow-lg">
+          <div class="flex gap-4">
+            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><path d="M12 9v4m0 4h.01"/></svg>
+            </span>
+            <div class="min-w-0">
+              <h3 id="ks-alertdialog-title" class="text-lg font-bold">Withdraw application APP-8214?</h3>
+              <p class="mt-1.5 text-sm text-muted-foreground">This ends the current review cycle. You will need to start a new application to reapply.</p>
+            </div>
+          </div>
+          <div class="mt-5 flex items-center justify-end gap-3">
+            <button data-slot="button" class="inline-flex h-10 items-center rounded-none border border-input bg-background px-6 text-sm font-bold uppercase tracking-[0.05em] transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Cancel</button>
+            <button data-slot="button" class="inline-flex h-10 items-center rounded-none bg-destructive px-6 text-sm font-bold uppercase tracking-[0.05em] text-destructive-foreground transition-colors hover:bg-destructive/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Withdraw</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid gap-6 sm:grid-cols-2">
+        <div>
+          <p class="ks-label">Popover</p>
+          <div class="w-64 rounded-none border border-border bg-popover p-4 text-popover-foreground shadow-md">
+            <p class="text-sm font-bold">CPD hours</p>
+            <p class="mt-1 text-sm text-muted-foreground">Logged so far this three-year cycle, across all approved activity types.</p>
+            <div class="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-muted"><div class="h-full w-[62%] rounded-full bg-primary"></div></div>
+            <p class="mt-1.5 text-xs text-muted-foreground tabular-nums">31 / 50</p>
+          </div>
+        </div>
+        <div>
+          <p class="ks-label">Tooltip</p>
+          <div class="inline-flex flex-col items-start gap-1.5">
+            <span role="tooltip" id="ks-tooltip-1" class="border border-border bg-popover px-2.5 py-1.5 text-xs text-popover-foreground shadow-md">Download certificate</span>
+            <button aria-label="Download" aria-describedby="ks-tooltip-1" class="inline-flex h-10 w-10 items-center justify-center rounded-none border border-input bg-background transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="ks-label mt-10">Sheet / drawer</p>
+  <div role="dialog" aria-modal="true" aria-labelledby="ks-sheet-title" class="flex max-w-md flex-col rounded-none border border-border bg-popover text-popover-foreground shadow-lg">
+    <div class="flex items-start justify-between gap-4 border-b border-border p-6">
+      <div>
+        <h3 id="ks-sheet-title" class="text-lg font-bold">Evidence attachments</h3>
+        <p class="mt-1 text-sm text-muted-foreground">Uploaded for APP-8214.</p>
+      </div>
+      <button data-slot="button" aria-label="Close" class="-mr-2 -mt-2 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-none text-muted-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="divide-y divide-border">
+      <div class="flex items-center justify-between gap-4 px-6 py-3 text-sm">
+        <span class="font-mono text-[0.8125rem]">cpd-log-2025.pdf</span>
+        <span class="font-mono text-[0.8125rem] text-muted-foreground">2.1 MB</span>
+      </div>
+      <div class="flex items-center justify-between gap-4 px-6 py-3 text-sm">
+        <span class="font-mono text-[0.8125rem]">supervisor-reference.pdf</span>
+        <span class="font-mono text-[0.8125rem] text-muted-foreground">640 KB</span>
+      </div>
+      <div class="flex items-center justify-between gap-4 px-6 py-3 text-sm">
+        <span class="font-mono text-[0.8125rem]">indemnity-certificate.pdf</span>
+        <span class="font-mono text-[0.8125rem] text-muted-foreground">180 KB</span>
+      </div>
+    </div>
+    <div class="border-t border-border px-6 py-4">
+      <button data-slot="button" class="inline-flex h-10 w-full items-center justify-center gap-2 rounded-none border border-input bg-background text-sm font-bold uppercase tracking-[0.05em] transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5v14"/></svg>
+        Add attachment
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- progress ---------- -->
+<section id="progress" class="ks-section">
+  <p class="ks-title">19 · Feedback</p>
+  <h2 class="ks-lede">Progress &amp; loading</h2>
+
+  <div class="ks-grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+    <div>
+      <p class="ks-label">Progress bar</p>
+      <div class="space-y-4">
+        <div>
+          <div role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" aria-label="CPD hours completed" class="h-2 w-full overflow-hidden rounded-full bg-muted"><div class="h-full w-[62%] rounded-full bg-primary transition-all"></div></div>
+          <p class="mt-2 text-xs text-muted-foreground tabular-nums">62% — CPD hours this cycle</p>
+        </div>
+        <div>
+          <div role="progressbar" aria-valuenow="24" aria-valuemin="0" aria-valuemax="100" aria-label="Storage used" class="h-2 w-full overflow-hidden rounded-full bg-muted"><div class="h-full w-[24%] rounded-full bg-chart-3"></div></div>
+          <p class="mt-2 text-xs text-muted-foreground tabular-nums">24% — document storage used</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <p class="ks-label">Spinner</p>
+      <div class="flex items-center gap-5">
+        <svg class="h-4 w-4 animate-spin text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        <svg class="h-6 w-6 animate-spin text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        <span class="inline-flex items-center gap-2 text-sm text-muted-foreground" role="status">
+          <svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+          Verifying credential…
+        </span>
+      </div>
+    </div>
+
+    <div>
+      <p class="ks-label">Progress ring</p>
+      <div class="relative inline-flex h-20 w-20 items-center justify-center" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" aria-label="CPD hours completed">
+        <svg viewBox="0 0 36 36" class="h-20 w-20 -rotate-90">
+          <circle cx="18" cy="18" r="15.5" fill="none" stroke="currentColor" class="text-muted" stroke-width="3.5"/>
+          <circle cx="18" cy="18" r="15.5" fill="none" stroke="currentColor" class="text-primary" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="97.4" stroke-dashoffset="37"/>
+        </svg>
+        <span class="absolute text-sm font-bold tabular-nums" aria-hidden="true">62%</span>
+      </div>
+    </div>
+
+    <div>
+      <p class="ks-label">Skeleton</p>
+      <div class="space-y-3" role="group" aria-busy="true" aria-label="Loading application">
+        <div class="flex items-center gap-3">
+          <div class="h-9 w-9 shrink-0 animate-pulse rounded-full bg-muted" aria-hidden="true"></div>
+          <div class="flex-1 space-y-2">
+            <div class="h-3 w-2/3 animate-pulse bg-muted" aria-hidden="true"></div>
+            <div class="h-3 w-1/3 animate-pulse bg-muted" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="h-20 w-full animate-pulse bg-muted" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- toast ---------- -->
+<section id="toast" class="ks-section">
+  <p class="ks-title">20 · Feedback</p>
+  <h2 class="ks-lede">Toast &amp; notification</h2>
+  <p class="ks-note">Popover surface, <span class="font-mono">shadow-lg</span>, stacked bottom-right in a real application. Every toast is dismissible; destructive ones do not auto-dismiss.</p>
+
+  <div class="mt-8 flex max-w-md flex-col gap-3">
+    <div role="status" class="flex items-start gap-3 rounded-none border border-border bg-popover p-4 text-popover-foreground shadow-lg">
+      <div class="min-w-0 flex-1 space-y-1">
+        <p class="text-sm font-bold">Declaration saved</p>
+        <p class="text-sm text-muted-foreground">Your annual practice declaration has been recorded.</p>
+      </div>
+      <button aria-label="Dismiss" class="-mr-1 -mt-1 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-none text-muted-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div role="status" class="flex items-start gap-3 rounded-none border border-border bg-popover p-4 text-popover-foreground shadow-lg">
+      <svg class="mt-0.5 h-4 w-4 shrink-0 text-chart-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+      <div class="min-w-0 flex-1 space-y-1">
+        <p class="text-sm font-bold">Fellowship approved</p>
+        <p class="text-sm text-muted-foreground"><span class="font-mono text-[0.8125rem]">APP-8214</span> was approved by the Central panel.</p>
+      </div>
+      <button class="inline-flex h-8 shrink-0 items-center rounded-none px-2.5 text-xs font-bold uppercase tracking-[0.05em] text-primary transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Undo</button>
+    </div>
+
+    <div role="alert" class="flex items-start gap-3 rounded-none border border-destructive/30 bg-popover p-4 text-popover-foreground shadow-lg">
+      <svg class="mt-0.5 h-4 w-4 shrink-0 text-destructive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6m0-6 6 6"/></svg>
+      <div class="min-w-0 flex-1 space-y-1">
+        <p class="text-sm font-bold">Could not submit your declaration</p>
+        <p class="text-sm text-muted-foreground">Retrying in 30 seconds.</p>
+      </div>
+      <button aria-label="Dismiss" class="-mr-1 -mt-1 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-none text-muted-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- empty ---------- -->
+<section id="empty" class="ks-section">
+  <p class="ks-title">21 · Feedback</p>
+  <h2 class="ks-lede">Empty, error &amp; loading states</h2>
+  <p class="ks-note">Empty states are the one place a heading may be centred. The icon sits in a square muted tile rather than a circle, so it reads as deliberate rather than as a missing image.</p>
+
+  <div class="ks-grid grid-cols-1 lg:grid-cols-3">
+    <div class="flex flex-col items-center justify-center border border-dashed border-border px-6 py-12 text-center">
+      <span class="flex h-11 w-11 items-center justify-center bg-muted text-muted-foreground">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+      </span>
+      <h3 class="mt-4 text-base font-bold">No applications yet</h3>
+      <p class="mt-1.5 max-w-xs text-sm text-muted-foreground">Start a Fellowship or Trainee application to begin the assessment process.</p>
+      <button data-slot="button" class="mt-5 inline-flex h-10 items-center gap-2 rounded-none bg-primary px-6 text-sm font-bold uppercase tracking-[0.05em] text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5v14"/></svg>
+        Start application
+      </button>
+    </div>
+
+    <div class="flex flex-col items-center justify-center border border-border px-6 py-12 text-center">
+      <span class="flex h-11 w-11 items-center justify-center bg-muted text-muted-foreground">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      </span>
+      <h3 class="mt-4 text-base font-bold">No results for "renewl"</h3>
+      <p class="mt-1.5 max-w-xs text-sm text-muted-foreground">Check the spelling, or search the guidelines library instead.</p>
+      <button data-slot="button" class="mt-5 inline-flex h-10 items-center rounded-none border border-input bg-background px-6 text-sm font-bold uppercase tracking-[0.05em] transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Clear filters</button>
+    </div>
+
+    <div class="flex flex-col items-center justify-center border border-destructive/30 bg-destructive/5 px-6 py-12 text-center">
+      <span class="flex h-11 w-11 items-center justify-center bg-destructive/10 text-destructive">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><path d="M12 9v4m0 4h.01"/></svg>
+      </span>
+      <h3 class="mt-4 text-base font-bold">Could not load your applications</h3>
+      <p class="mt-1.5 max-w-xs text-sm text-muted-foreground">The service returned an error. This is usually temporary.</p>
+      <button data-slot="button" class="mt-5 inline-flex h-10 items-center gap-2 rounded-none border border-input bg-background px-6 text-sm font-bold uppercase tracking-[0.05em] transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+        Try again
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 6. COMPOSED SECTIONS ============================= -->
+
+<!-- ---------- page-header ---------- -->
+<section id="page-header" class="ks-section">
+  <p class="ks-title">22 · Composed</p>
+  <h2 class="ks-lede">Application page header</h2>
+  <p class="ks-note">Breadcrumb, title, description, actions, tabs. In-app sections use <span class="font-mono">py-10</span> rhythm rather than the marketing bands' <span class="font-mono">py-16</span>.</p>
+
+  <div class="mt-8 border border-border bg-card">
+    <div class="p-6 pb-0">
+      <nav aria-label="Breadcrumb">
+        <ol class="flex flex-wrap items-center gap-1.5 text-sm">
+          <li><a href="#page-header" class="text-muted-foreground transition-colors hover:text-foreground">Applications</a></li>
+          <li aria-hidden="true" class="text-muted-foreground"><svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></li>
+          <li><span aria-current="page" class="font-bold">APP-8214</span></li>
+        </ol>
+      </nav>
+
+      <div class="mt-3 flex flex-wrap items-start justify-between gap-4">
+        <div class="min-w-0">
+          <div class="flex flex-wrap items-center gap-3">
+            <h1 class="text-3xl font-extrabold tracking-[-0.02em]">Priya Nakamura — APP-8214</h1>
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-chart-4/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em] text-chart-4"><span class="h-1.5 w-1.5 rounded-full bg-chart-4"></span>Approved</span>
+          </div>
+          <p class="mt-1.5 max-w-[65ch] text-sm text-muted-foreground">Fellowship application, Central region panel. Decision recorded <span class="font-mono text-[0.8125rem]">4 Feb 2026</span> by <a href="#page-header" class="text-primary underline-offset-4 hover:underline">Rosa Klein</a>.</p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button data-slot="button" class="inline-flex h-10 items-center gap-2 rounded-none border border-input bg-background px-6 text-sm font-bold uppercase tracking-[0.05em] transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>
+            Certificate
+          </button>
+          <button data-slot="button" aria-label="More options" class="inline-flex h-10 w-10 items-center justify-center rounded-none border border-input bg-background transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+          </button>
+          <button data-slot="button" class="inline-flex h-10 items-center gap-2 rounded-none bg-primary px-6 text-sm font-bold uppercase tracking-[0.05em] text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+            Close file
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-6 border-b border-border">
+        <nav aria-label="Application sections" class="flex gap-1 overflow-x-auto pt-1.5 -mt-1.5 pb-1.5 -mb-[7px] pl-1.5 -ml-1.5 pr-1.5 -mr-1.5">
+        <a href="#page-header" aria-current="page" class="shrink-0 whitespace-nowrap border-b-2 border-primary px-4 pt-3 pb-3 text-xs font-bold uppercase tracking-[0.05em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Overview</a>
+        <a href="#page-header" class="shrink-0 whitespace-nowrap border-b-2 border-transparent px-4 pt-3 pb-3 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground transition-colors hover:border-border hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Evidence</a>
+        <a href="#page-header" class="shrink-0 whitespace-nowrap border-b-2 border-transparent px-4 pt-3 pb-3 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground transition-colors hover:border-border hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Panel notes</a>
+        <a href="#page-header" class="shrink-0 whitespace-nowrap border-b-2 border-transparent px-4 pt-3 pb-3 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground transition-colors hover:border-border hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">History</a>
+        </nav>
+      </div>
+    </div>
+    <div class="p-6 text-sm text-muted-foreground">Page content begins here.</div>
+  </div>
+</section>
+
+<!-- ---------- hero ---------- -->
+<section id="hero" class="ks-section">
+  <p class="ks-title">23 · Composed</p>
+  <h2 class="ks-lede">Marketing hero</h2>
+  <p class="ks-note">Marketing bands use <span class="font-mono">py-16</span> rather than the in-app <span class="font-mono">py-10</span>. No gradient, no decorative background pattern — <span class="font-mono">health-pro</span> never uses either.</p>
+
+  <div class="mt-8 overflow-hidden border border-border bg-card">
+    <div class="grid items-center gap-10 px-6 py-16 lg:grid-cols-2 lg:px-12">
+      <div>
+        <span class="inline-flex items-center gap-1.5 border border-border bg-muted px-2.5 py-1 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground">
+          <span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
+          Practice standards v4 now in effect
+        </span>
+        <h1 class="mt-5 text-4xl font-extrabold leading-[1.1] tracking-[-0.015em] sm:text-5xl">Setting the standard<br class="hidden sm:block"> for safe, accountable practice.</h1>
+        <p class="mt-4 max-w-[55ch] text-lg leading-[1.6] text-muted-foreground">Meridian Council accredits, credentials and supports health professionals across every stage of practice — from trainee to Fellow to retirement.</p>
+        <div class="mt-7 flex flex-wrap items-center gap-3">
+          <button data-slot="button" class="inline-flex h-11 items-center gap-2 rounded-none bg-primary px-8 text-sm font-bold uppercase tracking-[0.05em] text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+            Start an application
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <button data-slot="button" class="inline-flex h-11 items-center gap-2 rounded-none border border-input bg-background px-8 text-sm font-bold uppercase tracking-[0.05em] transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Read the standards</button>
+        </div>
+        <p class="mt-5 text-sm text-muted-foreground">Open to all registered health and medical professionals.</p>
+      </div>
+
+      <div class="border border-border bg-background p-1">
+        <div class="flex items-center gap-1.5 px-3 py-2">
+          <span class="h-2.5 w-2.5 rounded-full bg-muted"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-muted"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-muted"></span>
+          <span class="ml-2 font-mono text-xs text-muted-foreground">registration status</span>
+        </div>
+        <div class="space-y-2 bg-muted/50 p-4 font-mono text-xs leading-relaxed">
+          <p class="text-muted-foreground">$ meridian status --member MHC-0042917</p>
+          <p><span class="text-chart-4">✓</span> Registration current — expires 14 Mar 2027</p>
+          <p><span class="text-chart-4">✓</span> Indemnity insurance verified</p>
+          <p><span class="text-chart-3">…</span> CPD hours: 31 / 50 this cycle</p>
+          <p class="text-primary">→ meridian.example/members/0042917</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- features ---------- -->
+<section id="features" class="ks-section">
+  <p class="ks-title">24 · Composed</p>
+  <h2 class="ks-lede">Feature grid — the action card</h2>
+  <p class="ks-note">The signature pattern: a bordered, square-cornered card capped by a full-bleed CTA strip flush with the card's own edges — <span class="font-mono">bg-sidebar-primary</span>, <span class="font-mono">h-11</span>, centred uppercase label. Segmented by audience, mirroring how a professional body actually organises its site.</p>
+
+  <div class="ks-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="flex flex-col border border-border bg-card">
+      <div class="flex-1 p-6">
+        <span class="flex h-11 w-11 items-center justify-center bg-accent text-accent-foreground">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+        </span>
+        <h3 class="mt-4 text-base font-bold">Fellows</h3>
+        <p class="mt-1.5 text-sm text-muted-foreground">Manage your credential, log CPD hours and view your renewal timeline.</p>
+      </div>
+      <a href="#features" data-slot="button" class="flex h-11 w-full items-center justify-center gap-2 bg-sidebar-primary text-sm font-bold uppercase tracking-[0.05em] text-sidebar-primary-foreground transition-colors duration-150 hover:bg-sidebar-primary/90 active:bg-sidebar-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card">
+        Member area
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <div class="flex flex-col border border-border bg-card">
+      <div class="flex-1 p-6">
+        <span class="flex h-11 w-11 items-center justify-center bg-accent text-accent-foreground">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/></svg>
+        </span>
+        <h3 class="mt-4 text-base font-bold">Trainees</h3>
+        <p class="mt-1.5 text-sm text-muted-foreground">Track supervised placements, assessment milestones and exam dates.</p>
+      </div>
+      <a href="#features" data-slot="button" class="flex h-11 w-full items-center justify-center gap-2 bg-sidebar-primary text-sm font-bold uppercase tracking-[0.05em] text-sidebar-primary-foreground transition-colors duration-150 hover:bg-sidebar-primary/90 active:bg-sidebar-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card">
+        Training pathway
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <div class="flex flex-col border border-border bg-card">
+      <div class="flex-1 p-6">
+        <span class="flex h-11 w-11 items-center justify-center bg-accent text-accent-foreground">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
+        </span>
+        <h3 class="mt-4 text-base font-bold">Health care professionals</h3>
+        <p class="mt-1.5 text-sm text-muted-foreground">Look up practice standards, notify a change of details, or refer a colleague.</p>
+      </div>
+      <a href="#features" data-slot="button" class="flex h-11 w-full items-center justify-center gap-2 bg-sidebar-primary text-sm font-bold uppercase tracking-[0.05em] text-sidebar-primary-foreground transition-colors duration-150 hover:bg-sidebar-primary/90 active:bg-sidebar-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card">
+        Practice standards
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <div class="flex flex-col border border-border bg-card">
+      <div class="flex-1 p-6">
+        <span class="flex h-11 w-11 items-center justify-center bg-accent text-accent-foreground">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+        </span>
+        <h3 class="mt-4 text-base font-bold">Patients &amp; the public</h3>
+        <p class="mt-1.5 text-sm text-muted-foreground">Confirm a practitioner's registration, or raise a concern about their care.</p>
+      </div>
+      <a href="#features" data-slot="button" class="flex h-11 w-full items-center justify-center gap-2 bg-sidebar-primary text-sm font-bold uppercase tracking-[0.05em] text-sidebar-primary-foreground transition-colors duration-150 hover:bg-sidebar-primary/90 active:bg-sidebar-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card">
+        Check a registration
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+  <p class="mt-4 max-w-[65ch] font-mono text-xs text-muted-foreground">Each strip is a real <span class="text-foreground">&lt;a href&gt;</span> carrying <span class="text-foreground">data-slot="button"</span> — it navigates, so per <span class="text-foreground">shared/ACCESSIBILITY.md</span> it is never a <span class="text-foreground">&lt;button&gt;</span> styled to look like a link.</p>
+</section>
+
+<!-- ---------- pricing ---------- -->
+<section id="pricing" class="ks-section">
+  <p class="ks-title">25 · Composed</p>
+  <h2 class="ks-lede">Pricing table — membership tiers</h2>
+  <p class="ks-note">The recommended tier is marked with a heavier border and a badge — not a different background colour, which would introduce a second accent surface.</p>
+
+  <div class="ks-grid grid-cols-1 lg:grid-cols-3">
+    <div class="flex flex-col border border-border bg-card p-6">
+      <h3 class="text-base font-bold">Trainee</h3>
+      <p class="mt-1.5 text-sm text-muted-foreground">For registrars and residents in supervised training.</p>
+      <p class="mt-5"><span class="text-4xl font-extrabold tabular-nums tracking-[-0.02em]">$180</span><span class="ml-1.5 text-sm text-muted-foreground">/year</span></p>
+      <ul class="mt-6 flex-1 space-y-2.5 text-sm">
+        <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-chart-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Access to the guidelines library</li>
+        <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-chart-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Supervised placement tracking</li>
+        <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-chart-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Trainee peer network</li>
+      </ul>
+      <button data-slot="button" class="mt-6 inline-flex h-10 w-full items-center justify-center rounded-none border border-input bg-background text-sm font-bold uppercase tracking-[0.05em] transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Apply as Trainee</button>
+    </div>
+
+    <div class="relative flex flex-col border-2 border-primary bg-card p-6">
+      <span class="absolute -top-3 left-6 inline-flex items-center rounded-full bg-primary px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em] text-primary-foreground">Most common</span>
+      <h3 class="text-base font-bold">Fellow</h3>
+      <p class="mt-1.5 text-sm text-muted-foreground">For fully qualified practitioners in independent practice.</p>
+      <p class="mt-5"><span class="text-4xl font-extrabold tabular-nums tracking-[-0.02em]">$420</span><span class="ml-1.5 text-sm text-muted-foreground">/year</span></p>
+      <ul class="mt-6 flex-1 space-y-2.5 text-sm">
+        <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-chart-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Everything in Trainee</li>
+        <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-chart-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>CPD tracking and reminders</li>
+        <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-chart-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Voting rights at general meeting</li>
+        <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-chart-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Reduced-fee legal advice line</li>
+      </ul>
+      <button data-slot="button" class="mt-6 inline-flex h-10 w-full items-center justify-center rounded-none bg-primary text-sm font-bold uppercase tracking-[0.05em] text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Apply for Fellowship</button>
+    </div>
+
+    <div class="flex flex-col border border-border bg-card p-6">
+      <h3 class="text-base font-bold">Retired / honorary</h3>
+      <p class="mt-1.5 text-sm text-muted-foreground">For Fellows who have ceased clinical practice.</p>
+      <p class="mt-5"><span class="text-4xl font-extrabold tracking-[-0.02em]">$60</span><span class="ml-1.5 text-sm text-muted-foreground">/year</span></p>
+      <ul class="mt-6 flex-1 space-y-2.5 text-sm">
+        <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-chart-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Non-practising registration</li>
+        <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-chart-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Newsletter and events</li>
+        <li class="flex gap-2.5"><svg class="mt-0.5 h-4 w-4 shrink-0 text-chart-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Mentorship programme access</li>
+      </ul>
+      <button data-slot="button" class="mt-6 inline-flex h-10 w-full items-center justify-center rounded-none border border-input bg-background text-sm font-bold uppercase tracking-[0.05em] transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Convert membership</button>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- testimonial ---------- -->
+<section id="testimonial" class="ks-section">
+  <p class="ks-title">26 · Composed</p>
+  <h2 class="ks-lede">Testimonial</h2>
+
+  <div class="ks-grid grid-cols-1 lg:grid-cols-2">
+    <figure class="border border-border bg-card p-8">
+      <svg class="h-6 w-6 text-border" viewBox="0 0 24 24" fill="currentColor"><path d="M9.5 5C6.5 6.8 5 9.4 5 12.8V19h6.2v-6.2H8.4c0-2.2.8-3.9 2.4-5.1L9.5 5Zm9 0c-3 1.8-4.5 4.4-4.5 7.8V19h6.2v-6.2h-2.8c0-2.2.8-3.9 2.4-5.1L18.5 5Z"/></svg>
+      <blockquote class="mt-4 text-lg leading-[1.6]">
+        The re-credentialing process used to take me a full weekend of paperwork. This cycle it took an evening — the CPD log carries forward automatically, and the panel could see everything they needed without another email from me.
+      </blockquote>
+      <figcaption class="mt-6 flex items-center gap-3">
+        <span class="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-sm font-bold text-muted-foreground">JW</span>
+        <span class="text-sm">
+          <span class="block font-bold">Joan Whitfield</span>
+          <span class="block text-muted-foreground">Fellow, Northern region panel</span>
+        </span>
+      </figcaption>
+    </figure>
+
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 lg:content-start">
+      <figure class="border border-border bg-card p-6">
+        <blockquote class="text-sm leading-relaxed text-muted-foreground">"As a trainee, having one place to see every milestone I still need was the difference between anxious guessing and actually finishing on time."</blockquote>
+        <figcaption class="mt-4 flex items-center gap-2.5 text-[0.8125rem]">
+          <span class="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground">TO</span>
+          <span><span class="font-bold text-foreground">Tomás Okafor</span> · Trainee, Southern region</span>
+        </figcaption>
+      </figure>
+      <figure class="border border-border bg-card p-6">
+        <blockquote class="text-sm leading-relaxed text-muted-foreground">"Patients ask us to confirm a colleague's registration more than you'd think. Being able to point them at a public register in ten seconds matters."</blockquote>
+        <figcaption class="mt-4 flex items-center gap-2.5 text-[0.8125rem]">
+          <span class="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground">RK</span>
+          <span><span class="font-bold text-foreground">Rosa Klein</span> · Practice manager, Riverside Clinic</span>
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- cta ---------- -->
+<section id="cta" class="ks-section">
+  <p class="ks-title">27 · Composed</p>
+  <h2 class="ks-lede">Call to action band</h2>
+  <p class="ks-note">The dark <span class="font-mono">--sidebar</span> chrome, full-bleed — one of the four places this design permits it. Brand red stays confined to the button fill inside it, matching the reference's dark CTA/footer band.</p>
+
+  <div class="mt-8 bg-sidebar px-6 py-12 text-sidebar-foreground sm:px-12">
+    <div class="flex flex-wrap items-center justify-between gap-8">
+      <div class="min-w-0">
+        <h2 class="text-3xl font-extrabold tracking-[-0.02em]">Ready to begin your Fellowship application?</h2>
+        <p class="mt-2 max-w-[55ch] text-sidebar-foreground/75">Most applications are decided within 90 days of a complete submission.</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-3">
+        <button data-slot="button" class="inline-flex h-11 items-center rounded-none bg-primary px-8 text-sm font-bold uppercase tracking-[0.05em] text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar">Start application</button>
+        <button data-slot="button" class="inline-flex h-11 items-center rounded-none border border-sidebar-foreground/25 px-8 text-sm font-bold uppercase tracking-[0.05em] text-sidebar-foreground transition-colors hover:bg-sidebar-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar">Talk to a registrar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- footer ---------- -->
+<section id="footer" class="ks-section">
+  <p class="ks-title">28 · Composed</p>
+  <h2 class="ks-lede">Footer</h2>
+
+  <footer class="mt-8 border border-sidebar-border bg-sidebar px-6 py-10 text-sidebar-foreground sm:px-10">
+    <div class="grid gap-10 lg:grid-cols-[1.5fr_repeat(3,1fr)]">
+      <div>
+        <div class="flex items-center gap-2.5">
+          <div class="flex h-8 w-8 items-center justify-center bg-sidebar-primary text-sidebar-primary-foreground">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
+          </div>
+          <span class="text-sm font-extrabold uppercase tracking-[0.03em]">Meridian Council</span>
+        </div>
+        <p class="mt-3 max-w-xs text-sm text-sidebar-foreground/70">The professional membership body for health and medical practitioners, setting practice standards since 1974.</p>
+      </div>
+
+      <div>
+        <p class="text-xs font-bold uppercase tracking-[0.08em] text-sidebar-foreground/60">Membership</p>
+        <ul class="mt-3 space-y-2 text-sm">
+          <li><a href="#footer" class="text-sidebar-foreground/80 transition-colors hover:text-sidebar-foreground">Fellowship</a></li>
+          <li><a href="#footer" class="text-sidebar-foreground/80 transition-colors hover:text-sidebar-foreground">Training pathway</a></li>
+          <li><a href="#footer" class="text-sidebar-foreground/80 transition-colors hover:text-sidebar-foreground">Renewals</a></li>
+          <li><a href="#footer" class="text-sidebar-foreground/80 transition-colors hover:text-sidebar-foreground">Fees</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-xs font-bold uppercase tracking-[0.08em] text-sidebar-foreground/60">Standards</p>
+        <ul class="mt-3 space-y-2 text-sm">
+          <li><a href="#footer" class="text-sidebar-foreground/80 transition-colors hover:text-sidebar-foreground">Practice guidelines</a></li>
+          <li><a href="#footer" class="text-sidebar-foreground/80 transition-colors hover:text-sidebar-foreground">Quality assurance programme</a></li>
+          <li><a href="#footer" class="text-sidebar-foreground/80 transition-colors hover:text-sidebar-foreground">Complaints process</a></li>
+          <li><a href="#footer" class="text-sidebar-foreground/80 transition-colors hover:text-sidebar-foreground">Public register</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-xs font-bold uppercase tracking-[0.08em] text-sidebar-foreground/60">Council</p>
+        <ul class="mt-3 space-y-2 text-sm">
+          <li><a href="#footer" class="text-sidebar-foreground/80 transition-colors hover:text-sidebar-foreground">About</a></li>
+          <li><a href="#footer" class="text-sidebar-foreground/80 transition-colors hover:text-sidebar-foreground">Governance</a></li>
+          <li><a href="#footer" class="text-sidebar-foreground/80 transition-colors hover:text-sidebar-foreground">Careers</a></li>
+          <li><a href="#footer" class="text-sidebar-foreground/80 transition-colors hover:text-sidebar-foreground">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-sidebar-border pt-6">
+      <p class="text-[0.8125rem] text-sidebar-foreground/70">© 2026 Meridian Council. All rights reserved.</p>
+      <div class="flex items-center gap-4 text-[0.8125rem]">
+        <a href="#footer" class="text-sidebar-foreground/80 transition-colors hover:text-sidebar-foreground">Privacy</a>
+        <a href="#footer" class="text-sidebar-foreground/80 transition-colors hover:text-sidebar-foreground">Terms</a>
+        <span class="h-4 w-px bg-sidebar-border"></span>
+        <a href="#footer" aria-label="Council email" class="text-sidebar-foreground/80 transition-colors hover:text-sidebar-foreground">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+        </a>
+        <a href="#footer" aria-label="Council website" class="text-sidebar-foreground/80 transition-colors hover:text-sidebar-foreground">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20Z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+</section>
+
+<!-- ========================= 7. UTILITY ================================== -->
+
+<!-- ---------- icons ---------- -->
+<section id="icons" class="ks-section">
+  <p class="ks-title">29 · Utility</p>
+  <h2 class="ks-lede">Icon set</h2>
+  <p class="ks-note">Lucide, inline SVG, 20px standalone / 16px in controls, stroke width 2. Never an emoji, never a filled glyph — the stroke weight keeps the set coherent with the square, bordered surfaces around it.</p>
+
+  <div class="mt-8 grid grid-cols-4 gap-4 sm:grid-cols-6 lg:grid-cols-9">
+    <div class="flex flex-col items-center gap-2 border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">shield-check</span></div>
+    <div class="flex flex-col items-center gap-2 border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">graduation-cap</span></div>
+    <div class="flex flex-col items-center gap-2 border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2Z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7Z"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">book-open</span></div>
+    <div class="flex flex-col items-center gap-2 border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">file-check</span></div>
+    <div class="flex flex-col items-center gap-2 border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">calendar</span></div>
+    <div class="flex flex-col items-center gap-2 border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">search</span></div>
+    <div class="flex flex-col items-center gap-2 border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">settings</span></div>
+    <div class="flex flex-col items-center gap-2 border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">user</span></div>
+    <div class="flex flex-col items-center gap-2 border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">users</span></div>
+    <div class="flex flex-col items-center gap-2 border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">folder</span></div>
+    <div class="flex flex-col items-center gap-2 border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">chart</span></div>
+    <div class="flex flex-col items-center gap-2 border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">bell</span></div>
+    <div class="flex flex-col items-center gap-2 border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">info</span></div>
+    <div class="flex flex-col items-center gap-2 border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">check-circle</span></div>
+    <div class="flex flex-col items-center gap-2 border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><path d="M12 9v4m0 4h.01"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">alert</span></div>
+    <div class="flex flex-col items-center gap-2 border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">x</span></div>
+    <div class="flex flex-col items-center gap-2 border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">chevron-down</span></div>
+    <div class="flex flex-col items-center gap-2 border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">arrow-right</span></div>
+    <div class="flex flex-col items-center gap-2 border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">download</span></div>
+    <div class="flex flex-col items-center gap-2 border border-border bg-card p-3"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg><span class="font-mono text-[0.625rem] text-muted-foreground">mail</span></div>
+  </div>
+</section>
+
+<!-- ---------- motion ---------- -->
+<section id="motion" class="ks-section">
+  <p class="ks-title">30 · Utility</p>
+  <h2 class="ks-lede">Motion &amp; interaction</h2>
+  <p class="ks-note">One duration for everything interactive. Colour and opacity animate; layout and position do not — nothing the user is aiming at ever moves.</p>
+
+  <div class="ks-grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_20rem]">
+    <div class="overflow-x-auto border border-border">
+      <table class="w-full text-sm">
+        <caption class="sr-only">Motion states and their treatment</caption>
+        <thead class="bg-muted [&_th]:h-11 [&_th]:px-4 [&_th]:text-left [&_th]:text-xs [&_th]:font-bold [&_th]:uppercase [&_th]:tracking-[0.08em] [&_th]:text-muted-foreground">
+          <tr class="border-b border-border"><th>State</th><th>Treatment</th><th>Timing</th></tr>
+        </thead>
+        <tbody class="[&_td]:px-4 [&_td]:py-3 [&_td]:align-top">
+          <tr class="border-b border-border"><td class="font-bold">Default</td><td class="text-muted-foreground">Base token colours</td><td class="font-mono text-xs text-muted-foreground">—</td></tr>
+          <tr class="border-b border-border"><td class="font-bold">Hover</td><td class="text-muted-foreground">Fill drops to <span class="font-mono text-[0.8125rem]">/90</span>, or surface shifts to <span class="font-mono text-[0.8125rem]">bg-accent</span>. No transform.</td><td class="font-mono text-xs text-muted-foreground">150ms</td></tr>
+          <tr class="border-b border-border"><td class="font-bold">Focus</td><td class="text-muted-foreground"><span class="font-mono text-[0.8125rem]">ring-2 ring-ring ring-offset-2</span> on <span class="font-mono text-[0.8125rem]">:focus-visible</span> only. Inside the dark sidebar chrome, the ring switches to <span class="font-mono text-[0.8125rem]">ring-sidebar-ring</span> with <span class="font-mono text-[0.8125rem]">ring-offset-sidebar</span>.</td><td class="font-mono text-xs text-muted-foreground">instant</td></tr>
+          <tr class="border-b border-border"><td class="font-bold">Active</td><td class="text-muted-foreground">Fill drops to <span class="font-mono text-[0.8125rem]">/80</span>. No scale.</td><td class="font-mono text-xs text-muted-foreground">150ms</td></tr>
+          <tr class="border-b border-border"><td class="font-bold">Disabled</td><td class="text-muted-foreground"><span class="font-mono text-[0.8125rem]">opacity-50 pointer-events-none</span> plus the real <span class="font-mono text-[0.8125rem]">disabled</span> attribute.</td><td class="font-mono text-xs text-muted-foreground">—</td></tr>
+          <tr class="border-b border-border"><td class="font-bold">Overlay entry</td><td class="text-muted-foreground">Fade plus 4px rise</td><td class="font-mono text-xs text-muted-foreground">200ms</td></tr>
+          <tr><td class="font-bold">Reduced motion</td><td class="text-muted-foreground">All durations collapse to ~0 — handled in <span class="font-mono text-[0.8125rem]">theme.css</span></td><td class="font-mono text-xs text-muted-foreground">0.01ms</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="border border-border bg-card p-6">
+      <p class="ks-label">Try it — tab through these</p>
+      <div class="flex flex-wrap gap-3">
+        <button data-slot="button" class="inline-flex h-10 items-center rounded-none bg-primary px-6 text-sm font-bold uppercase tracking-[0.05em] text-primary-foreground transition-colors duration-150 hover:bg-primary/90 active:bg-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Primary</button>
+        <button data-slot="button" class="inline-flex h-10 items-center rounded-none border border-input bg-background px-6 text-sm font-bold uppercase tracking-[0.05em] transition-colors duration-150 hover:bg-accent active:bg-accent/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">Outline</button>
+        <input placeholder="Focus me" class="h-10 w-full rounded-none border border-input bg-background px-3 text-sm transition-colors duration-150 placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+      </div>
+      <p class="mt-4 text-[0.8125rem] text-muted-foreground">The ring uses <span class="font-mono">ring-offset-background</span> so it stays visible on both page and card surfaces.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+  document.getElementById("theme-toggle").addEventListener("click", function () {
+    var dark = document.documentElement.classList.toggle("dark");
+    localStorage.setItem("health-pro-theme", dark ? "dark" : "light");
+  });
+</script>
+</body>
+</html>

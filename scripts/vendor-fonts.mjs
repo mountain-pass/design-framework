@@ -86,6 +86,10 @@ const FONTS = {
     query: "family=DM+Sans:wght@400..700&family=Fredoka:wght@600..700",
     licences: ["DM Sans — SIL Open Font License 1.1", "Fredoka — SIL Open Font License 1.1"],
   },
+  "health-pro": {
+    query: "family=Public+Sans:wght@400..800&family=JetBrains+Mono:wght@400..500",
+    licences: ["Public Sans — SIL Open Font License 1.1", "JetBrains Mono — SIL Open Font License 1.1"],
+  },
 };
 
 const get = async (url, as) => {
