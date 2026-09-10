@@ -394,9 +394,34 @@ font-bold uppercase tracking-[0.08em]`. Rows are `h-11` with `border-b`.
 Numeric columns are right-aligned with `tabular-nums`.
 
 **Badge** — `rounded-full px-2.5 py-0.5 text-xs font-bold uppercase
-tracking-[0.05em]`. Status pills add a 6px leading dot with a `/10` tinted
-background and the status colour as text — the badge/avatar radius exception
-does not extend to anything else.
+tracking-[0.05em]`. Status pills use a **solid** fill in the status colour
+(`bg-chart-4`, `bg-chart-3`, `bg-destructive`, `bg-primary`) with a 6px leading
+dot in `bg-current` and light text — `text-primary-foreground` for the
+chart-coloured pills, `text-destructive-foreground` for destructive, since
+neither `--chart-3` nor `--chart-4` has a dedicated foreground token of its
+own. **Never use a translucent (`/10`) fill for a status pill** — it was tried
+and dropped: a tinted pill lets whatever sits behind it (a coloured table row,
+a coloured card) show through and muddy the status colour, which is exactly
+what happened when an `/10` green "Approved" pill sat on the table's
+`bg-accent` selected row. Alert callouts under `#alerts` are the one place a
+translucent tint is still correct — there it is a large background behind
+readable paragraph text, not a small chip meant to read as a solid colour —
+so do not "fix" those to match. The badge/avatar radius exception does not
+extend to anything else.
+
+**Table — selected row.** `bg-accent` is a saturated fill in this design (see
+Colour), so a selected row also sets `text-accent-foreground` on the `<tr>` to
+keep its default text legible, rather than leaving it to inherit the page's
+`--foreground`. Cells that print their own colour explicitly still need their
+own override: the date column uses `text-accent-foreground/70`, not
+`text-muted-foreground`, for the same reason the footer uses
+`text-sidebar-foreground/70` for secondary text on its own dark fill —
+`--muted-foreground` is tuned against `--background`, not against an
+arbitrary saturated surface. The row's own selection checkbox swaps to
+`border-accent-foreground bg-accent-foreground text-accent` so it stays a
+visible white square instead of a red-on-red square with no edge, and its
+row-actions button adds `hover:text-foreground` alongside `hover:bg-background`
+so the icon doesn't turn white-on-white on hover.
 
 **Dropdown / Popover / Dialog / Sheet / Toast** — `bg-popover border
 rounded-none shadow-md` (dialogs and sheets `shadow-lg`). These are the only
