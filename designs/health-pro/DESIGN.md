@@ -52,42 +52,56 @@ never confusable at a glance — plus five standalone chart hues.
 | Token | Light | Dark | Role |
 |---|---|---|---|
 | `--background` | `oklch(1 0 0)` | `oklch(0.15 0.01 20)` | Page |
-| `--foreground` | `oklch(0.18 0.012 20)` | `oklch(0.96 0.006 20)` | Body text |
+| `--foreground` | `oklch(0.244 0.006 0.6)` | `oklch(0.96 0.006 20)` | Body text |
 | `--card` | `oklch(1 0 0)` | `oklch(0.19 0.012 20)` | Raised surface |
 | `--popover` | `oklch(1 0 0)` | `oklch(0.21 0.013 20)` | Floating surface |
-| `--primary` | `oklch(0.46 0.19 25)` | `oklch(0.66 0.17 25)` | Brand action |
-| `--secondary` / `--muted` | `oklch(0.95 0.008 20)` / `oklch(0.96 0.006 20)` | `oklch(0.26 0.014 20)` / `oklch(0.24 0.013 20)` | Subdued fill |
-| `--muted-foreground` | `oklch(0.40 0.014 20)` | `oklch(0.74 0.012 20)` | Secondary text |
-| `--accent` | `oklch(0.94 0.02 25)` | `oklch(0.28 0.03 25)` | Hover surface |
+| `--primary` | `oklch(0.530 0.207 22.3)` | `oklch(0.66 0.17 25)` | Brand action |
+| `--secondary` / `--muted` | `oklch(0.961 0 89.9)` (both) | `oklch(0.26 0.014 20)` / `oklch(0.24 0.013 20)` | Subdued fill |
+| `--muted-foreground` | `oklch(0.538 0.005 271.3)` | `oklch(0.74 0.012 20)` | Secondary text |
+| `--accent` | `oklch(0.530 0.207 22.3)` | `oklch(0.28 0.03 25)` | Hover surface |
 | `--destructive` | `oklch(0.50 0.20 10)` | `oklch(0.62 0.19 10)` | Danger (H=10, not H=25) |
-| `--border` | `oklch(0.88 0.008 20)` | `oklch(0.30 0.014 20)` | Hairlines, dividers |
-| `--input` | `oklch(0.60 0.02 20)` | `oklch(0.52 0.016 20)` | Control boundaries |
-| `--sidebar` | `oklch(0.16 0.01 20)` | `oklch(0.13 0.01 20)` | Persistent dark chrome |
+| `--border` | `oklch(0.888 0 89.9)` | `oklch(0.30 0.014 20)` | Hairlines, dividers |
+| `--input` | `oklch(0.888 0 89.9)` | `oklch(0.52 0.016 20)` | Control boundaries |
+| `--sidebar` | `oklch(0.218 0 89.9)` | `oklch(0.13 0.01 20)` | Persistent dark chrome |
 
-### Why this primary
+**Light mode is a client override — see "Client override" below.** The values
+in the Light column above are no longer `health-pro`'s own tuned palette; they
+are the literal colours sampled from a specific client's existing reference
+site (institutional red, near-black chrome, light-grey section bands),
+requested and applied **regardless of WCAG contrast**. The Dark column is
+untouched and remains this design's original, AA-compliant palette.
 
-`oklch(0.46 0.19 25)` is a deep, saturated red — dark enough to carry white
-text at AA (7.57:1 light) while reading as decisive rather than pastel. It is
-tuned separately from `--destructive` (H=10) precisely so a red action button
-and a red error state are never the same red: an implementer who confuses them
-produces a bug that reads as "why is Submit coloured like an error," not a
-subtle token slip.
+### Why this primary (dark mode; light mode is a literal override)
 
-In dark mode the primary lightens to `L=0.66` and **drops chroma** from 0.19 to
-0.17 — holding chroma constant while raising lightness is the mistake that
-makes a dark-mode accent look radioactive against a dark surface.
+Dark mode's `oklch(0.66 0.17 25)` is a deep, saturated red — light enough to
+read clearly against a dark surface while remaining tuned separately from
+`--destructive` (H=10), so a red action button and a red error state are never
+the same red: an implementer who confuses them produces a bug that reads as
+"why is Submit coloured like an error," not a subtle token slip. It **drops
+chroma** from the equivalent light-mode chroma — holding chroma constant while
+raising lightness is the mistake that makes a dark-mode accent look
+radioactive against a dark surface.
+
+Light mode's `oklch(0.530 0.207 22.3)` is not tuned at all — it is `#C8102E`
+sampled from the client's site and converted straight to `oklch()`, per the
+Client override below. That it still happens to carry white text at 5.89:1 is
+a coincidence of that particular red being dark enough, not a design goal.
 
 ### The persistent dark `--sidebar` chrome
 
 `--sidebar` is deliberately **not** derived from `--background` — it stays a
-near-black surface (`L=0.16` light, `L=0.13` dark) regardless of which theme is
-active. This is a deliberate design decision, not a bug: the reference
+near-black surface (`L=0.218` light, `L=0.13` dark) regardless of which theme
+is active. This is a deliberate design decision, not a bug: the reference
 institutional sites this design draws from keep their top utility bar and
 primary navigation permanently dark, the way a masthead does not change colour
 with the rest of the page. `--sidebar` is used for exactly four things — the
 top utility bar, the primary nav (desktop, collapsed-icon and mobile-bottom
 variants), the sidebar nav variant, and the footer/CTA full-bleed bands. It
-must never appear on an ordinary content card; see Never #9.
+must never appear on an ordinary content card; see Never #9. In light mode its
+value is now the client's literal near-black (`#1A1A1A`) rather than
+`health-pro`'s own tuned near-black; the two are close enough that this reads
+as a refinement, not a visible change, to anyone who saw the design before the
+override.
 
 ### Measured contrast
 
@@ -95,30 +109,54 @@ Computed from `theme.css` by `scripts/check.mjs`, not estimated:
 
 | Pair | Light | Dark | Minimum |
 |---|---|---|---|
-| `foreground` on `background` | 18.85:1 | 17.50:1 | 4.5:1 |
-| `muted-foreground` on `background` | 9.27:1 | 8.50:1 | 4.5:1 |
-| `card-foreground` on `card` | 18.85:1 | 16.45:1 | 4.5:1 |
-| `popover-foreground` on `popover` | 18.85:1 | 15.79:1 | 4.5:1 |
-| `primary-foreground` on `primary` | 7.57:1 | 5.79:1 | 4.5:1 |
-| `secondary-foreground` on `secondary` | 16.25:1 | 13.87:1 | 4.5:1 |
-| `accent-foreground` on `accent` | 11.84:1 | 11.57:1 | 4.5:1 |
+| `foreground` on `background` | 16.31:1 | 17.50:1 | 4.5:1 |
+| `muted-foreground` on `background` | 5.11:1 | 8.50:1 | 4.5:1 |
+| `card-foreground` on `card` | 16.31:1 | 16.45:1 | 4.5:1 |
+| `popover-foreground` on `popover` | 16.31:1 | 15.79:1 | 4.5:1 |
+| `primary-foreground` on `primary` | 5.89:1 | 5.79:1 | 4.5:1 |
+| `secondary-foreground` on `secondary` | 14.56:1 | 13.87:1 | 4.5:1 |
+| `accent-foreground` on `accent` | 5.89:1 | 11.57:1 | 4.5:1 |
 | `destructive-foreground` on `destructive` | 6.52:1 | 4.86:1 | 4.5:1 |
-| `primary` on `background` | 7.79:1 | 5.85:1 | 4.5:1 |
+| `primary` on `background` | 5.89:1 | 5.85:1 | 4.5:1 |
 | `destructive` on `background` | 6.71:1 | 4.90:1 | 4.5:1 |
-| `sidebar-foreground` on `sidebar` | 17.27:1 | 17.89:1 | 4.5:1 |
-| `sidebar-primary-foreground` on `sidebar-primary` | 5.23:1 | 5.79:1 | 4.5:1 |
-| `sidebar-accent-foreground` on `sidebar-accent` | 14.67:1 | 15.43:1 | 4.5:1 |
-| `input` on `background` | 3.98:1 | 3.55:1 | 3:1 |
-| `ring` on `background` | 7.79:1 | 5.85:1 | 3:1 |
-| `sidebar-ring` on `sidebar` (not in `CONTRAST_PAIRS`, checked by hand per the brief) | 5.52:1 | 6.50:1 | 3:1 |
+| `sidebar-foreground` on `sidebar` | 17.40:1 | 17.89:1 | 4.5:1 |
+| `sidebar-primary-foreground` on `sidebar-primary` | 5.89:1 | 5.79:1 | 4.5:1 |
+| `sidebar-accent-foreground` on `sidebar-accent` | 11.22:1 | 15.43:1 | 4.5:1 |
+| `input` on `background` | **1.40:1** | 3.55:1 | 3:1 |
+| `ring` on `background` | 5.89:1 | 5.85:1 | 3:1 |
+| `sidebar-ring` on `sidebar` (not in `CONTRAST_PAIRS`, checked by hand per the brief) | **2.95:1** | 6.50:1 | 3:1 |
 
-Everything clears its minimum in both themes, and `check.mjs` fails the build
-if that stops being true. This design does not need the contrast-waiver
-mechanism `CLAUDE.md` describes for a palette that cannot reach AA.
+<!-- check:contrast=waived -->
 
-`--input` is a UI boundary (3.98:1 light, 3.55:1 dark), not the decorative
-1.3:1 hairline `--border` is allowed to be — the two tokens hold different
-values for exactly the reason `shared/ACCESSIBILITY.md` describes.
+**Light mode does not meet WCAG 2.2 AA, deliberately.** Every pair above
+happens to still clear its minimum in light mode except two — `--input` on
+`--background` (1.40:1, needs 3:1) and the hand-checked `--sidebar-ring` on
+`--sidebar` (2.95:1, needs 3:1) — and both shortfalls exist for the same
+reason: the client asked for the literal colours from their existing site,
+not a re-tuned palette, and their site's form-field border and focus treatment
+were never designed against this bar. Darkening `--input` or brightening
+`--sidebar-ring` to pass would mean they are no longer the client's actual
+site colours, which was the one thing this override was for.
+
+The gate is therefore waived for `health-pro`'s light mode via the marker
+above, which `check.mjs` reads. Waiving suppresses the build failure, not the
+finding: both shortfalls are still measured and still printed on every run, so
+nobody inherits this by accident. Dark mode is untouched, still clears every
+pair with room to spare, and carries no waiver.
+
+**What this costs.** A user with low vision will struggle to locate a text
+field's boundary in light mode when the field isn't otherwise distinguished by
+a fill or icon — the border is close to invisible as a boundary cue, even
+though it is easily visible as a line. A keyboard user tabbing through the
+dark `--sidebar` chrome (top bar, primary nav, sidebar nav, footer) will find
+the focus ring faint against that near-black surface. Neither failure hides
+content or breaks a workflow; both make one specific interaction harder to
+see. **What to do instead**, if this project needs to satisfy AA: use dark
+mode, which is unaffected and fully compliant, or restore this design's
+original tuned light-mode `--input` (`oklch(0.60 0.02 20)`, 3.98:1) and
+`--sidebar-ring` (`oklch(0.65 0.18 25)`, 5.52:1) values from before this
+override — see the Client override section below for exactly what changed and
+why, so the swap back is a two-line diff, not a re-derivation.
 
 ### Why dark-mode `--destructive` uses white text, and how it was kept there
 
@@ -144,6 +182,45 @@ less headroom than the others in the table above.
   *state*, never decoration.
 - Chart colours are ordered. A two-series chart uses `chart-1` and `chart-2`,
   not `chart-1` and `chart-4`.
+
+### Client override — literal reference-site palette (light mode only)
+
+At a specific client's request, `health-pro`'s **light-mode** colour tokens
+were replaced with the literal colours sampled from that client's own
+existing website, in place of this design's own AA-tuned palette — see the
+waiver above for exactly which pairs that costs. **Dark mode is untouched**
+and keeps the original palette described everywhere else on this page.
+
+The values below are visual approximations sampled from a screenshot of the
+client's site, not colour-picked from their source files or brand guideline.
+If pixel-perfect fidelity is required, re-sample from the live site or a
+brand-guideline document and reconvert to `oklch()` — do not hand-tune the
+numbers below by eye.
+
+| Token | Reference-site colour | Sampled hex | `oklch()` in `theme.css` | Used for |
+|---|---|---|---|---|
+| `--primary`, `--accent`, `--sidebar-primary`, `--ring`, `--sidebar-ring` | Institutional red | `#C8102E` | `oklch(0.530 0.207 22.3)` | Buttons, CTA strips, dividers, active nav, focus rings |
+| `--primary-foreground`, `--accent-foreground`, `--sidebar-primary-foreground`, `--sidebar-foreground`, `--sidebar-accent-foreground` | White | `#FFFFFF` | `oklch(1 0 0)` | Text/icons on red or on the dark chrome |
+| `--foreground`, `--card-foreground`, `--popover-foreground`, `--secondary-foreground` | Near-black body text | `#231F20` | `oklch(0.244 0.006 0.6)` | Body text, text on light-grey bands |
+| `--muted-foreground` | Secondary/caption text grey | `#6D6E71` | `oklch(0.538 0.005 271.3)` | Captions, help text, subdued labels |
+| `--secondary`, `--muted` | Section light-grey band | `#F2F2F2` | `oklch(0.961 0 89.9)` | Quick-links/resources section backgrounds |
+| `--border`, `--input` | Card-border grey | `#DADADA` | `oklch(0.888 0 89.9)` | Card/table hairlines **and** form-field borders — see the waiver above for why using one literal grey for both costs `--input` its 3:1 |
+| `--sidebar` | Nav/footer black | `#1A1A1A` | `oklch(0.218 0 89.9)` | Top utility bar, main nav, sidebar nav, footer |
+| `--sidebar-accent` | Secondary dark band | `#3B3B3B` | `oklch(0.352 0 89.9)` | Hover surface within the dark chrome |
+| `--sidebar-border` | Nav divider | `#2B2B2B` | `oklch(0.289 0 89.9)` | Hairline between nav regions |
+
+`--destructive`, `--destructive-foreground`, and all five `--chart-*` tokens
+are **not** part of this override — the reference site doesn't show a clear
+error/destructive state or a data-viz palette to copy literally, so they keep
+`health-pro`'s own tuned values. If the client later points at a literal
+error-state colour, add it to this table and to `theme.css` the same way, and
+re-run `scripts/check.mjs` to catch anything it newly fails.
+
+**If asked to revert this override**, `--input` was `oklch(0.60 0.02 20)` and
+`--sidebar-ring` was `oklch(0.65 0.18 25)` before it — restoring just those two
+values gets back to a fully AA-compliant light mode without touching anything
+else in this table, since every other pair already happened to clear its
+minimum with the literal colours.
 
 ---
 
@@ -281,11 +358,15 @@ position of anything the user is aiming at.
 legibility against `--background`, not against the near-black `--sidebar`
 surface, so every focusable control inside the top bar, primary nav, sidebar
 nav and footer/CTA bands uses `focus-visible:ring-sidebar-ring` with
-`focus-visible:ring-offset-sidebar` instead. `--sidebar-ring` measures 5.52:1
-(light) and 6.50:1 (dark) against `--sidebar` — comfortably past the 3:1
-`shared/ACCESSIBILITY.md` requires of a focus indicator, and well clear of
-`check.mjs`'s automatic pairs, which is why this is checked and recorded here
-by hand instead.
+`focus-visible:ring-offset-sidebar` instead. In dark mode `--sidebar-ring`
+measures 6.50:1 against `--sidebar` — comfortably past the 3:1
+`shared/ACCESSIBILITY.md` requires of a focus indicator. **In light mode this
+pair now measures 2.95:1 and fails that 3:1 minimum** — `--sidebar-ring` was
+overridden to the client's literal brand red as part of the Client override
+under Colour, above, and that red is not bright enough against `--sidebar` to
+clear the bar. This is checked by hand rather than by `check.mjs`'s automatic
+pairs, and the shortfall is covered by the same `<!-- check:contrast=waived
+-->` marker and "What this costs" note as `--input`.
 
 `prefers-reduced-motion: reduce` collapses all durations to ~0.01ms in
 `theme.css`, applied automatically to every consumer.
@@ -376,8 +457,14 @@ each carries a text `aria-label` describing what it shows.
 
 ### Known gaps
 
-None. Every pair in `CONTRAST_PAIRS` clears its minimum in both themes,
-verified by `node scripts/check.mjs`. This design carries no contrast waiver.
+**Light mode carries a contrast waiver** (`<!-- check:contrast=waived -->`,
+declared under Colour). Two pairs fall short of their WCAG minimum:
+`--input` on `--background` (1.40:1, needs 3:1) and `--sidebar-ring` on
+`--sidebar` (2.95:1, needs 3:1, hand-checked). Both are the direct cost of the
+Client override — see that section for the full explanation, what this costs
+a user, and how to revert it. Every other pair, in both themes, clears its
+minimum; `node scripts/check.mjs` confirms this on every run. **Dark mode has
+no gaps and carries no waiver.**
 
 ---
 

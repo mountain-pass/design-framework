@@ -72,33 +72,43 @@
      shiftEm ≈ 0.0025em, under the ~0.005em noise floor. No correction is
      shipped; see DESIGN.md's Extensions section. */
 
+  /* ------------------------------------------------------------------------
+     CLIENT OVERRIDE — literal reference-site colours, light mode only.
+     shared/ACCESSIBILITY.md's contrast minimums are DELIBERATELY NOT
+     satisfied by several pairs below, at the client's explicit request, in
+     favour of pixel-for-pixel brand fidelity to their existing site. See
+     DESIGN.md's "Client override" section for the full colour table, the
+     <!-- check:contrast=waived --> marker, and the known shortfalls this
+     produces. .dark below is untouched and stays AA-compliant.
+     ------------------------------------------------------------------------ */
+
   --background: oklch(1 0 0);
-  --foreground: oklch(0.18 0.012 20);
+  --foreground: oklch(0.244 0.006 0.6);
 
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.012 20);
+  --card-foreground: oklch(0.244 0.006 0.6);
 
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.012 20);
+  --popover-foreground: oklch(0.244 0.006 0.6);
 
-  --primary: oklch(0.46 0.19 25);
-  --primary-foreground: oklch(0.99 0 0);
+  --primary: oklch(0.530 0.207 22.3);
+  --primary-foreground: oklch(1 0 0);
 
-  --secondary: oklch(0.95 0.008 20);
-  --secondary-foreground: oklch(0.18 0.012 20);
+  --secondary: oklch(0.961 0 89.9);
+  --secondary-foreground: oklch(0.244 0.006 0.6);
 
-  --muted: oklch(0.96 0.006 20);
-  --muted-foreground: oklch(0.40 0.014 20);
+  --muted: oklch(0.961 0 89.9);
+  --muted-foreground: oklch(0.538 0.005 271.3);
 
-  --accent: oklch(0.94 0.02 25);
-  --accent-foreground: oklch(0.30 0.10 25);
+  --accent: oklch(0.530 0.207 22.3);
+  --accent-foreground: oklch(1 0 0);
 
   --destructive: oklch(0.50 0.20 10);
   --destructive-foreground: oklch(0.99 0 0);
 
-  --border: oklch(0.88 0.008 20);
-  --input: oklch(0.60 0.02 20);
-  --ring: oklch(0.46 0.19 25);
+  --border: oklch(0.888 0 89.9);
+  --input: oklch(0.888 0 89.9);
+  --ring: oklch(0.530 0.207 22.3);
 
   --chart-1: oklch(0.50 0.19 25);
   --chart-2: oklch(0.40 0.09 235);
@@ -106,14 +116,14 @@
   --chart-4: oklch(0.50 0.11 165);
   --chart-5: oklch(0.55 0.02 20);
 
-  --sidebar: oklch(0.16 0.01 20);
-  --sidebar-foreground: oklch(0.96 0.006 20);
-  --sidebar-primary: oklch(0.55 0.20 25);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.24 0.012 20);
-  --sidebar-accent-foreground: oklch(0.96 0.006 20);
-  --sidebar-border: oklch(0.30 0.012 20);
-  --sidebar-ring: oklch(0.65 0.18 25);
+  --sidebar: oklch(0.218 0 89.9);
+  --sidebar-foreground: oklch(1 0 0);
+  --sidebar-primary: oklch(0.530 0.207 22.3);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.352 0 89.9);
+  --sidebar-accent-foreground: oklch(1 0 0);
+  --sidebar-border: oklch(0.289 0 89.9);
+  --sidebar-ring: oklch(0.530 0.207 22.3);
 }
 
 .dark {
