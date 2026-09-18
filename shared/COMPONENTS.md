@@ -89,7 +89,13 @@ for a worked example.
 ### `id="inputs"` — Form controls
 - `Input` — default, with placeholder, disabled, with leading icon, error state
 - `Textarea`
-- `Select` (closed)
+- `Select` (closed) — the resting trigger showing the current value
+- `Select` (open) — the dropdown listbox **rendered open and inline** (like the
+  menus in `#menu`, and for the same reason: an agent reading this file must see
+  it without running anything). Show the trigger in its expanded state above a
+  listbox of at least three options, with the chosen option marked by a check and
+  a second option shown as the highlighted (active) one, so selected and active
+  read as distinct states
 - `Checkbox` — unchecked, checked, indeterminate, disabled, with label
 - `RadioGroup` — a group of three, one selected
 - `Switch` — off, on, disabled
@@ -101,6 +107,19 @@ not a label. The error example must show the full wiring an implementer will cop
 `aria-invalid="true"` on the control and `aria-describedby` pointing at the message.
 The indeterminate checkbox needs `aria-checked="mixed"`. The radio group is a
 `<fieldset>` with a `<legend>`.
+
+The closed `Select` is a native `<select>` unless the design requires custom
+rendering. The open `Select` is a custom control, so it follows the APG
+[select-only combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) pattern:
+the trigger carries `role="combobox"`, `aria-haspopup="listbox"`, `aria-expanded`,
+and `aria-controls` pointing at the listbox; the popup is `role="listbox"` with
+`role="option"` children; the chosen option carries `aria-selected="true"` and is
+marked with something other than colour (a check), and the active option is tracked
+with `aria-activedescendant`. A combobox trigger is not labelable with `<label for>`,
+so associate its label with `aria-labelledby`. Because it is rendered statically
+open, its focus and keyboard behaviour is documented in `DESIGN.md`, exactly as the
+menus in `#menu` are — do not key the trigger's field styling to the `<button>` tag,
+since this pattern's trigger is not a button.
 
 ### `id="form"` — Composed form
 A realistic form: two-column layout, a fieldset with legend, required-field

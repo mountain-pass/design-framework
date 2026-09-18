@@ -212,8 +212,9 @@ Technical requirements:
   `<html>`. Persist the choice in `localStorage`.
 - A sticky in-page table of contents linking to every section ID.
 - Overlay components (`Dialog`, `Sheet`, `Popover`, `Tooltip`, `DropdownMenu`,
-  command palette) are rendered **inline and open**, not behind a click. An agent
-  reading this file must be able to see them without executing anything.
+  command palette, and the open `Select` listbox in `#inputs`) are rendered
+  **inline and open**, not behind a click. An agent reading this file must be able
+  to see them without executing anything.
 
 Markup requirements:
 

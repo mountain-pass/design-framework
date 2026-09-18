@@ -604,6 +604,34 @@ pnpm run build</textarea>
       </div>
     </div>
   </div>
+
+  <div class="mt-8 max-w-sm">
+    <p class="ks-label">Select — open</p>
+    <div class="space-y-2">
+      <span id="ks-region-label" class="block text-sm font-medium leading-none">Region</span>
+      <div class="relative">
+        <div id="ks-region-trigger" role="combobox" tabindex="0" aria-haspopup="listbox" aria-expanded="true" aria-controls="ks-region-listbox" aria-labelledby="ks-region-label ks-region-trigger" aria-activedescendant="ks-region-opt-2" class="flex h-9 w-full cursor-default items-center justify-between gap-2 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+          <span>Sydney — ap-southeast-2</span>
+          <svg class="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+        <div id="ks-region-listbox" role="listbox" aria-labelledby="ks-region-label" class="mt-1 w-full rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-md">
+          <div id="ks-region-opt-1" role="option" aria-selected="true" class="flex h-8 w-full items-center gap-2 rounded-sm px-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground">
+            <svg class="h-4 w-4 shrink-0 text-primary" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            <span>Sydney — ap-southeast-2</span>
+          </div>
+          <div id="ks-region-opt-2" role="option" aria-selected="false" class="flex h-8 w-full items-center gap-2 rounded-sm bg-accent px-2 text-sm text-accent-foreground">
+            <span class="h-4 w-4 shrink-0" aria-hidden="true"></span>
+            <span>Frankfurt — eu-central-1</span>
+          </div>
+          <div id="ks-region-opt-3" role="option" aria-selected="false" class="flex h-8 w-full items-center gap-2 rounded-sm px-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground">
+            <span class="h-4 w-4 shrink-0" aria-hidden="true"></span>
+            <span>Oregon — us-west-2</span>
+          </div>
+        </div>
+      </div>
+      <p class="text-[0.8125rem] text-muted-foreground">Rendered open. The selected option carries a check and <span class="font-mono">aria-selected</span>; the highlighted option is tracked with <span class="font-mono">aria-activedescendant</span>.</p>
+    </div>
+  </div>
 </section>
 
 <!-- ---------- form ---------- -->
