@@ -253,49 +253,155 @@ height, or the position of anything the user is trying to click.
 
 ## Component notes
 
-Anything not mentioned here is **stock shadcn/ui**, styled by the tokens.
+This section is the **exact class contract** for `slate`'s components — the literal
+Tailwind classes each one carries in `index.html`, arranged as the shadcn primitive
+that consumes them. Copy these strings verbatim into the component's definition (a
+shadcn `cva()` for the ones with variants, the base `className` for the rest). Do not
+paraphrase them, do not drop classes you think are redundant, and do not re-express
+any of them as CSS — see the "utility classes, never bespoke CSS" rule in the repo
+root `CLAUDE.md` and in a consuming project's `DESIGN.md`. The kitchen sink renders
+from these same classes, so it is your visual confirmation, not a second source to
+reconcile against. Anything not listed here is **stock shadcn/ui**, styled by the
+tokens.
 
-**Button** — Six variants, four sizes, as stock. The `default` size is `h-9`.
-Icon-only buttons are `h-9 w-9` with the icon at 16px. Icons inside labelled
-buttons are 16px with `gap-2`.
+Two reading notes. Tailwind utilities are order-independent, so a string here and the
+same set in a different order in the kitchen sink render identically — match the *set*,
+not the character order. And state utilities (`hover:`, `active:`, `disabled:`) follow
+the Motion table above; the kitchen sink shows several of them as static swatches
+because a demo cannot hover itself.
 
-**Input** — `h-9`, `border-input`, `rounded-md`, `text-sm`. `border-input` is a
-visibly darker grey than `border` — that is deliberate (see Colour), so do not
-"fix" it by swapping in `border`. Placeholder is
-`text-muted-foreground`. The error state adds `border-destructive` and
-`focus-visible:ring-destructive`; the message below is `text-destructive text-xs`.
-The border does not thicken on error — thickening shifts layout by a pixel and the
-colour change is sufficient.
+### Button — `components/ui/button.tsx`
 
-**Card** — `border rounded-lg bg-card`, no shadow. Header is `p-6 pb-4`, content
-`p-6 pt-0`, footer `p-6 pt-0 border-t`. Card titles are h3 scale.
+```ts
+const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default:     "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 active:bg-primary/80",
+        secondary:   "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        destructive: "bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90",
+        outline:     "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        ghost:       "hover:bg-accent hover:text-accent-foreground",
+        link:        "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        sm:      "h-8 px-3 text-xs",
+        default: "h-9 px-4 py-2",
+        lg:      "h-10 px-6",
+        icon:    "h-9 w-9",
+      },
+    },
+    defaultVariants: { variant: "default", size: "default" },
+  }
+)
+```
 
-**Table** — Header row is `bg-muted/50` with `text-muted-foreground text-xs
-font-medium uppercase tracking-wide`. Body rows are 44px with `border-b`. Hover is
-`bg-muted/50`. Selected is `bg-accent`. Numeric columns are right-aligned with
-`tabular-nums`. Row actions live in a ghost icon button at the row's right edge.
+- Icons inside a button are 16px (`h-4 w-4`), Lucide, 2px stroke; the base `gap-2`
+  spaces them. Icon-only buttons use `size="icon"` and **must** carry an `aria-label`.
+- `active:bg-primary/80` (and the `/80` step per variant) is the pressed state from the
+  Motion table; the kitchen sink's "Active" example shows it as a static swatch.
+- Split button: wrap two buttons in `inline-flex items-center rounded-md shadow-xs`;
+  the trailing icon button is `h-9 w-8` with `border-l border-primary-foreground/20`.
 
-**Badge** — `rounded-full px-2.5 py-0.5 text-xs font-medium`. Status pills use a
-6px leading dot in the status colour with a `/10` tinted background and the status
-colour as text.
+### Form controls — `components/ui/input.tsx`, `select.tsx`, `checkbox.tsx`, …
 
-**Dropdown / Popover / Dialog** — `bg-popover border rounded-lg shadow-md` (dialogs
-`shadow-lg`). Menu items are `h-8 px-2 rounded-sm text-sm`, hover `bg-accent`.
-Keyboard shortcut hints are `text-xs text-muted-foreground ml-auto tracking-widest`.
+**Input** (base `className`):
+```
+flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+```
+- **Error**: swap `border-input` → `border-destructive` and `focus-visible:ring-ring` →
+  `focus-visible:ring-destructive`; set `aria-invalid="true"` + `aria-describedby`. The
+  message below is `text-xs text-destructive`. The border width does **not** change on
+  error — only the colour.
+- **Disabled**: add `disabled:cursor-not-allowed disabled:bg-muted disabled:opacity-50`.
+- `border-input` is a darker grey than `border` on purpose (see Colour) — do not
+  replace it with `border`.
 
-**Alert** — `border rounded-lg p-4`, icon at 16px in the top-left, title
-`font-medium text-sm`, description `text-sm text-muted-foreground`. Intent is
-carried by the icon and a `/10` tinted background, not by a heavy coloured left
-bar.
+**Textarea** — same field treatment, but `px-3 py-2` and no fixed height. (The kitchen
+sink's textarea adds `font-mono` only because it holds a build command; that is not
+part of the base.)
 
-**Sidebar nav** — Uses the `--sidebar-*` tokens, which are one step off the page
-background rather than matching it. Items are `h-8 px-2 rounded-md text-sm`, active
-is `bg-sidebar-accent font-medium` with no left accent bar. Group labels are
-caption scale in `muted-foreground`.
+**Select — trigger (closed):**
+```
+flex h-9 w-full appearance-none rounded-md border border-input bg-background py-1 pl-3 pr-9 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+```
+with a `pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground` chevron. The **open** listbox (APG select-only combobox) is in `#inputs`: popover `mt-1 w-full rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-md`; option `flex h-8 w-full items-center gap-2 rounded-sm px-2 text-sm`, the selected one carrying a `text-primary` check and `aria-selected="true"`, the active one `bg-accent text-accent-foreground`.
 
-**Tabs** — Underline style, not the filled-pill style shadcn ships by default. A
-2px `border-primary` underline on the active tab, `text-muted-foreground` on the
-rest. The filled style competes with buttons for attention.
+**Checkbox** — box `flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border border-input bg-background shadow-xs`; checked/indeterminate swap to `border-primary bg-primary text-primary-foreground` with a 12px check (`h-3 w-3`, 3px stroke). Indeterminate sets `aria-checked="mixed"`.
+
+**Radio** — `flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-input bg-background shadow-xs`; selected sets `border-primary` and holds an inner `h-2 w-2 rounded-full bg-primary`. Group is a `<fieldset>` + `<legend>`.
+
+**Switch** — track `inline-flex h-5 w-9 shrink-0 items-center rounded-full border border-transparent bg-input p-0.5 shadow-xs transition-colors`, on → `bg-primary`; thumb `h-4 w-4 rounded-full bg-background shadow-sm transition-transform`, on adds `translate-x-4`.
+
+**Slider** — track `h-1.5 w-full rounded-full bg-muted`, fill `bg-primary`, thumb `h-4 w-4 rounded-full border border-primary bg-background shadow-sm`.
+
+### Badge — `components/ui/badge.tsx`
+
+```ts
+const badgeVariants = cva(
+  "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+  {
+    variants: {
+      variant: {
+        default:     "bg-primary text-primary-foreground",
+        secondary:   "bg-secondary text-secondary-foreground",
+        destructive: "bg-destructive text-destructive-foreground",
+        outline:     "border border-border",
+      },
+    },
+    defaultVariants: { variant: "default" },
+  }
+)
+```
+
+**Status pill** (signals *state*, never decoration) — `inline-flex items-center gap-1.5 rounded-full bg-<status>/10 px-2.5 py-0.5 text-xs font-medium text-<status>` with a leading `h-1.5 w-1.5 rounded-full bg-<status>` dot and the **status word in the text**. `<status>` is `chart-3` (success), `chart-4` (warning), `destructive` (error), `primary` (info); neutral uses `bg-muted … text-muted-foreground` with a `bg-muted-foreground` dot.
+
+### Card
+
+- Container: `rounded-lg border border-border bg-card` — border, no shadow.
+- Header: `p-6 pb-4`; title `text-xl font-semibold tracking-[-0.015em]`; description `mt-1 text-sm text-muted-foreground`.
+- Content: `px-6 pb-6 text-sm`.
+- Footer: `flex items-center justify-end gap-2 border-t border-border px-6 py-4`.
+- A header action is a ghost icon button (`-mr-2 -mt-1 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md …`).
+
+### Table
+
+- `<table class="w-full caption-bottom text-sm">`, inside an `overflow-x-auto` wrapper, with a real `<caption>`.
+- Header: `<thead class="bg-muted/50 [&_th]:h-10 [&_th]:px-4 [&_th]:text-left [&_th]:align-middle [&_th]:text-xs [&_th]:font-medium [&_th]:uppercase [&_th]:tracking-wide [&_th]:text-muted-foreground">`.
+- Body: `<tbody class="[&_td]:h-11 [&_td]:px-4 [&_td]:align-middle">`; rows `border-b border-border`, hover `bg-muted/50`, **selected `bg-accent`**.
+- Sortable header is a `<button>` inside the `<th>`, and the `<th>` carries `aria-sort`. Numeric columns are `text-right` + `tabular-nums`. Row actions are a ghost icon button revealed with `opacity` and `:focus-within` — never `display:none`, which is unfocusable.
+
+### Dropdown / Popover / Dialog
+
+- Surface: `rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-md` (dialogs use `shadow-lg` and their body is padded, not `p-1`).
+- Menu item: `flex h-8 w-full items-center gap-2.5 rounded-sm px-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground`; the highlighted item is `bg-accent text-accent-foreground`.
+- Destructive item: `flex h-8 w-full items-center gap-2.5 rounded-sm px-2 text-sm text-destructive transition-colors hover:bg-destructive/10`.
+- Section label `px-2 py-1.5 text-xs font-medium text-muted-foreground`; separator `my-1 h-px bg-border`; shortcut hint `ml-auto font-mono text-xs tracking-widest text-muted-foreground`.
+
+### Alert
+
+- Container: `flex gap-3 rounded-lg border p-4`. Intent sets the border/fill pair and the icon colour — never a heavy left bar:
+  - info / neutral: `border-border bg-muted/40`, icon `text-muted-foreground`
+  - success: `border-chart-3/30 bg-chart-3/10`, icon `text-chart-3`
+  - warning: `border-chart-4/30 bg-chart-4/10`, icon `text-chart-4`
+  - destructive: `border-destructive/30 bg-destructive/10`, icon `text-destructive`
+- Icon `mt-0.5 h-4 w-4 shrink-0`; title `text-sm font-medium`; description `text-sm text-muted-foreground`; action link `inline-block text-sm font-medium text-primary underline-offset-4 hover:underline`.
+
+### Sidebar nav
+
+- Container: `w-64 rounded-lg border border-sidebar-border bg-sidebar p-2 text-sidebar-foreground` — uses the `--sidebar-*` tokens, one step off the page background.
+- Item: `flex h-8 items-center gap-2.5 rounded-md px-2 text-sm text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground`.
+- **Active** item: `flex h-8 items-center gap-2.5 rounded-md bg-sidebar-accent px-2 text-sm font-medium text-sidebar-accent-foreground` **plus `aria-current="page"`** — `font-medium` + fill, no left accent bar.
+- Group label: `px-2 py-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground`.
+
+### Tabs
+
+- **Underline style**, not shadcn's filled pill. The bar `<nav>` uses the overflow-safe padding pattern under a `border-b border-border`: `flex gap-1 overflow-x-auto pt-1.5 -mt-1.5 pb-1.5 -mb-[7px] pl-1.5 -ml-1.5 pr-1.5 -mr-1.5`.
+- Active tab: `shrink-0 whitespace-nowrap border-b-2 border-primary px-4 pt-3 pb-3 text-sm font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:rounded-t-md`.
+- Inactive tab: `shrink-0 whitespace-nowrap border-b-2 border-transparent px-4 pt-3 pb-3 text-sm text-muted-foreground transition-colors hover:border-border hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:rounded-t-md`.
+- Segmented control (keeps the fill, because it *is* a control): wrapper `inline-flex items-center gap-1 rounded-md bg-muted p-1`; selected segment `inline-flex h-7 items-center rounded-sm bg-background px-3 text-sm font-medium shadow-xs …`; unselected `inline-flex h-7 items-center rounded-sm px-3 text-sm text-muted-foreground transition-colors hover:text-foreground …`.
+- Vertical tabs use the **sidebar item** treatment (`flex h-8 items-center rounded-md px-2.5 …`, active `bg-accent text-accent-foreground`), not an underline.
 
 ---
 
