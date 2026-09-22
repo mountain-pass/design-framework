@@ -1,0 +1,212 @@
+{
+  "design": "playful",
+  "note": "Machine-readable source of truth for playful's component class strings, validated against designs/playful/index.html by scripts/check.mjs. Rounded-xl and bouncy like learn, but with single-weight borders on surfaces and a plain accent-filled active nav item. Fields are border-2 with a soft focus:ring-4 halo, and form controls are styled native inputs (peer/checked:). Values are Tailwind utility classes routed through the tokens in shared/TOKENS.md.",
+  "components": {
+    "button": {
+      "primitive": "components/ui/button.tsx",
+      "kind": "cva",
+      "base": "inline-flex items-center justify-center rounded-xl text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+      "variants": {
+        "variant": {
+          "default": "bg-primary text-primary-foreground shadow-md transition-all hover:bg-primary/90 hover:shadow-lg",
+          "secondary": "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+          "destructive": "bg-destructive text-destructive-foreground shadow-md transition-all hover:bg-destructive/90 hover:shadow-lg",
+          "outline": "border-2 border-input bg-background hover:bg-accent hover:text-accent-foreground hover:border-accent",
+          "ghost": "text-foreground hover:bg-accent hover:text-accent-foreground",
+          "link": "text-primary underline-offset-4 hover:underline"
+        },
+        "size": {
+          "sm": "h-8 rounded-lg px-4 text-xs",
+          "default": "h-11 px-6",
+          "lg": "h-13 px-8 text-base",
+          "icon": "h-11 w-11"
+        }
+      },
+      "defaultVariants": { "variant": "default", "size": "default" },
+      "docs": "Rounded-xl, font-semibold. default/destructive use transition-all so their shadow lifts on hover. sm tightens the radius to rounded-lg. link is padding/height-less (cn()/tailwind-merge drops the size padding)."
+    },
+    "badge": {
+      "primitive": "components/ui/badge.tsx",
+      "kind": "cva",
+      "base": "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+      "variants": {
+        "variant": {
+          "default": "bg-primary text-primary-foreground",
+          "secondary": "bg-secondary text-secondary-foreground",
+          "destructive": "bg-destructive text-destructive-foreground",
+          "outline": "border border-border"
+        }
+      },
+      "defaultVariants": { "variant": "default" }
+    },
+    "statusPill": {
+      "primitive": "components/ui/badge.tsx (status variant)",
+      "kind": "className",
+      "docs": "Tinted /10 fill with the status colour as text; a leading dot repeats it. The status word is in the text.",
+      "variants": {
+        "intent": {
+          "success": "inline-flex items-center gap-1.5 rounded-full bg-chart-3/10 px-2.5 py-0.5 text-xs font-medium text-chart-3",
+          "warning": "inline-flex items-center gap-1.5 rounded-full bg-chart-4/10 px-2.5 py-0.5 text-xs font-medium text-chart-4",
+          "error": "inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-2.5 py-0.5 text-xs font-medium text-destructive",
+          "info": "inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary",
+          "neutral": "inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground"
+        }
+      },
+      "parts": {
+        "dotSuccess": "h-1.5 w-1.5 rounded-full bg-chart-3",
+        "dotWarning": "h-1.5 w-1.5 rounded-full bg-chart-4",
+        "dotError": "h-1.5 w-1.5 rounded-full bg-destructive",
+        "dotInfo": "h-1.5 w-1.5 rounded-full bg-primary",
+        "dotNeutral": "h-1.5 w-1.5 rounded-full bg-muted-foreground"
+      }
+    },
+    "input": {
+      "primitive": "components/ui/input.tsx",
+      "kind": "className",
+      "base": "h-11 w-full rounded-lg border-2 border-input bg-background px-4 text-sm transition-colors placeholder:text-muted-foreground hover:border-input/80 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10",
+      "states": {
+        "error": "h-11 w-full rounded-lg border-2 border-destructive bg-background px-4 text-sm focus:outline-none focus:ring-4 focus:ring-destructive/10",
+        "disabled": "h-11 w-full rounded-lg border-2 border-input bg-muted px-4 text-sm text-muted-foreground cursor-not-allowed opacity-60"
+      },
+      "parts": {
+        "label": "text-sm font-semibold text-foreground",
+        "errorMessage": "text-sm text-destructive"
+      },
+      "docs": "border-2 fields with a soft focus:ring-4 focus:ring-primary/10 halo. The demo prefixes each field with mt-2 for label spacing; that is layout, not part of the field."
+    },
+    "textarea": {
+      "primitive": "components/ui/textarea.tsx",
+      "kind": "className",
+      "base": "w-full rounded-lg border-2 border-input bg-background px-4 py-3 text-sm transition-colors placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 resize-none"
+    },
+    "select": {
+      "primitive": "components/ui/select.tsx",
+      "kind": "className",
+      "parts": {
+        "trigger": "h-11 w-full appearance-none rounded-lg border-2 border-input bg-background pl-4 pr-12 text-sm transition-colors focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10",
+        "chevron": "pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground",
+        "comboboxTrigger": "flex h-11 w-full cursor-default items-center justify-between gap-2 rounded-lg border-2 border-input bg-background px-4 text-sm transition-colors focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10",
+        "listbox": "mt-1 w-full rounded-xl border border-border bg-popover p-1 text-popover-foreground shadow-md",
+        "option": "flex h-9 w-full items-center gap-2 rounded-sm px-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground",
+        "optionSelected": "flex h-9 w-full items-center gap-2 rounded-sm px-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
+        "optionActive": "flex h-9 w-full items-center gap-2 rounded-sm bg-accent px-2 text-sm text-accent-foreground",
+        "optionCheck": "h-4 w-4 shrink-0 text-primary"
+      }
+    },
+    "checkbox": {
+      "primitive": "components/ui/checkbox.tsx",
+      "kind": "className",
+      "docs": "A styled native <input type=checkbox> using the peer + checked: pattern.",
+      "parts": {
+        "box": "peer h-5 w-5 shrink-0 rounded-md border-2 border-input bg-background transition-all checked:bg-primary checked:border-primary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer",
+        "disabled": "h-5 w-5 shrink-0 rounded-md border-2 border-input bg-muted cursor-not-allowed",
+        "label": "text-sm font-medium peer-checked:text-foreground"
+      }
+    },
+    "radio": {
+      "primitive": "components/ui/radio-group.tsx",
+      "kind": "className",
+      "parts": {
+        "box": "peer h-5 w-5 shrink-0 rounded-full border-2 border-input bg-background transition-all checked:bg-primary checked:border-primary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer"
+      }
+    },
+    "switch": {
+      "primitive": "components/ui/switch.tsx",
+      "kind": "className",
+      "parts": {
+        "wrapper": "relative inline-block h-6 w-11 shrink-0",
+        "input": "peer sr-only",
+        "track": "block h-full w-full rounded-full bg-input transition-colors peer-checked:bg-primary peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2",
+        "thumb": "absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-background transition-transform shadow-sm peer-checked:translate-x-5"
+      }
+    },
+    "slider": {
+      "primitive": "components/ui/slider.tsx",
+      "kind": "className",
+      "parts": {
+        "input": "h-2 w-full appearance-none rounded-full bg-muted bg-[linear-gradient(to_right,var(--primary)_var(--slider-fill),transparent_var(--slider-fill))] outline-none [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:shadow-md"
+      },
+      "docs": "A native range input with a gradient-filled track and pseudo-element thumbs driven by the --slider-fill custom property."
+    },
+    "card": {
+      "primitive": "components/ui/card.tsx",
+      "kind": "className",
+      "parts": {
+        "root": "rounded-xl border border-border bg-card",
+        "header": "p-6 pb-4",
+        "title": "text-2xl font-bold tracking-tight",
+        "description": "mt-1 text-sm text-muted-foreground",
+        "content": "px-6 pb-6 text-sm",
+        "footer": "flex items-center justify-end gap-2 border-t border-border px-6 py-4"
+      }
+    },
+    "table": {
+      "primitive": "components/ui/table.tsx",
+      "kind": "className",
+      "parts": {
+        "table": "w-full caption-bottom text-sm",
+        "thead": "bg-muted/50 [&_th]:h-12 [&_th]:px-4 [&_th]:text-left [&_th]:align-middle [&_th]:text-xs [&_th]:font-medium [&_th]:uppercase [&_th]:tracking-wide [&_th]:text-muted-foreground",
+        "tbody": "[&_td]:h-11 [&_td]:px-4 [&_td]:align-middle",
+        "row": "border-b border-border",
+        "rowSelected": "border-b border-border bg-accent"
+      }
+    },
+    "menu": {
+      "primitive": "components/ui/dropdown-menu.tsx (and popover.tsx, dialog.tsx)",
+      "kind": "className",
+      "parts": {
+        "surface": "rounded-xl border border-border bg-popover p-1 text-popover-foreground shadow-md",
+        "item": "flex h-9 w-full items-center gap-2.5 rounded-sm px-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground",
+        "itemActive": "flex h-9 w-full items-center gap-2.5 rounded-sm bg-accent px-2 text-sm text-accent-foreground",
+        "itemDestructive": "flex h-9 w-full items-center gap-2.5 rounded-sm px-2 text-sm text-destructive transition-colors hover:bg-destructive/10",
+        "label": "px-2 py-1.5 text-xs font-medium text-muted-foreground",
+        "separator": "my-1 h-px bg-border",
+        "shortcut": "ml-auto font-mono text-xs tracking-widest text-muted-foreground"
+      }
+    },
+    "alert": {
+      "primitive": "components/ui/alert.tsx",
+      "kind": "className",
+      "variants": {
+        "intent": {
+          "info": "flex gap-3 rounded-xl border border-border bg-muted/40 p-4",
+          "success": "flex gap-3 rounded-xl border border-chart-3/30 bg-chart-3/10 p-4",
+          "warning": "flex gap-3 rounded-xl border border-chart-4/30 bg-chart-4/10 p-4",
+          "destructive": "flex gap-3 rounded-xl border border-destructive/30 bg-destructive/10 p-4"
+        }
+      },
+      "parts": {
+        "iconInfo": "mt-0.5 h-4 w-4 shrink-0 text-muted-foreground",
+        "iconSuccess": "mt-0.5 h-4 w-4 shrink-0 text-chart-3",
+        "iconWarning": "mt-0.5 h-4 w-4 shrink-0 text-chart-4",
+        "iconDestructive": "mt-0.5 h-4 w-4 shrink-0 text-destructive",
+        "title": "text-sm font-medium",
+        "description": "text-sm text-muted-foreground",
+        "actionLink": "inline-block text-sm font-medium text-primary underline-offset-4 hover:underline"
+      }
+    },
+    "sidebarNav": {
+      "primitive": "components/ui/sidebar.tsx",
+      "kind": "className",
+      "parts": {
+        "root": "w-64 rounded-xl border border-sidebar-border bg-sidebar p-2 text-sidebar-foreground",
+        "item": "flex h-9 items-center gap-2.5 rounded-lg px-2 text-sm text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+        "itemActive": "flex h-9 items-center gap-2.5 rounded-lg bg-sidebar-accent px-2 text-sm font-medium text-sidebar-accent-foreground",
+        "groupLabel": "px-2 py-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground"
+      },
+      "docs": "Active item carries aria-current=page; no left accent bar."
+    },
+    "tabs": {
+      "primitive": "components/ui/tabs.tsx",
+      "kind": "className",
+      "parts": {
+        "bar": "flex gap-1 overflow-x-auto pt-1.5 -mt-1.5 pb-1.5 -mb-[7px] pl-1.5 -ml-1.5 pr-1.5 -mr-1.5",
+        "tabActive": "shrink-0 whitespace-nowrap border-b-2 border-primary px-4 pt-3 pb-3 text-sm font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:rounded-t-md",
+        "tab": "shrink-0 whitespace-nowrap border-b-2 border-transparent px-4 pt-3 pb-3 text-sm text-muted-foreground transition-colors hover:border-border hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:rounded-t-md",
+        "segmentedWrap": "inline-flex items-center gap-1 rounded-lg bg-muted p-1",
+        "segmentSelected": "inline-flex h-7 items-center rounded-sm bg-background px-3 text-sm font-medium shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "segment": "inline-flex h-7 items-center rounded-sm px-3 text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      }
+    }
+  }
+}
