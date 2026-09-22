@@ -279,6 +279,57 @@ function checkSubresources(label, html, { tailwind = true } = {}) {
   }
 }
 
+// ------------------------------------------------------- class manifest ---
+//
+// A design may ship classes.json — the machine-readable source of truth for
+// its component class strings (DESIGN.md's "Component notes" is the human view
+// of the same strings). It is opt-in: validated only when the file is present.
+//
+// Every class TOKEN in the manifest must be grounded in the design's
+// index.html, so the manifest can never claim a class the kitchen sink does not
+// render — edit the demo and drop a class, and the manifest fails here. A
+// state-variant token (hover:/focus-visible:/active:/disabled:/…) is satisfied
+// by its static form in the demo: a static "Active" swatch renders
+// `bg-primary/80`, not `active:bg-primary/80`, so the prefix is peeled before
+// the lookup. This anchors the manifest to the rendered truth. It does not yet
+// verify the reverse — that every demo class is in the manifest — which needs
+// per-element markers; drift where the demo drops or changes a class is caught.
+
+const MANIFEST_SKIP_KEYS = new Set(["design", "note", "primitive", "kind", "docs", "defaultVariants"]);
+
+const collectClassStrings = (node, out = []) => {
+  if (typeof node === "string") { out.push(node); return out; }
+  if (node && typeof node === "object") {
+    for (const [k, v] of Object.entries(node)) {
+      if (MANIFEST_SKIP_KEYS.has(k)) continue;
+      collectClassStrings(v, out);
+    }
+  }
+  return out;
+};
+
+const htmlClassTokens = (html) => {
+  const set = new Set();
+  for (const m of html.matchAll(/\bclass="([^"]*)"/g)) {
+    for (const t of m[1].split(/\s+/)) if (t) set.add(t);
+  }
+  return set;
+};
+
+// Grounded if the token appears verbatim, or — after peeling one or more
+// leading variant prefixes (`hover:`, `focus-visible:`, `md:`, …) — its bare
+// utility does. Arbitrary variants like `[&_th]:` never match the prefix shape,
+// so they must appear verbatim, which they do.
+const grounded = (token, demo) => {
+  if (demo.has(token)) return true;
+  let rest = token, m;
+  while ((m = /^[a-z][a-z0-9-]*:(.+)$/.exec(rest))) {
+    rest = m[1];
+    if (demo.has(rest)) return true;
+  }
+  return false;
+};
+
 // ---------------------------------------------------------------- designs ---
 
 const designs = folders("designs");
@@ -435,6 +486,33 @@ for (const name of designs) {
   const expected = SECTIONS.filter((s) => ordered.includes(s));
   if (ordered.join(",") !== expected.join(",")) {
     fail(label, "index.html sections are out of order — see shared/COMPONENTS.md");
+  }
+
+  // --- classes.json (opt-in): the class manifest, grounded against the demo
+  const manifestPath = join(ROOT, "designs", name, "classes.json");
+  if (existsSync(manifestPath)) {
+    let manifest = null;
+    try {
+      manifest = JSON.parse(read("designs", name, "classes.json"));
+    } catch (e) {
+      fail(label, `classes.json is not valid JSON: ${e.message}`);
+    }
+    if (manifest) {
+      const demo = htmlClassTokens(html);
+      const ungrounded = new Set();
+      for (const str of collectClassStrings(manifest.components ?? manifest)) {
+        for (const token of str.split(/\s+/)) {
+          if (token && !grounded(token, demo)) ungrounded.add(token);
+        }
+      }
+      if (ungrounded.size) {
+        const shown = [...ungrounded].slice(0, 8).join(", ");
+        fail(
+          label,
+          `classes.json references ${ungrounded.size} class(es) not rendered in index.html: ${shown}${ungrounded.size > 8 ? ` (+${ungrounded.size - 8} more)` : ""} — the manifest must match the kitchen sink`
+        );
+      }
+    }
   }
 
   // --- no hard-coded colour outside the theme block

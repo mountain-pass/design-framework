@@ -1,0 +1,222 @@
+{
+  "design": "slate",
+  "note": "Machine-readable source of truth for slate's component class strings. Every class token here is validated against designs/slate/index.html by scripts/check.mjs (a hover:/active:/disabled:/focus-visible: token is satisfied by its static form in the demo), so this file cannot drift from the kitchen sink. The prose reference in DESIGN.md ('Component notes') is the human-readable view of the same strings. Values are Tailwind utility classes routed through the tokens in shared/TOKENS.md — never a raw colour. cva components give base + variants; the rest give a base className and named parts/states.",
+  "components": {
+    "button": {
+      "primitive": "components/ui/button.tsx",
+      "kind": "cva",
+      "base": "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50",
+      "variants": {
+        "variant": {
+          "default": "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 active:bg-primary/80",
+          "secondary": "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+          "destructive": "bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90",
+          "outline": "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+          "ghost": "hover:bg-accent hover:text-accent-foreground",
+          "link": "text-primary underline-offset-4 hover:underline"
+        },
+        "size": {
+          "sm": "h-8 px-3 text-xs",
+          "default": "h-9 px-4 py-2",
+          "lg": "h-10 px-6",
+          "icon": "h-9 w-9"
+        }
+      },
+      "defaultVariants": { "variant": "default", "size": "default" },
+      "docs": "Icons inside a button are h-4 w-4 (16px), Lucide, 2px stroke; base gap-2 spaces them. Icon-only buttons use size=icon and must carry an aria-label. active:*/80 is the pressed step from the Motion table; the demo shows it as a static swatch."
+    },
+    "badge": {
+      "primitive": "components/ui/badge.tsx",
+      "kind": "cva",
+      "base": "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+      "variants": {
+        "variant": {
+          "default": "bg-primary text-primary-foreground",
+          "secondary": "bg-secondary text-secondary-foreground",
+          "destructive": "bg-destructive text-destructive-foreground",
+          "outline": "border border-border"
+        }
+      },
+      "defaultVariants": { "variant": "default" }
+    },
+    "statusPill": {
+      "primitive": "components/ui/badge.tsx (status variant)",
+      "kind": "className",
+      "docs": "Signals state, never decoration. The status word is in the text; a leading dot repeats the colour. Never colour alone.",
+      "variants": {
+        "intent": {
+          "success": "inline-flex items-center gap-1.5 rounded-full bg-chart-3/10 px-2.5 py-0.5 text-xs font-medium text-chart-3",
+          "warning": "inline-flex items-center gap-1.5 rounded-full bg-chart-4/10 px-2.5 py-0.5 text-xs font-medium text-chart-4",
+          "error": "inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-2.5 py-0.5 text-xs font-medium text-destructive",
+          "info": "inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary",
+          "neutral": "inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground"
+        }
+      },
+      "parts": {
+        "dotSuccess": "h-1.5 w-1.5 rounded-full bg-chart-3",
+        "dotWarning": "h-1.5 w-1.5 rounded-full bg-chart-4",
+        "dotError": "h-1.5 w-1.5 rounded-full bg-destructive",
+        "dotInfo": "h-1.5 w-1.5 rounded-full bg-primary",
+        "dotNeutral": "h-1.5 w-1.5 rounded-full bg-muted-foreground"
+      }
+    },
+    "input": {
+      "primitive": "components/ui/input.tsx",
+      "kind": "className",
+      "base": "flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+      "states": {
+        "error": "flex h-9 w-full rounded-md border border-destructive bg-background px-3 py-1 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "disabled": "flex h-9 w-full cursor-not-allowed rounded-md border border-input bg-muted px-3 py-1 text-sm opacity-50 shadow-xs"
+      },
+      "parts": {
+        "errorMessage": "flex items-center gap-1.5 text-xs text-destructive"
+      },
+      "docs": "border-input is a darker grey than border on purpose (see Colour) — do not replace it with border. On error the border colour changes but its width does not."
+    },
+    "textarea": {
+      "primitive": "components/ui/textarea.tsx",
+      "kind": "className",
+      "base": "flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+      "docs": "Same field treatment as Input, but px-3 py-2 and no fixed height. The kitchen sink's example adds font-mono only because it holds a build command; that is not part of the base."
+    },
+    "select": {
+      "primitive": "components/ui/select.tsx",
+      "kind": "className",
+      "docs": "Closed trigger is a native <select> styled as a field. The open form is the APG select-only combobox rendered inline in #inputs.",
+      "parts": {
+        "trigger": "flex h-9 w-full appearance-none rounded-md border border-input bg-background py-1 pl-3 pr-9 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "chevron": "pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground",
+        "comboboxTrigger": "flex h-9 w-full cursor-default items-center justify-between gap-2 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "listbox": "mt-1 w-full rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-md",
+        "option": "flex h-8 w-full items-center gap-2 rounded-sm px-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground",
+        "optionSelected": "flex h-8 w-full items-center gap-2 rounded-sm px-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
+        "optionActive": "flex h-8 w-full items-center gap-2 rounded-sm bg-accent px-2 text-sm text-accent-foreground",
+        "optionCheck": "h-4 w-4 shrink-0 text-primary"
+      }
+    },
+    "checkbox": {
+      "primitive": "components/ui/checkbox.tsx",
+      "kind": "className",
+      "parts": {
+        "box": "flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border border-input bg-background shadow-xs",
+        "boxChecked": "flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border border-primary bg-primary text-primary-foreground shadow-xs",
+        "check": "h-3 w-3"
+      },
+      "docs": "Checked and indeterminate share boxChecked; the check glyph is 3px stroke. Indeterminate sets aria-checked=mixed."
+    },
+    "radio": {
+      "primitive": "components/ui/radio-group.tsx",
+      "kind": "className",
+      "parts": {
+        "outer": "flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-input bg-background shadow-xs",
+        "outerSelected": "flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-primary bg-background shadow-xs",
+        "dot": "h-2 w-2 rounded-full bg-primary"
+      },
+      "docs": "Group is a <fieldset> with a <legend>."
+    },
+    "switch": {
+      "primitive": "components/ui/switch.tsx",
+      "kind": "className",
+      "parts": {
+        "trackOff": "inline-flex h-5 w-9 shrink-0 items-center rounded-full border border-transparent bg-input p-0.5 shadow-xs transition-colors",
+        "trackOn": "inline-flex h-5 w-9 shrink-0 items-center rounded-full border border-transparent bg-primary p-0.5 shadow-xs transition-colors",
+        "thumb": "h-4 w-4 rounded-full bg-background shadow-sm transition-transform",
+        "thumbOn": "h-4 w-4 translate-x-4 rounded-full bg-background shadow-sm transition-transform"
+      }
+    },
+    "slider": {
+      "primitive": "components/ui/slider.tsx",
+      "kind": "className",
+      "parts": {
+        "track": "h-1.5 w-full rounded-full bg-muted",
+        "range": "h-1.5 rounded-full bg-primary",
+        "thumb": "h-4 w-4 -translate-x-1/2 rounded-full border border-primary bg-background shadow-sm"
+      }
+    },
+    "card": {
+      "primitive": "components/ui/card.tsx",
+      "kind": "className",
+      "parts": {
+        "root": "rounded-lg border border-border bg-card",
+        "header": "p-6 pb-4",
+        "title": "text-xl font-semibold tracking-[-0.015em]",
+        "description": "mt-1 text-sm text-muted-foreground",
+        "content": "px-6 pb-6 text-sm",
+        "footer": "flex items-center justify-end gap-2 border-t border-border px-6 py-4"
+      },
+      "docs": "Border, no shadow — a card sits in the page, not above it."
+    },
+    "table": {
+      "primitive": "components/ui/table.tsx",
+      "kind": "className",
+      "parts": {
+        "table": "w-full caption-bottom text-sm",
+        "thead": "bg-muted/50 [&_th]:h-10 [&_th]:px-4 [&_th]:text-left [&_th]:align-middle [&_th]:text-xs [&_th]:font-medium [&_th]:uppercase [&_th]:tracking-wide [&_th]:text-muted-foreground",
+        "tbody": "[&_td]:h-11 [&_td]:px-4 [&_td]:align-middle",
+        "row": "border-b border-border",
+        "rowSelected": "border-b border-border bg-accent"
+      },
+      "docs": "Wrap in overflow-x-auto with a real <caption>. Sortable header is a <button> inside the <th>, and the <th> carries aria-sort. Numeric columns are text-right + tabular-nums. Row actions reveal with opacity/:focus-within, never display:none."
+    },
+    "menu": {
+      "primitive": "components/ui/dropdown-menu.tsx (and popover.tsx, dialog.tsx)",
+      "kind": "className",
+      "parts": {
+        "surface": "rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-md",
+        "item": "flex h-8 w-full items-center gap-2.5 rounded-sm px-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground",
+        "itemActive": "flex h-8 w-full items-center gap-2.5 rounded-sm bg-accent px-2 text-sm text-accent-foreground",
+        "itemDestructive": "flex h-8 w-full items-center gap-2.5 rounded-sm px-2 text-sm text-destructive transition-colors hover:bg-destructive/10",
+        "label": "px-2 py-1.5 text-xs font-medium text-muted-foreground",
+        "separator": "my-1 h-px bg-border",
+        "shortcut": "ml-auto font-mono text-xs tracking-widest text-muted-foreground"
+      },
+      "docs": "Dialogs use the same surface but shadow-lg and a padded body, not p-1."
+    },
+    "alert": {
+      "primitive": "components/ui/alert.tsx",
+      "kind": "className",
+      "variants": {
+        "intent": {
+          "info": "flex gap-3 rounded-lg border border-border bg-muted/40 p-4",
+          "success": "flex gap-3 rounded-lg border border-chart-3/30 bg-chart-3/10 p-4",
+          "warning": "flex gap-3 rounded-lg border border-chart-4/30 bg-chart-4/10 p-4",
+          "destructive": "flex gap-3 rounded-lg border border-destructive/30 bg-destructive/10 p-4"
+        }
+      },
+      "parts": {
+        "iconInfo": "mt-0.5 h-4 w-4 shrink-0 text-muted-foreground",
+        "iconSuccess": "mt-0.5 h-4 w-4 shrink-0 text-chart-3",
+        "iconWarning": "mt-0.5 h-4 w-4 shrink-0 text-chart-4",
+        "iconDestructive": "mt-0.5 h-4 w-4 shrink-0 text-destructive",
+        "title": "text-sm font-medium",
+        "description": "text-sm text-muted-foreground",
+        "actionLink": "inline-block text-sm font-medium text-primary underline-offset-4 hover:underline"
+      },
+      "docs": "Intent is carried by the icon and a /10 tinted background, never a heavy coloured left bar."
+    },
+    "sidebarNav": {
+      "primitive": "components/ui/sidebar.tsx",
+      "kind": "className",
+      "parts": {
+        "root": "w-64 rounded-lg border border-sidebar-border bg-sidebar p-2 text-sidebar-foreground",
+        "item": "flex h-8 items-center gap-2.5 rounded-md px-2 text-sm text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+        "itemActive": "flex h-8 items-center gap-2.5 rounded-md bg-sidebar-accent px-2 text-sm font-medium text-sidebar-accent-foreground",
+        "groupLabel": "px-2 py-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground"
+      },
+      "docs": "Uses the --sidebar-* tokens, one step off the page background. Active item also carries aria-current=page; no left accent bar."
+    },
+    "tabs": {
+      "primitive": "components/ui/tabs.tsx",
+      "kind": "className",
+      "parts": {
+        "bar": "flex gap-1 overflow-x-auto pt-1.5 -mt-1.5 pb-1.5 -mb-[7px] pl-1.5 -ml-1.5 pr-1.5 -mr-1.5",
+        "tabActive": "shrink-0 whitespace-nowrap border-b-2 border-primary px-4 pt-3 pb-3 text-sm font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:rounded-t-md",
+        "tab": "shrink-0 whitespace-nowrap border-b-2 border-transparent px-4 pt-3 pb-3 text-sm text-muted-foreground transition-colors hover:border-border hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:rounded-t-md",
+        "segmentedWrap": "inline-flex items-center gap-1 rounded-md bg-muted p-1",
+        "segmentSelected": "inline-flex h-7 items-center rounded-sm bg-background px-3 text-sm font-medium shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "segment": "inline-flex h-7 items-center rounded-sm px-3 text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      },
+      "docs": "Underline style, not shadcn's filled pill. The bar sits under a border-b border-border. Vertical tabs use the sidebar item treatment (active bg-accent), not an underline."
+    }
+  }
+}

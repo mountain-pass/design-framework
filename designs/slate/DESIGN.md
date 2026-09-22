@@ -264,6 +264,13 @@ from these same classes, so it is your visual confirmation, not a second source 
 reconcile against. Anything not listed here is **stock shadcn/ui**, styled by the
 tokens.
 
+The machine-readable form of this section is [`classes.json`](classes.json) in this
+folder — the same strings as structured data (a `cva` shape for the components that
+have one). `scripts/check.mjs` validates every class in it against the kitchen sink,
+so the manifest, this section and `index.html` cannot drift apart. If you are
+generating components programmatically, read `classes.json`; if you are hand-writing
+them, either this section or the manifest works.
+
 Two reading notes. Tailwind utilities are order-independent, so a string here and the
 same set in a different order in the kitchen sink render identically — match the *set*,
 not the character order. And state utilities (`hover:`, `active:`, `disabled:`) follow
