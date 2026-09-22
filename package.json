@@ -8,7 +8,7 @@
     "build:components": "node scripts/build-components.mjs slate",
     "build:preview": "node scripts/build-preview.mjs slate",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "verify": "npm run typecheck && node scripts/build-preview.mjs slate --check-only"
+    "verify": "npm run typecheck && npm run build:preview"
   },
   "devDependencies": {
     "@radix-ui/react-checkbox": "^1.1.2",
