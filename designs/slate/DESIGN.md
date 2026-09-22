@@ -276,10 +276,12 @@ Ready-made shadcn components generated from that manifest live in
 you can drop into a Next.js + shadcn project, carrying these exact classes.
 `scripts/build-components.mjs` emits them and `check.mjs` fails if a committed file
 drifts from a fresh generation, so they stay in lockstep with `classes.json`. The set
-currently covers the cva/`cn`-only primitives (Button, Badge, Input, Textarea, Card,
-Alert); the Radix-driven ones (Select, Checkbox, Switch, Slider, Tabs, DropdownMenu,
-Table, Sidebar) carry their classes in `classes.json` and get their Radix wiring in a
-later batch.
+is complete: the cva/`cn` primitives (Button, Badge, Input, Textarea, Card, Alert)
+carry the manifest classes verbatim, and the Radix-driven ones (Select, Checkbox,
+RadioGroup, Switch, Slider, Tabs, DropdownMenu, Table, SidebarNav) weave those design
+classes into stock shadcn/Radix structure, adding the interactive scaffolding — focus
+ring, `data-[state]` transitions, disabled treatment — that a static demo cannot show.
+All 16 were verified by building and rendering them with real React + Radix.
 
 Two reading notes. Tailwind utilities are order-independent, so a string here and the
 same set in a different order in the kitchen sink render identically — match the *set*,
