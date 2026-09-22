@@ -176,11 +176,14 @@ const alert = (design, c) => {
 
 const checkbox = (design, c) => {
   const p = c.checkbox.parts, FOCUS = focusRing(c);
+  // Checked and indeterminate share the same filled box; the glyph differs — a
+  // check when checked, a minus when indeterminate (aria-checked=mixed).
   const checked = added(p.box, p.boxChecked, "data-[state=checked]:");
+  const indeterminate = added(p.box, p.boxChecked, "data-[state=indeterminate]:");
   return HEADER(design) +
 `import * as React from "react"
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
-import { Check } from "lucide-react"
+import { Check, Minus } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -190,7 +193,7 @@ function Checkbox({ className, ...props }: React.ComponentProps<typeof CheckboxP
       data-slot="checkbox"
       className={cn(
         ${JSON.stringify(p.box)},
-        ${JSON.stringify(`${checked} ${FOCUS} ${DISABLED}`)},
+        ${JSON.stringify(`${checked} ${indeterminate} ${FOCUS} ${DISABLED}`)},
         className
       )}
       {...props}
@@ -199,7 +202,11 @@ function Checkbox({ className, ...props }: React.ComponentProps<typeof CheckboxP
         data-slot="checkbox-indicator"
         className="flex items-center justify-center text-current"
       >
-        <Check className=${JSON.stringify(p.check)} strokeWidth={3} />
+        {props.checked === "indeterminate" ? (
+          <Minus className=${JSON.stringify(p.check)} strokeWidth={3} />
+        ) : (
+          <Check className=${JSON.stringify(p.check)} strokeWidth={3} />
+        )}
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
   )
