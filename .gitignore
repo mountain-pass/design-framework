@@ -143,3 +143,6 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Built site output (assembled by scripts/build-site.mjs for deploy)
+dist/
