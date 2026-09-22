@@ -36,6 +36,23 @@ The trigger looks like:
    Copying classes ad hoc into every call site instead means the same shape
    decision gets re-made, and can drift, at every screen the component appears on.
 
+   **Copy the classes exactly, and never as CSS.** The kitchen sink's class list for
+   a component is the contract, not an inspiration. Reproduce it character-for-
+   character — the only edit allowed is the mechanical `class` → `className` rename
+   when translating the HTML to JSX. Do not paraphrase it, do not drop classes you
+   think are redundant, and do not re-express any of it as a stylesheet rule, a
+   `styled`/CSS-in-JS block, an inline `style`, or a new `.css` file. Component
+   appearance in this system is Tailwind utility classes routed through tokens, full
+   stop — bespoke CSS for anything the kitchen sink states as classes is the failure
+   mode, because it drifts from the demo the instant either side changes and it
+   escapes every check that keeps the design swappable. `theme.css` (step 5) is the
+   only stylesheet this design adds: everything utilities genuinely cannot express —
+   the `@font-face` rules, the `@layer base` defaults, `prefers-reduced-motion`, and
+   any slider-thumb pseudo-element or `--uppercase-optical-nudge` a design ships —
+   already lives inside it. Fonts included: the typefaces arrive through `theme.css`
+   and the token-driven `font-sans`/`font-mono` classes the kitchen sink already
+   uses, so never re-declare a `font-family` in component CSS.
+
 5. **Install the theme.** Copy `designs/<name>/theme.css` into the target project's
    global stylesheet (`app/globals.css` in a Next.js + shadcn project). It is
    written to be pasted verbatim.

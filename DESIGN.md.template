@@ -72,6 +72,16 @@ Copy the theme verbatim into this project's global stylesheet
   into that component's own definition — its `cva` variants, its base className —
   not into each place it's used. A design's shape (radius, border weight, shadow)
   is a property of the component, not of any one screen that happens to use it.
+- **Utility classes, copied verbatim — never bespoke CSS.** A component's
+  appearance is the exact list of Tailwind classes the kitchen sink puts on it.
+  Reproduce that list character-for-character (the only change is `class` →
+  `className` when moving to JSX); don't paraphrase it, don't drop classes from it,
+  and don't re-express any of it as a stylesheet rule, a CSS-in-JS block, an inline
+  `style`, or a new `.css` file. `theme.css` (pasted above) is the only stylesheet
+  this design needs — fonts included, via its `@font-face` rules and the
+  `font-sans`/`font-mono` classes. If a visual property looks like it needs custom
+  CSS, check the kitchen sink first: it almost certainly already does it with a
+  utility class.
 - **Verify with a `/kitchensink` page.** After updating the primitives, build a
   `/kitchensink` route rendering the same components, in the same order, as the
   design's own `index.html` — using the project's own updated components, not
