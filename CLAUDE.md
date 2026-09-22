@@ -53,6 +53,18 @@ The trigger looks like:
    and the token-driven `font-sans`/`font-mono` classes the kitchen sink already
    uses, so never re-declare a `font-family` in component CSS.
 
+   **The one exception — and it needs sign-off.** Custom CSS is permitted only for a
+   component the design does *not* cover — one with no entry in the kitchen sink and
+   no shadcn primitive to key off — and whose appearance genuinely cannot be built
+   from utility classes. Even then: confirm it with the user *before* writing it —
+   name the component, say why a utility-class build won't do, and get an explicit
+   yes — and still route every value through the design tokens (`var(--primary)`,
+   `var(--radius)`, the `--color-*` custom properties `theme.css` exposes), never a
+   hard-coded hex or a Tailwind palette class. A component that *is* in the kitchen
+   sink is never a candidate for this exception: reproduce its classes instead. If
+   you reach for custom CSS to tweak something the design already ships, that is the
+   failure mode, not the exception.
+
 5. **Install the theme.** Copy `designs/<name>/theme.css` into the target project's
    global stylesheet (`app/globals.css` in a Next.js + shadcn project). It is
    written to be pasted verbatim.

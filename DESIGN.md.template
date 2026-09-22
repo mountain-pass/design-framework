@@ -82,6 +82,14 @@ Copy the theme verbatim into this project's global stylesheet
   `font-sans`/`font-mono` classes. If a visual property looks like it needs custom
   CSS, check the kitchen sink first: it almost certainly already does it with a
   utility class.
+  - **The one exception needs sign-off.** Custom CSS is allowed only for a
+    component this design does not cover — no kitchen-sink entry, no shadcn
+    primitive to key off — that genuinely can't be built from utility classes.
+    Confirm it with me first (name the component and why utilities won't do, and
+    get an explicit yes), and even then route every value through the design tokens
+    (`var(--primary)`, `var(--radius)`, the `--color-*` properties), never a
+    hard-coded colour. Anything already in the kitchen sink is not a candidate —
+    reproduce its classes instead.
 - **Verify with a `/kitchensink` page.** After updating the primitives, build a
   `/kitchensink` route rendering the same components, in the same order, as the
   design's own `index.html` — using the project's own updated components, not
