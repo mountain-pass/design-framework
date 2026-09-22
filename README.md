@@ -79,6 +79,7 @@ before you write any code rather than after the copy is in.
 │       ├── DESIGN.md        Instructions for an AI implementing this design
 │       ├── theme.css        Paste-ready tokens for a real project
 │       ├── classes.json     Machine-readable class manifest — checked against index.html
+│       ├── components/ui/   Generated shadcn .tsx (from classes.json) + lib/utils.ts
 │       └── index.html       Kitchen sink, renders from theme.css (serve, don't open)
 │
 ├── layouts/
@@ -99,7 +100,8 @@ before you write any code rather than after the copy is in.
 │
 └── scripts/
     ├── check.mjs            Validates every folder against the contracts
-    └── build-gallery.mjs    Regenerates index.html from the folders
+    ├── build-gallery.mjs    Regenerates index.html from the folders
+    └── build-components.mjs  Generates a design's shadcn .tsx from its classes.json
 ```
 
 ---

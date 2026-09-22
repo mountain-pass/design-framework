@@ -271,6 +271,16 @@ so the manifest, this section and `index.html` cannot drift apart. If you are
 generating components programmatically, read `classes.json`; if you are hand-writing
 them, either this section or the manifest works.
 
+Ready-made shadcn components generated from that manifest live in
+[`components/ui/`](components/ui/) (with [`lib/utils.ts`](lib/utils.ts)) — real `.tsx`
+you can drop into a Next.js + shadcn project, carrying these exact classes.
+`scripts/build-components.mjs` emits them and `check.mjs` fails if a committed file
+drifts from a fresh generation, so they stay in lockstep with `classes.json`. The set
+currently covers the cva/`cn`-only primitives (Button, Badge, Input, Textarea, Card,
+Alert); the Radix-driven ones (Select, Checkbox, Switch, Slider, Tabs, DropdownMenu,
+Table, Sidebar) carry their classes in `classes.json` and get their Radix wiring in a
+later batch.
+
 Two reading notes. Tailwind utilities are order-independent, so a string here and the
 same set in a different order in the kitchen sink render identically — match the *set*,
 not the character order. And state utilities (`hover:`, `active:`, `disabled:`) follow

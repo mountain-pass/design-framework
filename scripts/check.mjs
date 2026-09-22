@@ -7,6 +7,7 @@
 import { readdirSync, readFileSync, existsSync, statSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { buildComponents } from "./build-components.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -511,6 +512,30 @@ for (const name of designs) {
           label,
           `classes.json references ${ungrounded.size} class(es) not rendered in index.html: ${shown}${ungrounded.size > 8 ? ` (+${ungrounded.size - 8} more)` : ""} — the manifest must match the kitchen sink`
         );
+      }
+    }
+
+    // --- generated components (opt-in): must be regenerable from the manifest
+    //
+    // When a design ships components/ (real shadcn .tsx generated from
+    // classes.json), those files must equal a fresh generation — otherwise a
+    // hand-edit has drifted them from the manifest, which is the one source of
+    // truth. This is what makes the .tsx a derived view rather than a third copy.
+    if (manifest && existsSync(join(ROOT, "designs", name, "components"))) {
+      let generated = null;
+      try {
+        generated = buildComponents(name);
+      } catch (e) {
+        fail(label, `could not regenerate components from classes.json: ${e.message}`);
+      }
+      if (generated) {
+        for (const [rel, content] of Object.entries(generated)) {
+          const abs = join(ROOT, "designs", name, rel);
+          const current = existsSync(abs) ? read("designs", name, rel) : null;
+          if (current !== content) {
+            fail(label, `${rel} is out of date — run \`node scripts/build-components.mjs ${name}\``);
+          }
+        }
       }
     }
   }
