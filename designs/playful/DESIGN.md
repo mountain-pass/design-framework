@@ -195,62 +195,236 @@ Buttons use shadows on the default and primary variants (`shadow-md`), and the s
 
 ## Component notes
 
-### Buttons
-Generous padding (`px-6` vs slate's `px-4`), taller height (`h-11` vs `h-9`), and `rounded-xl` corners (16px vs slate's 6px). Primary buttons get `shadow-md` by default and `shadow-lg` on hover, making them feel tactile and inviting to press.
+This section is the **exact class contract** for `playful`'s components — the
+literal Tailwind classes each one carries in `index.html`, arranged as the shadcn
+primitive that consumes them. Copy these strings verbatim into the component's
+definition (a shadcn `cva()` for the ones with variants, the base `className` for
+the rest); do not paraphrase them and do not re-express any of them as CSS — see the
+"utility classes, never bespoke CSS" rule in the repo root `CLAUDE.md`. Anything not
+listed here is **stock shadcn/ui**, styled by the tokens.
 
-Ghost and link buttons omit the shadow. Outline buttons use a `border-2` (double weight) to compensate for not having a fill — the thicker border keeps the button feeling substantial.
+The machine-readable form of this section is [`classes.json`](classes.json) in this
+folder — the same strings as structured data. `scripts/check.mjs` validates every
+class in it against the kitchen sink, so the manifest, this section and `index.html`
+cannot drift apart. Tailwind utilities are order-independent, so match the *set* of
+classes, not their character order; state utilities (`hover:`, `active:`,
+`disabled:`) follow the Motion table above and appear as static swatches in the demo.
 
-Icon buttons are `h-11 w-11` squares, matching the height of text buttons so they align in toolbars.
+### Button — `components/ui/button.tsx`
 
-### Inputs & forms
-All form controls are `h-11` to match buttons. Borders are `border-2` instead of the standard 1px — this makes fields feel more defined and easier to target, and the slightly heavier border weight pairs well with the generous rounded corners.
+```ts
+const buttonVariants = cva(
+  "inline-flex items-center justify-center rounded-xl text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground shadow-md transition-all hover:bg-primary/90 hover:shadow-lg",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        destructive: "bg-destructive text-destructive-foreground shadow-md transition-all hover:bg-destructive/90 hover:shadow-lg",
+        outline: "border-2 border-input bg-background hover:bg-accent hover:text-accent-foreground hover:border-accent",
+        ghost: "text-foreground hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        sm: "h-8 rounded-lg px-4 text-xs",
+        default: "h-11 px-6",
+        lg: "h-13 px-8 text-base",
+        icon: "h-11 w-11",
+      },
+    },
+    defaultVariants: { variant: "default", size: "default" },
+  }
+)
+```
 
-Focus ring is `ring-4` with 10% opacity primary color (`focus:ring-primary/10`), creating a soft glow rather than a hard outline.
+Rounded-xl, font-semibold. default/destructive use transition-all so their shadow lifts on hover. sm tightens the radius to rounded-lg. link is padding/height-less (cn()/tailwind-merge drops the size padding).
 
-Error states change the border color to `--destructive` and add a `ring-4 ring-destructive/10` on focus. The error message appears below with an icon, colored `text-destructive`.
+### Badge — `components/ui/badge.tsx`
 
-Switches and checkboxes have shadows (`shadow-sm`) to lift them slightly off the surface. This is unusual compared to flat designs, but it reinforces the tactile, friendly aesthetic.
+```ts
+const badgeVariants = cva(
+  "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground",
+        secondary: "bg-secondary text-secondary-foreground",
+        destructive: "bg-destructive text-destructive-foreground",
+        outline: "border border-border",
+      },
+    },
+    defaultVariants: { variant: "default" },
+  }
+)
+```
 
-### Cards
-White background (`bg-card`) on the default background (`bg-background`), with `rounded-xl` corners, a 1px border (`border-border`), and `shadow-md`. Padding is `p-8` (32px) — generous enough to feel uncluttered even with substantial content.
+### Status pill — `components/ui/badge.tsx (status variant)`
 
-Stat cards use smaller padding (`p-6` / 24px) to keep metrics tight and scannable, but they still get the same rounded corners and shadow treatment.
+**intent**
 
-### Tables
-Row height is `h-11` (44px) instead of slate's 36px, giving more breathing room and making rows easier to scan and select on touch devices. Header uses `bg-muted/50` with uppercase labels.
+- `success` — `inline-flex items-center gap-1.5 rounded-full bg-chart-3/10 px-2.5 py-0.5 text-xs font-medium text-chart-3`
+- `warning` — `inline-flex items-center gap-1.5 rounded-full bg-chart-4/10 px-2.5 py-0.5 text-xs font-medium text-chart-4`
+- `error` — `inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-2.5 py-0.5 text-xs font-medium text-destructive`
+- `info` — `inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary`
+- `neutral` — `inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground`
 
-Selected row gets `bg-accent` — the bright orange — to clearly differentiate it. Hover rows use `bg-muted/50`.
+**Parts**
 
-### Navigation
-Top nav bar is `h-16` (64px) vs slate's h-14 (56px). The extra height accommodates the more prominent logo typography (Fredoka at 18px bold) and makes touch targets more comfortable.
+- `dotSuccess` — `h-1.5 w-1.5 rounded-full bg-chart-3`
+- `dotWarning` — `h-1.5 w-1.5 rounded-full bg-chart-4`
+- `dotError` — `h-1.5 w-1.5 rounded-full bg-destructive`
+- `dotInfo` — `h-1.5 w-1.5 rounded-full bg-primary`
+- `dotNeutral` — `h-1.5 w-1.5 rounded-full bg-muted-foreground`
 
-Sidebar items use `rounded-lg` and show a clear `bg-accent` highlight for the active item. Hover uses `bg-secondary/50` — the soft lavender.
+Tinted /10 fill with the status colour as text; a leading dot repeats it. The status word is in the text.
 
-### Tabs
-Tab items have `rounded-t-lg` when selected (active), creating a continuous surface with the panel below. Segmented controls (toggle groups) use `rounded-xl` for the container and `bg-accent` for the selected segment.
+### Input — `components/ui/input.tsx`
 
-### Alerts
-Alerts use icon, title, description, and tinted backgrounds:
-- Info: `bg-primary/10` with `text-primary` icon
-- Success: `bg-chart-3/10` (mint green) with `text-chart-3` icon
-- Warning: `bg-chart-4/10` (yellow) with `text-chart-4` icon
-- Destructive: `bg-destructive/10` with `text-destructive` icon
+Base `className`:
 
-The 10% opacity backgrounds provide color without overwhelming the content. Borders match the icon color.
+```
+h-11 w-full rounded-lg border-2 border-input bg-background px-4 text-sm transition-colors placeholder:text-muted-foreground hover:border-input/80 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10
+```
 
-### Dialogs & overlays
-Dialogs have `rounded-2xl` corners (20px — the most rounded treatment in the system), `shadow-xl`, and a backdrop with `bg-background/80 backdrop-blur`. The large radius makes dialogs feel like friendly cards rather than stern system alerts.
+**States**
 
-Popovers and dropdowns use `rounded-xl` and `shadow-lg`.
+- `error` — `h-11 w-full rounded-lg border-2 border-destructive bg-background px-4 text-sm focus:outline-none focus:ring-4 focus:ring-destructive/10`
+- `disabled` — `h-11 w-full rounded-lg border-2 border-input bg-muted px-4 text-sm text-muted-foreground cursor-not-allowed opacity-60`
 
-Toasts appear in the bottom-right, `rounded-xl`, with the same tinted-background treatment as alerts.
+**Parts**
 
-### Progress & loading
-Progress bars have a `rounded-full` track (full pill shape) filled with `bg-primary`. Circular spinners use a partial arc with `stroke-primary` at 2px weight.
+- `label` — `text-sm font-semibold text-foreground`
+- `errorMessage` — `text-sm text-destructive`
 
-Skeletons use `bg-muted animate-pulse`, with `rounded-lg` to match the shapes they're standing in for (avatar skeletons are `rounded-full`).
+border-2 fields with a soft focus:ring-4 focus:ring-primary/10 halo. The demo prefixes each field with mt-2 for label spacing; that is layout, not part of the field.
 
----
+### Textarea — `components/ui/textarea.tsx`
+
+Base `className`:
+
+```
+w-full rounded-lg border-2 border-input bg-background px-4 py-3 text-sm transition-colors placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 resize-none
+```
+
+### Select — `components/ui/select.tsx`
+
+**Parts**
+
+- `trigger` — `h-11 w-full appearance-none rounded-lg border-2 border-input bg-background pl-4 pr-12 text-sm transition-colors focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10`
+- `chevron` — `pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground`
+- `comboboxTrigger` — `flex h-11 w-full cursor-default items-center justify-between gap-2 rounded-lg border-2 border-input bg-background px-4 text-sm transition-colors focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10`
+- `listbox` — `mt-1 w-full rounded-xl border border-border bg-popover p-1 text-popover-foreground shadow-md`
+- `option` — `flex h-9 w-full items-center gap-2 rounded-sm px-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground`
+- `optionSelected` — `flex h-9 w-full items-center gap-2 rounded-sm px-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground`
+- `optionActive` — `flex h-9 w-full items-center gap-2 rounded-sm bg-accent px-2 text-sm text-accent-foreground`
+- `optionCheck` — `h-4 w-4 shrink-0 text-primary`
+
+### Checkbox — `components/ui/checkbox.tsx`
+
+**Parts**
+
+- `box` — `peer h-5 w-5 shrink-0 rounded-md border-2 border-input bg-background transition-all checked:bg-primary checked:border-primary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer`
+- `disabled` — `h-5 w-5 shrink-0 rounded-md border-2 border-input bg-muted cursor-not-allowed`
+- `label` — `text-sm font-medium peer-checked:text-foreground`
+
+A styled native <input type=checkbox> using the peer + checked: pattern.
+
+### Radio — `components/ui/radio-group.tsx`
+
+**Parts**
+
+- `box` — `peer h-5 w-5 shrink-0 rounded-full border-2 border-input bg-background transition-all checked:bg-primary checked:border-primary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer`
+
+### Switch — `components/ui/switch.tsx`
+
+**Parts**
+
+- `wrapper` — `relative inline-block h-6 w-11 shrink-0`
+- `input` — `peer sr-only`
+- `track` — `block h-full w-full rounded-full bg-input transition-colors peer-checked:bg-primary peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2`
+- `thumb` — `absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-background transition-transform shadow-sm peer-checked:translate-x-5`
+
+### Slider — `components/ui/slider.tsx`
+
+**Parts**
+
+- `input` — `h-2 w-full appearance-none rounded-full bg-muted bg-[linear-gradient(to_right,var(--primary)_var(--slider-fill),transparent_var(--slider-fill))] outline-none [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:shadow-md`
+
+A native range input with a gradient-filled track and pseudo-element thumbs driven by the --slider-fill custom property.
+
+### Card — `components/ui/card.tsx`
+
+**Parts**
+
+- `root` — `rounded-xl border border-border bg-card`
+- `header` — `p-6 pb-4`
+- `title` — `text-2xl font-bold tracking-tight`
+- `description` — `mt-1 text-sm text-muted-foreground`
+- `content` — `px-6 pb-6 text-sm`
+- `footer` — `flex items-center justify-end gap-2 border-t border-border px-6 py-4`
+
+### Table — `components/ui/table.tsx`
+
+**Parts**
+
+- `table` — `w-full caption-bottom text-sm`
+- `thead` — `bg-muted/50 [&_th]:h-12 [&_th]:px-4 [&_th]:text-left [&_th]:align-middle [&_th]:text-xs [&_th]:font-medium [&_th]:uppercase [&_th]:tracking-wide [&_th]:text-muted-foreground`
+- `tbody` — `[&_td]:h-11 [&_td]:px-4 [&_td]:align-middle`
+- `row` — `border-b border-border`
+- `rowSelected` — `border-b border-border bg-accent`
+
+### Dropdown / Popover / Dialog — `components/ui/dropdown-menu.tsx (and popover.tsx, dialog.tsx)`
+
+**Parts**
+
+- `surface` — `rounded-xl border border-border bg-popover p-1 text-popover-foreground shadow-md`
+- `item` — `flex h-9 w-full items-center gap-2.5 rounded-sm px-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground`
+- `itemActive` — `flex h-9 w-full items-center gap-2.5 rounded-sm bg-accent px-2 text-sm text-accent-foreground`
+- `itemDestructive` — `flex h-9 w-full items-center gap-2.5 rounded-sm px-2 text-sm text-destructive transition-colors hover:bg-destructive/10`
+- `label` — `px-2 py-1.5 text-xs font-medium text-muted-foreground`
+- `separator` — `my-1 h-px bg-border`
+- `shortcut` — `ml-auto font-mono text-xs tracking-widest text-muted-foreground`
+
+### Alert — `components/ui/alert.tsx`
+
+**intent**
+
+- `info` — `flex gap-3 rounded-xl border border-border bg-muted/40 p-4`
+- `success` — `flex gap-3 rounded-xl border border-chart-3/30 bg-chart-3/10 p-4`
+- `warning` — `flex gap-3 rounded-xl border border-chart-4/30 bg-chart-4/10 p-4`
+- `destructive` — `flex gap-3 rounded-xl border border-destructive/30 bg-destructive/10 p-4`
+
+**Parts**
+
+- `iconInfo` — `mt-0.5 h-4 w-4 shrink-0 text-muted-foreground`
+- `iconSuccess` — `mt-0.5 h-4 w-4 shrink-0 text-chart-3`
+- `iconWarning` — `mt-0.5 h-4 w-4 shrink-0 text-chart-4`
+- `iconDestructive` — `mt-0.5 h-4 w-4 shrink-0 text-destructive`
+- `title` — `text-sm font-medium`
+- `description` — `text-sm text-muted-foreground`
+- `actionLink` — `inline-block text-sm font-medium text-primary underline-offset-4 hover:underline`
+
+### Sidebar nav — `components/ui/sidebar.tsx`
+
+**Parts**
+
+- `root` — `w-64 rounded-xl border border-sidebar-border bg-sidebar p-2 text-sidebar-foreground`
+- `item` — `flex h-9 items-center gap-2.5 rounded-lg px-2 text-sm text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground`
+- `itemActive` — `flex h-9 items-center gap-2.5 rounded-lg bg-sidebar-accent px-2 text-sm font-medium text-sidebar-accent-foreground`
+- `groupLabel` — `px-2 py-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground`
+
+Active item carries aria-current=page; no left accent bar.
+
+### Tabs — `components/ui/tabs.tsx`
+
+**Parts**
+
+- `bar` — `flex gap-1 overflow-x-auto pt-1.5 -mt-1.5 pb-1.5 -mb-[7px] pl-1.5 -ml-1.5 pr-1.5 -mr-1.5`
+- `tabActive` — `shrink-0 whitespace-nowrap border-b-2 border-primary px-4 pt-3 pb-3 text-sm font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:rounded-t-md`
+- `tab` — `shrink-0 whitespace-nowrap border-b-2 border-transparent px-4 pt-3 pb-3 text-sm text-muted-foreground transition-colors hover:border-border hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:rounded-t-md`
+- `segmentedWrap` — `inline-flex items-center gap-1 rounded-lg bg-muted p-1`
+- `segmentSelected` — `inline-flex h-7 items-center rounded-sm bg-background px-3 text-sm font-medium shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`
+- `segment` — `inline-flex h-7 items-center rounded-sm px-3 text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`
 
 ## Accessibility
 

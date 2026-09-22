@@ -375,72 +375,239 @@ pairs, and the shortfall is covered by the same `<!-- check:contrast=waived
 
 ## Component notes
 
-Anything not mentioned here is **stock shadcn/ui**, styled by the tokens.
+This section is the **exact class contract** for `health-pro`'s components — the
+literal Tailwind classes each one carries in `index.html`, arranged as the shadcn
+primitive that consumes them. Copy these strings verbatim into the component's
+definition (a shadcn `cva()` for the ones with variants, the base `className` for
+the rest); do not paraphrase them and do not re-express any of them as CSS — see the
+"utility classes, never bespoke CSS" rule in the repo root `CLAUDE.md`. Anything not
+listed here is **stock shadcn/ui**, styled by the tokens.
 
-**Button** — Six variants, four sizes. `default` is `h-10`; `sm` is `h-9`;
-`lg` is `h-11`; `icon` is `h-10 w-10`. Every variant, including `link`, is
-uppercase/bold/tracked — this design has no lowercase button anywhere. No
-`shadow-*` on any variant.
+The machine-readable form of this section is [`classes.json`](classes.json) in this
+folder — the same strings as structured data. `scripts/check.mjs` validates every
+class in it against the kitchen sink, so the manifest, this section and `index.html`
+cannot drift apart. Tailwind utilities are order-independent, so match the *set* of
+classes, not their character order; state utilities (`hover:`, `active:`,
+`disabled:`) follow the Motion table above and appear as static swatches in the demo.
 
-**Input** — `h-10`, `border-input`, `rounded-none`, `text-sm`. Error state adds
-`border-destructive` and `focus-visible:ring-destructive`; the border does not
-thicken.
+### Button — `components/ui/button.tsx`
 
-**Card** — `border rounded-none bg-card`, no shadow. Header `p-6 pb-4`,
-content `p-6 pt-0`, footer `p-6 pt-0 border-t`. Titles use the h3 scale.
+```ts
+const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-none text-sm font-bold uppercase tracking-[0.05em] transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 active:bg-secondary/70",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 active:bg-destructive/80",
+        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "px-2 text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        sm: "h-9 px-4 text-xs",
+        default: "h-10 px-6",
+        lg: "h-11 px-8",
+        icon: "h-10 w-10",
+      },
+    },
+    defaultVariants: { variant: "default", size: "default" },
+  }
+)
+```
 
-**Table** — Header row is `bg-muted` with `text-muted-foreground text-xs
-font-bold uppercase tracking-[0.08em]`. Rows are `h-11` with `border-b`.
-Numeric columns are right-aligned with `tabular-nums`.
+Flat (rounded-none), bold uppercase, no shadow. Link tightens padding to px-2. Icons are h-4 w-4, and cn()/tailwind-merge resolves the link padding override.
 
-**Badge** — `rounded-full px-2.5 py-0.5 text-xs font-bold uppercase
-tracking-[0.05em]`. Status pills use a **solid** fill in the status colour
-(`bg-chart-4`, `bg-chart-3`, `bg-destructive`, `bg-primary`) with a 6px leading
-dot in `bg-current` and light text — `text-primary-foreground` for the
-chart-coloured pills, `text-destructive-foreground` for destructive, since
-neither `--chart-3` nor `--chart-4` has a dedicated foreground token of its
-own. **Never use a translucent (`/10`) fill for a status pill** — it was tried
-and dropped: a tinted pill lets whatever sits behind it (a coloured table row,
-a coloured card) show through and muddy the status colour, which is exactly
-what happened when an `/10` green "Approved" pill sat on the table's
-`bg-accent` selected row. Alert callouts under `#alerts` are the one place a
-translucent tint is still correct — there it is a large background behind
-readable paragraph text, not a small chip meant to read as a solid colour —
-so do not "fix" those to match. The badge/avatar radius exception does not
-extend to anything else.
+### Badge — `components/ui/badge.tsx`
 
-**Table — selected row.** `bg-accent` is a saturated fill in this design (see
-Colour), so a selected row also sets `text-accent-foreground` on the `<tr>` to
-keep its default text legible, rather than leaving it to inherit the page's
-`--foreground`. Cells that print their own colour explicitly still need their
-own override: the date column uses `text-accent-foreground/70`, not
-`text-muted-foreground`, for the same reason the footer uses
-`text-sidebar-foreground/70` for secondary text on its own dark fill —
-`--muted-foreground` is tuned against `--background`, not against an
-arbitrary saturated surface. The row's own selection checkbox swaps to
-`border-accent-foreground bg-accent-foreground text-accent` so it stays a
-visible white square instead of a red-on-red square with no edge, and its
-row-actions button adds `hover:text-foreground` alongside `hover:bg-background`
-so the icon doesn't turn white-on-white on hover.
+```ts
+const badgeVariants = cva(
+  "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em]",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground",
+        secondary: "bg-secondary text-secondary-foreground",
+        destructive: "bg-destructive text-destructive-foreground",
+        outline: "border border-border",
+      },
+    },
+    defaultVariants: { variant: "default" },
+  }
+)
+```
 
-**Dropdown / Popover / Dialog / Sheet / Toast** — `bg-popover border
-rounded-none shadow-md` (dialogs and sheets `shadow-lg`). These are the only
-surfaces in the design carrying a shadow.
+### Status pill — `components/ui/badge.tsx (status variant)`
 
-**Sidebar nav / top bar / footer / CTA** — Use the `--sidebar-*` tokens
-regardless of light/dark theme (see Colour, above). The active item uses
-`bg-sidebar-primary text-sidebar-primary-foreground` — a solid red fill, not
-an underline — which is one of the four sanctioned uses of brand red and is
-already covered by a checked contrast pair. Hover on non-active items is
-`bg-sidebar-accent`.
+**intent**
 
-**Tabs** — Underline style: a 2px `border-primary` underline on the active
-tab, uppercase/bold/tracked labels throughout (tabs are a nav control, so
-Never #6 applies to them too), `text-muted-foreground` on the rest.
+- `success` — `inline-flex items-center gap-1.5 rounded-full bg-chart-3 px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em] text-primary-foreground`
+- `warning` — `inline-flex items-center gap-1.5 rounded-full bg-chart-4 px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em] text-primary-foreground`
+- `error` — `inline-flex items-center gap-1.5 rounded-full bg-destructive px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em] text-destructive-foreground`
+- `info` — `inline-flex items-center gap-1.5 rounded-full bg-primary px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em] text-primary-foreground`
+- `neutral` — `inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground`
 
-**Action card** — See "The action-card pattern" under Shape & depth.
+**Parts**
 
----
+- `dot` — `h-1.5 w-1.5 rounded-full bg-current`
+- `dotNeutral` — `h-1.5 w-1.5 rounded-full bg-muted-foreground`
+
+Solid-filled pills (not tinted). The dot is bg-current except neutral. The status word is always in the text.
+
+### Input — `components/ui/input.tsx`
+
+Base `className`:
+
+```
+flex h-10 w-full rounded-none border border-input bg-background px-3 py-2 text-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+```
+
+**States**
+
+- `error` — `flex h-10 w-full rounded-none border border-destructive bg-background px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-2 focus-visible:ring-offset-background`
+- `disabled` — `flex h-10 w-full cursor-not-allowed rounded-none border border-input bg-muted px-3 py-2 text-sm opacity-50`
+
+**Parts**
+
+- `label` — `text-sm font-bold leading-none`
+- `errorMessage` — `flex items-center gap-1.5 text-sm text-destructive`
+
+Flat 40px fields; labels are bold.
+
+### Textarea — `components/ui/textarea.tsx`
+
+Base `className`:
+
+```
+flex w-full rounded-none border border-input bg-background px-3 py-2 text-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+```
+
+### Select — `components/ui/select.tsx`
+
+**Parts**
+
+- `trigger` — `flex h-10 w-full appearance-none rounded-none border border-input bg-background py-2 pl-3 pr-9 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background`
+- `chevron` — `pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground`
+- `comboboxTrigger` — `flex h-10 w-full cursor-default items-center justify-between gap-2 rounded-none border border-input bg-background px-3 py-2 text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background`
+- `listbox` — `mt-1 w-full rounded-none border border-border bg-popover p-1 text-popover-foreground shadow-md`
+- `option` — `flex h-9 w-full items-center gap-2 rounded-none px-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground`
+- `optionSelected` — `flex h-9 w-full items-center gap-2 rounded-none px-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground`
+- `optionActive` — `flex h-9 w-full items-center gap-2 rounded-none bg-accent px-2 text-sm text-accent-foreground`
+- `optionCheck` — `h-4 w-4 shrink-0 text-primary`
+
+### Checkbox — `components/ui/checkbox.tsx`
+
+**Parts**
+
+- `box` — `flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border border-input bg-background`
+- `boxChecked` — `flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border border-primary bg-primary text-primary-foreground`
+- `check` — `h-3 w-3`
+
+### Radio — `components/ui/radio-group.tsx`
+
+**Parts**
+
+- `outer` — `flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-input bg-background`
+- `outerSelected` — `flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-primary bg-background`
+- `dot` — `h-2 w-2 rounded-full bg-primary`
+
+### Switch — `components/ui/switch.tsx`
+
+**Parts**
+
+- `trackOff` — `inline-flex h-5 w-9 shrink-0 items-center rounded-full border border-transparent bg-input p-0.5 transition-colors`
+- `trackOn` — `inline-flex h-5 w-9 shrink-0 items-center rounded-full border border-transparent bg-primary p-0.5 transition-colors`
+- `thumb` — `h-4 w-4 rounded-full bg-background transition-transform`
+- `thumbOn` — `h-4 w-4 translate-x-4 rounded-full bg-background transition-transform`
+
+### Slider — `components/ui/slider.tsx`
+
+**Parts**
+
+- `input` — `w-full accent-primary`
+
+health-pro uses a native range input with accent-primary rather than a custom track/thumb.
+
+### Card — `components/ui/card.tsx`
+
+**Parts**
+
+- `root` — `rounded-none border border-border bg-card`
+- `header` — `p-6 pb-4`
+- `title` — `text-xl font-bold leading-[1.3]`
+- `description` — `mt-1 text-sm text-muted-foreground`
+- `content` — `px-6 pb-6 text-sm`
+- `footer` — `flex items-center justify-end gap-2 border-t border-border px-6 py-4`
+
+### Table — `components/ui/table.tsx`
+
+**Parts**
+
+- `table` — `w-full caption-bottom text-sm`
+- `thead` — `bg-muted [&_th]:h-11 [&_th]:px-4 [&_th]:text-left [&_th]:align-middle [&_th]:text-xs [&_th]:font-bold [&_th]:uppercase [&_th]:tracking-[0.08em] [&_th]:text-muted-foreground`
+- `tbody` — `[&_td]:h-11 [&_td]:px-4 [&_td]:align-middle`
+- `row` — `border-b border-border`
+- `rowSelected` — `border-b border-border bg-accent text-accent-foreground`
+
+### Dropdown / Popover / Dialog — `components/ui/dropdown-menu.tsx (and popover.tsx, dialog.tsx)`
+
+**Parts**
+
+- `surface` — `rounded-none border border-border bg-popover p-1 text-popover-foreground shadow-md`
+- `item` — `flex h-9 w-full items-center gap-2.5 rounded-none px-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground`
+- `itemActive` — `flex h-9 w-full items-center gap-2.5 rounded-none bg-accent px-2 text-sm text-accent-foreground`
+- `itemDestructive` — `flex h-9 w-full items-center gap-2.5 rounded-none px-2 text-sm text-destructive transition-colors hover:bg-destructive/10`
+- `label` — `px-2 py-1.5 text-xs font-bold text-muted-foreground`
+- `separator` — `my-1 h-px bg-border`
+- `shortcut` — `ml-auto font-mono text-xs tracking-widest text-muted-foreground`
+
+Dialogs use the same surface but shadow-lg and a padded body.
+
+### Alert — `components/ui/alert.tsx`
+
+**intent**
+
+- `info` — `flex gap-3 border border-border bg-muted/40 p-4`
+- `success` — `flex gap-3 border border-chart-3/30 bg-chart-3/10 p-4`
+- `warning` — `flex gap-3 border border-chart-4/30 bg-chart-4/10 p-4`
+- `destructive` — `flex gap-3 border border-destructive/30 bg-destructive/10 p-4`
+
+**Parts**
+
+- `iconInfo` — `mt-0.5 h-4 w-4 shrink-0 text-muted-foreground`
+- `iconSuccess` — `mt-0.5 h-4 w-4 shrink-0 text-chart-3`
+- `iconWarning` — `mt-0.5 h-4 w-4 shrink-0 text-chart-4`
+- `iconDestructive` — `mt-0.5 h-4 w-4 shrink-0 text-destructive`
+- `title` — `text-sm font-bold`
+- `description` — `text-sm text-muted-foreground`
+- `actionLink` — `inline-block text-sm font-bold text-primary underline-offset-4 hover:underline`
+
+Alerts are flat (no rounded). Intent is carried by the icon and a /10 tint, never a heavy left bar.
+
+### Sidebar nav — `components/ui/sidebar.tsx`
+
+**Parts**
+
+- `root` — `w-64 border border-sidebar-border bg-sidebar p-2 text-sidebar-foreground`
+- `item` — `flex h-10 items-center gap-2.5 px-2 text-sm text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground`
+- `itemActive` — `flex h-10 items-center gap-2.5 bg-sidebar-primary px-2 text-sm font-bold uppercase tracking-[0.05em] text-sidebar-primary-foreground`
+- `groupLabel` — `px-2 py-1.5 text-xs font-bold uppercase tracking-[0.08em] text-sidebar-foreground/60`
+
+Flat. Active item uses bg-sidebar-primary (not accent), bold uppercase, and carries aria-current=page.
+
+### Tabs — `components/ui/tabs.tsx`
+
+**Parts**
+
+- `bar` — `flex gap-1 overflow-x-auto pt-1.5 -mt-1.5 pb-1.5 -mb-[7px] pl-1.5 -ml-1.5 pr-1.5 -mr-1.5`
+- `tabActive` — `shrink-0 whitespace-nowrap border-b-2 border-primary px-4 pt-3 pb-3 text-xs font-bold uppercase tracking-[0.05em] text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`
+- `tab` — `shrink-0 whitespace-nowrap border-b-2 border-transparent px-4 pt-3 pb-3 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground transition-colors hover:border-border hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`
+- `segmentedWrap` — `inline-flex items-center border border-input bg-muted p-1`
+- `segmentSelected` — `inline-flex h-8 items-center bg-background px-4 text-xs font-bold uppercase tracking-[0.05em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`
+- `segment` — `inline-flex h-8 items-center px-4 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`
+
+Underline tabs; segmented control is flat (no rounded). Vertical tabs use the sidebar/accent item treatment.
 
 ## Accessibility
 

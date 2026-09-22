@@ -286,130 +286,234 @@ scale/transform, keeping only opacity/color transitions.
 
 ## Component notes
 
-Anything not mentioned here follows stock shadcn/ui, styled by Material tokens.
+This section is the **exact class contract** for `material-design`'s components — the
+literal Tailwind classes each one carries in `index.html`, arranged as the shadcn
+primitive that consumes them. Copy these strings verbatim into the component's
+definition (a shadcn `cva()` for the ones with variants, the base `className` for
+the rest); do not paraphrase them and do not re-express any of them as CSS — see the
+"utility classes, never bespoke CSS" rule in the repo root `CLAUDE.md`. Anything not
+listed here is **stock shadcn/ui**, styled by the tokens.
 
-### Button
+The machine-readable form of this section is [`classes.json`](classes.json) in this
+folder — the same strings as structured data. `scripts/check.mjs` validates every
+class in it against the kitchen sink, so the manifest, this section and `index.html`
+cannot drift apart. Tailwind utilities are order-independent, so match the *set* of
+classes, not their character order; state utilities (`hover:`, `active:`,
+`disabled:`) follow the Motion table above and appear as static swatches in the demo.
 
-**Six variants, three sizes.** Material has strong button opinions.
+### Button — `components/ui/button.tsx`
 
-- **Filled (default):** `bg-primary text-primary-foreground shadow-sm
-  hover:shadow-md rounded-full h-10 px-6 font-medium uppercase tracking-wide text-sm`.
-  Full rounding, elevated, uppercase with letter-spacing. This is Material's hero
-  button.
-- **Outlined:** `border-2 border-primary text-primary rounded-full h-10 px-6
-  font-medium uppercase tracking-wide`. Fully rounded, no fill, 2px border (thicker
-  than default). Uppercase.
-- **Text:** `text-primary hover:bg-accent rounded-lg h-10 px-4`. Minimal, sentence
-  case.
-- **Sizes:** `sm` is `h-9 px-4 text-xs`, default is `h-10 px-6 text-sm`, `lg` is
-  `h-11 px-8 text-base`.
-- Icon buttons: `h-10 w-10 rounded-full` with 20px icon (larger than other
-  designs). State layer (hover) is circular.
+```ts
+const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground shadow-xs uppercase tracking-wide hover:bg-primary/90 active:bg-primary/80",
+        secondary: "bg-secondary text-secondary-foreground uppercase tracking-wide hover:bg-secondary/80",
+        destructive: "bg-destructive text-destructive-foreground shadow-xs uppercase tracking-wide hover:bg-destructive/90",
+        outline: "border border-input bg-background uppercase tracking-wide hover:bg-accent hover:text-accent-foreground",
+        ghost: "uppercase tracking-wide hover:bg-accent hover:text-accent-foreground",
+        link: "rounded-md text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        sm: "h-8 px-3 text-xs",
+        default: "h-9 px-4 py-2",
+        lg: "h-10 px-6",
+        icon: "h-9 w-9",
+      },
+    },
+    defaultVariants: { variant: "default", size: "default" },
+  }
+)
+```
 
-### Floating Action Button (FAB)
+Pill buttons (rounded-full) with UPPERCASE tracking-wide labels. The link variant is the exception: lowercase and rounded-md.
 
-**Extension:** Not in base components, but Material is incomplete without it.
-`h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg
-hover:shadow-xl`. Fixed position `bottom-6 right-6`. Icon 24px. May extend to
-include a label (extended FAB): `h-14 px-6 gap-3 rounded-full`.
+### Badge — `components/ui/badge.tsx`
 
-### Input
+```ts
+const badgeVariants = cva(
+  "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground",
+        secondary: "bg-secondary text-secondary-foreground",
+        destructive: "bg-destructive text-destructive-foreground",
+        outline: "border border-border",
+      },
+    },
+    defaultVariants: { variant: "default" },
+  }
+)
+```
 
-`h-10 rounded-t-lg rounded-b-md` (asymmetric, subtle nod to Material's "cut
-corner"), `border-b-2 border-input` (bottom border is thicker, top/sides are
-`border`), `focus:border-b-primary`. Label is **floating**: starts inside the
-input, moves to top on focus/fill. Placeholder is hidden until focus.
+### Status pill — `components/ui/badge.tsx (status variant)`
 
-This is more complex than stock shadcn and **may be simplified** to `rounded-lg
-border-2` for easier implementation. The DESIGN.md describes ideal; implementers
-can use standard `rounded-lg border` if the floating label is too complex.
+**intent**
 
-### Card
+- `success` — `inline-flex items-center gap-1.5 rounded-full bg-chart-3/10 px-2.5 py-0.5 text-xs font-medium text-chart-3`
+- `warning` — `inline-flex items-center gap-1.5 rounded-full bg-chart-4/10 px-2.5 py-0.5 text-xs font-medium text-chart-4`
+- `error` — `inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-2.5 py-0.5 text-xs font-medium text-destructive`
+- `info` — `inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary`
+- `neutral` — `inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground`
 
-`rounded-xl border border-border/50 bg-card shadow-sm hover:shadow-md
-transition-shadow`. Larger radius (16px), always has a shadow. Header is `p-6`,
-content `p-6 pt-0`, footer `p-6 pt-0 border-t`.
+**Parts**
 
-### Table
+- `dotSuccess` — `h-1.5 w-1.5 rounded-full bg-chart-3`
+- `dotWarning` — `h-1.5 w-1.5 rounded-full bg-chart-4`
+- `dotError` — `h-1.5 w-1.5 rounded-full bg-destructive`
+- `dotInfo` — `h-1.5 w-1.5 rounded-full bg-primary`
+- `dotNeutral` — `h-1.5 w-1.5 rounded-full bg-muted-foreground`
 
-**No zebra striping.** Rows are `border-b hover:bg-accent/50` (subtle hover).
-Header is `bg-muted/30` (very subtle tint) with `text-muted-foreground font-medium
-text-xs uppercase tracking-wider`. Material tables are clean and rely on dividers,
-not fills. Row height is 52px (taller than `slate`'s 44px).
+Tinted /10 fill with the status colour as text; a leading dot repeats it. The status word is in the text.
 
-### Badge & Chip
+### Input — `components/ui/input.tsx`
 
-Material distinguishes these:
+Base `className`:
 
-- **Badge (status):** `rounded-full px-2.5 py-0.5 text-xs font-medium
-  bg-muted/80 text-foreground`. Small, minimal.
-- **Chip (filter/input):** `rounded-full px-4 py-2 text-sm border
-  border-border bg-secondary hover:bg-accent`. Larger, more interactive, with
-  optional leading icon or avatar and trailing close button. Height 32px.
+```
+flex h-9 w-full rounded-lg border border-input bg-background px-3 py-1 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+```
 
-### Dropdown / Menu
+**States**
 
-`rounded-xl border bg-popover shadow-lg p-1`. Items are `rounded-lg h-10 px-3
-text-sm hover:bg-accent` (rounder than slate's `rounded-sm`). Checkmarks and icons
-are 20px. Dividers are `my-1 bg-border`.
+- `error` — `flex h-9 w-full rounded-md border border-destructive bg-background px-3 py-1 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-2 focus-visible:ring-offset-background`
+- `disabled` — `flex h-9 w-full cursor-not-allowed rounded-md border border-input bg-muted px-3 py-1 text-sm opacity-50 shadow-xs`
 
-### Dialog & Sheet
+**Parts**
 
-**Dialog:** `rounded-3xl shadow-2xl` (24px radius, maximum elevation). No close X
-in the corner — Material dialogs have text actions in the footer. Header `p-6
-pb-4 text-2xl font-normal`, content `p-6 pt-0`, footer `p-6 pt-4 flex gap-2
-justify-end` with text buttons.
+- `label` — `text-sm font-medium leading-none`
+- `errorMessage` — `flex items-center gap-1.5 text-xs text-destructive`
 
-**Sheet (drawer):** Slides from edge (usually left for nav drawer, right for
-details). `rounded-r-2xl` (left edge is sharp, right is rounded). `shadow-xl
-bg-card`. Width 280px for nav, 360–400px for content.
+### Textarea — `components/ui/textarea.tsx`
 
-### Alert
+Base `className`:
 
-`rounded-xl border-l-4` (thick left accent), `p-4 bg-accent/20` (tinted
-background). Icon 20px. Title `font-medium`, description `text-sm
-text-muted-foreground`. Intent color (`chart-3` green, `chart-4` amber,
-`destructive` red) is the left border and icon color. More colorful than `slate`.
+```
+flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+```
 
-### Tabs
+### Select — `components/ui/select.tsx`
 
-**Filled pills** (Material's primary tabs), not underlines. Active tab is
-`bg-primary text-primary-foreground rounded-full`, inactive is
-`text-muted-foreground hover:bg-accent/50 rounded-full`. Tabs are `h-10 px-6
-font-medium`. Spacing between tabs is `gap-1`.
+**Parts**
 
-Alternative: underline style with `border-b-2 border-primary` for secondary tabs.
+- `trigger` — `flex h-9 w-full appearance-none rounded-lg border border-input bg-background py-1 pl-3 pr-9 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background`
+- `chevron` — `pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground`
+- `comboboxTrigger` — `flex h-9 w-full cursor-default items-center justify-between gap-2 rounded-lg border border-input bg-background px-3 py-1 text-sm shadow-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background`
+- `listbox` — `mt-1 w-full rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-md`
+- `option` — `flex h-8 w-full items-center gap-2 rounded-sm px-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground`
+- `optionSelected` — `flex h-8 w-full items-center gap-2 rounded-sm px-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground`
+- `optionActive` — `flex h-8 w-full items-center gap-2 rounded-sm bg-accent px-2 text-sm text-accent-foreground`
+- `optionCheck` — `h-4 w-4 shrink-0 text-primary`
 
-### Navigation
+### Checkbox — `components/ui/checkbox.tsx`
 
-**Top bar:** `h-16` (taller than slate's `h-14`), `bg-card shadow-sm border-b`. Logo
-left, nav center or left, actions right. Icons 20px.
+**Parts**
 
-**Sidebar (nav drawer):** `w-64` collapsed, `w-280` expanded. Uses
-`--sidebar-*` tokens. Items are `rounded-r-full` (only right side rounds, creating
-a "pill emerging from edge" look when active). Active item `bg-sidebar-accent
-text-sidebar-accent-foreground font-medium`. Group labels are `px-6 py-2
-text-xs uppercase tracking-widest text-muted-foreground`.
+- `box` — `flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border border-input bg-background shadow-xs`
+- `boxChecked` — `flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border border-primary bg-primary text-primary-foreground shadow-xs`
+- `check` — `h-3 w-3`
 
-### Progress & Loading
+### Radio — `components/ui/radio-group.tsx`
 
-**Linear progress:** `h-1 rounded-full bg-muted`, fill is `bg-primary rounded-full`.
-Indeterminate uses a 1.5s animation sliding a gradient across.
+**Parts**
 
-**Circular progress:** 40px diameter, 4px stroke, uses `stroke-primary`. Spins at
-1.4s per rotation (Material's spec).
+- `outer` — `flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-input bg-background shadow-xs`
+- `outerSelected` — `flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-primary bg-background shadow-xs`
+- `dot` — `h-2 w-2 rounded-full bg-primary`
 
-**Skeleton:** Uses `bg-muted animate-pulse`, but Material prefers a **shimmer**
-(linear gradient moving left-to-right) over pulse. Duration 2s.
+### Switch — `components/ui/switch.tsx`
 
-### Toast (Snackbar)
+**Parts**
 
-Material calls these **snackbars**. Single-line preferred, multiline allowed.
-`rounded-lg bg-foreground/90 text-background shadow-lg` (inverted colors). Fixed
-position `bottom-6 left-6`, `max-w-md`. Action button is `text-primary-foreground
-font-medium uppercase text-sm`. Dismisses after 4–7s (longer than typical toasts).
+- `trackOff` — `inline-flex h-5 w-9 shrink-0 items-center rounded-full border border-transparent bg-input p-0.5 shadow-xs transition-colors`
+- `trackOn` — `inline-flex h-5 w-9 shrink-0 items-center rounded-full border border-transparent bg-primary p-0.5 shadow-xs transition-colors`
+- `thumb` — `h-4 w-4 rounded-full bg-background shadow-sm transition-transform`
+- `thumbOn` — `h-4 w-4 translate-x-4 rounded-full bg-background shadow-sm transition-transform`
 
----
+### Slider — `components/ui/slider.tsx`
+
+**Parts**
+
+- `track` — `h-1.5 w-full rounded-full bg-muted`
+- `range` — `h-1.5 rounded-full bg-primary`
+- `thumb` — `h-4 w-4 -translate-x-1/2 rounded-full border border-primary bg-background shadow-sm`
+
+### Card — `components/ui/card.tsx`
+
+**Parts**
+
+- `root` — `rounded-lg border border-border bg-card`
+- `header` — `p-6 pb-4`
+- `title` — `text-xl font-semibold tracking-[-0.015em]`
+- `description` — `mt-1 text-sm text-muted-foreground`
+- `content` — `px-6 pb-6 text-sm`
+- `footer` — `flex items-center justify-end gap-2 border-t border-border px-6 py-4`
+
+### Table — `components/ui/table.tsx`
+
+**Parts**
+
+- `table` — `w-full caption-bottom text-sm`
+- `thead` — `bg-muted/50 [&_th]:h-10 [&_th]:px-4 [&_th]:text-left [&_th]:align-middle [&_th]:text-xs [&_th]:font-medium [&_th]:uppercase [&_th]:tracking-wide [&_th]:text-muted-foreground`
+- `tbody` — `[&_td]:h-11 [&_td]:px-4 [&_td]:align-middle`
+- `row` — `border-b border-border`
+- `rowSelected` — `border-b border-border bg-accent`
+
+### Dropdown / Popover / Dialog — `components/ui/dropdown-menu.tsx (and popover.tsx, dialog.tsx)`
+
+**Parts**
+
+- `surface` — `rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-md`
+- `item` — `flex h-8 w-full items-center gap-2.5 rounded-sm px-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground`
+- `itemActive` — `flex h-8 w-full items-center gap-2.5 rounded-sm bg-accent px-2 text-sm text-accent-foreground`
+- `itemDestructive` — `flex h-8 w-full items-center gap-2.5 rounded-sm px-2 text-sm text-destructive transition-colors hover:bg-destructive/10`
+- `label` — `px-2 py-1.5 text-xs font-medium text-muted-foreground`
+- `separator` — `my-1 h-px bg-border`
+- `shortcut` — `ml-auto font-mono text-xs tracking-widest text-muted-foreground`
+
+### Alert — `components/ui/alert.tsx`
+
+**intent**
+
+- `info` — `flex gap-3 rounded-lg border border-border bg-muted/40 p-4`
+- `success` — `flex gap-3 rounded-lg border border-chart-3/30 bg-chart-3/10 p-4`
+- `warning` — `flex gap-3 rounded-lg border border-chart-4/30 bg-chart-4/10 p-4`
+- `destructive` — `flex gap-3 rounded-lg border border-destructive/30 bg-destructive/10 p-4`
+
+**Parts**
+
+- `iconInfo` — `mt-0.5 h-4 w-4 shrink-0 text-muted-foreground`
+- `iconSuccess` — `mt-0.5 h-4 w-4 shrink-0 text-chart-3`
+- `iconWarning` — `mt-0.5 h-4 w-4 shrink-0 text-chart-4`
+- `iconDestructive` — `mt-0.5 h-4 w-4 shrink-0 text-destructive`
+- `title` — `text-sm font-medium`
+- `description` — `text-sm text-muted-foreground`
+- `actionLink` — `inline-block text-sm font-medium text-primary underline-offset-4 hover:underline`
+
+### Sidebar nav — `components/ui/sidebar.tsx`
+
+**Parts**
+
+- `root` — `w-64 rounded-lg border border-sidebar-border bg-sidebar p-2 text-sidebar-foreground`
+- `item` — `flex h-8 items-center gap-2.5 rounded-md px-2 text-sm text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground`
+- `itemActive` — `flex h-8 items-center gap-2.5 rounded-md bg-sidebar-accent px-2 text-sm font-medium text-sidebar-accent-foreground`
+- `groupLabel` — `px-2 py-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground`
+
+Active item carries aria-current=page; no left accent bar.
+
+### Tabs — `components/ui/tabs.tsx`
+
+**Parts**
+
+- `bar` — `flex gap-1 overflow-x-auto pt-1.5 -mt-1.5 pb-1.5 -mb-[7px] pl-1.5 -ml-1.5 pr-1.5 -mr-1.5`
+- `tabActive` — `shrink-0 whitespace-nowrap border-b-2 border-primary px-4 pt-3 pb-3 text-sm font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:rounded-t-md`
+- `tab` — `shrink-0 whitespace-nowrap border-b-2 border-transparent px-4 pt-3 pb-3 text-sm text-muted-foreground transition-colors hover:border-border hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:rounded-t-md`
+- `segmentedWrap` — `inline-flex items-center gap-1 rounded-md bg-muted p-1`
+- `segmentSelected` — `inline-flex h-7 items-center rounded-sm bg-background px-3 text-sm font-medium shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`
+- `segment` — `inline-flex h-7 items-center rounded-sm px-3 text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`
 
 ## Never
 
