@@ -281,10 +281,10 @@ carry the manifest classes verbatim, and the Radix-driven ones (Select, Checkbox
 RadioGroup, Switch, Slider, Tabs, DropdownMenu, Table, SidebarNav) weave those design
 classes into stock shadcn/Radix structure, adding the interactive scaffolding — focus
 ring, `data-[state]` transitions, disabled treatment — that a static demo cannot show.
-All 16 were verified by building and rendering them with real React + Radix. An
-opt-in live preview that runs these `.tsx` in the browser (CDN React + Radix, no
-local build, network required — not one of the repo's no-build demos) is in
-[`react-preview/`](react-preview/).
+All 16 were verified by building and rendering them with real React + Radix. A
+compiled live preview that renders these `.tsx` — `scripts/build-preview.mjs` bundles
+them into a self-contained page that opens on any host, and fails the build if a
+component does not compile — is in [`react-preview/`](react-preview/).
 
 Two reading notes. Tailwind utilities are order-independent, so a string here and the
 same set in a different order in the kitchen sink render identically — match the *set*,

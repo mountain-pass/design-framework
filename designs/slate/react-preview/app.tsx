@@ -45,7 +45,8 @@ function App() {
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">slate — live components</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Rendered from the real <code className="font-mono">components/ui/*.tsx</code>, transformed in the browser.
+            Rendered from the real <code className="font-mono">components/ui/*.tsx</code>, compiled by
+            {" "}<code className="font-mono">scripts/build-preview.mjs</code>.
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={() => setDark((d) => !d)}>

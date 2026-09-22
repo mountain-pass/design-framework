@@ -6,15 +6,18 @@
 <title>slate — live component preview</title>
 
 <!--
-  Opt-in React preview. Unlike the kitchen sink (../index.html), this page runs
-  the real components/ui/*.tsx: it fetches each one, transforms the TypeScript +
-  JSX in the browser with Babel, and wires them to React + Radix from a CDN
-  through an import map. No local build, but it DOES need a network connection,
-  and it is deliberately NOT one of the repo's no-build demos. See README.md.
+  Compiled React preview. Unlike the kitchen sink (../index.html, static HTML,
+  no build), this page renders the real components/ui/*.tsx. They are compiled
+  ahead of time into app.bundle.js by scripts/build-preview.mjs, so this page
+  is self-contained: it opens on any static host, online or offline, with no
+  CDN and no runtime transform. Rebuild the bundle with `npm run build:preview`
+  after changing a component. See README.md.
 -->
 
 <!-- Tailwind: same vendored compiler + theme.css as the kitchen sink, so the
      React-rendered DOM is styled from the design's own tokens. -->
+<style>html{visibility:hidden}</style>
+<script>addEventListener("load", () => { document.documentElement.style.visibility = "visible"; });</script>
 <script>
   fetch("../theme.css")
     .then((res) => { if (!res.ok) throw new Error("theme.css " + res.status); return res.text(); })
@@ -29,84 +32,9 @@
     })
     .catch((err) => console.error(err));
 </script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.4/babel.min.js"></script>
 </head>
 <body>
-<div id="root" style="font-family: system-ui; padding: 24px; color: #555">Loading the live preview… (needs a network connection for React + Radix)</div>
-
-<script>
-(async () => {
-  // CDN packages, shared through the import map so there is a single React.
-  const R = "https://esm.sh";
-  const cdn = {
-    "react": `${R}/react@19`,
-    "react-dom": `${R}/react-dom@19?external=react`,
-    "react-dom/client": `${R}/react-dom@19/client?external=react`,
-    "react/jsx-runtime": `${R}/react@19/jsx-runtime`,
-    "class-variance-authority": `${R}/class-variance-authority@0.7.1`,
-    "clsx": `${R}/clsx@2.1.1`,
-    "tailwind-merge": `${R}/tailwind-merge@2.5.4`,
-    "lucide-react": `${R}/lucide-react@0.462.0?external=react`,
-    "@radix-ui/react-slot": `${R}/@radix-ui/react-slot@1?external=react`,
-    "@radix-ui/react-checkbox": `${R}/@radix-ui/react-checkbox@1?external=react,react-dom`,
-    "@radix-ui/react-radio-group": `${R}/@radix-ui/react-radio-group@1?external=react,react-dom`,
-    "@radix-ui/react-switch": `${R}/@radix-ui/react-switch@1?external=react,react-dom`,
-    "@radix-ui/react-slider": `${R}/@radix-ui/react-slider@1?external=react,react-dom`,
-    "@radix-ui/react-select": `${R}/@radix-ui/react-select@2?external=react,react-dom`,
-    "@radix-ui/react-tabs": `${R}/@radix-ui/react-tabs@1?external=react,react-dom`,
-    "@radix-ui/react-dropdown-menu": `${R}/@radix-ui/react-dropdown-menu@2?external=react,react-dom`,
-  };
-
-  // Local component modules — fetched and transformed in the browser.
-  const local = {
-    "@/lib/utils": "../lib/utils.ts",
-    "@/components/ui/button": "../components/ui/button.tsx",
-    "@/components/ui/badge": "../components/ui/badge.tsx",
-    "@/components/ui/input": "../components/ui/input.tsx",
-    "@/components/ui/textarea": "../components/ui/textarea.tsx",
-    "@/components/ui/card": "../components/ui/card.tsx",
-    "@/components/ui/alert": "../components/ui/alert.tsx",
-    "@/components/ui/checkbox": "../components/ui/checkbox.tsx",
-    "@/components/ui/radio-group": "../components/ui/radio-group.tsx",
-    "@/components/ui/switch": "../components/ui/switch.tsx",
-    "@/components/ui/slider": "../components/ui/slider.tsx",
-    "@/components/ui/select": "../components/ui/select.tsx",
-    "@/components/ui/tabs": "../components/ui/tabs.tsx",
-    "@/components/ui/dropdown-menu": "../components/ui/dropdown-menu.tsx",
-    "@/components/ui/table": "../components/ui/table.tsx",
-    "@/components/ui/sidebar-nav": "../components/ui/sidebar-nav.tsx",
-  };
-
-  const transform = async (path) => {
-    const src = await (await fetch(path)).text();
-    const { code } = Babel.transform(src, {
-      filename: path,
-      presets: [["typescript", { isTSX: true, allExtensions: true }], ["react", { runtime: "automatic" }]],
-    });
-    return URL.createObjectURL(new Blob([code], { type: "text/javascript" }));
-  };
-
-  const imports = { ...cdn };
-  await Promise.all(Object.entries(local).map(async ([spec, path]) => { imports[spec] = await transform(path); }));
-
-  const map = document.createElement("script");
-  map.type = "importmap";
-  map.textContent = JSON.stringify({ imports });
-  document.head.append(map);
-
-  const appUrl = await transform("./app.tsx");
-  const entry = document.createElement("script");
-  entry.type = "module";
-  entry.src = appUrl;
-  document.body.append(entry);
-})().catch((err) => {
-  document.getElementById("root").innerHTML =
-    '<pre style="padding:16px;color:#b00020;white-space:pre-wrap">Preview failed to load: ' +
-    (err && err.message ? err.message : String(err)) +
-    '\n\nThis page needs a network connection for the CDN packages, and a modern browser (dynamic import maps).</pre>';
-  console.error(err);
-});
-</script>
+<div id="root"></div>
+<script src="app.bundle.js"></script>
 </body>
 </html>

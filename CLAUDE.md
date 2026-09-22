@@ -161,9 +161,23 @@ framework depends on designs being comparable, and they are only comparable if t
 show the same things in the same order. Add at the end if you must; never remove,
 rename, or reorder.
 
-**Demos must open with no build step.** The vendored Tailwind browser compiler
+**The static demos must open with no build step.** The kitchen sink, the layout
+wireframe and the voice string sink use the vendored Tailwind browser compiler
 (`vendor/tailwind-browser-<version>.js`), inline SVG icons, no bundler, no `npm
-install`. If a demo needs a build to look at, it has failed at its only job.
+install`. If one of *these* needs a build to look at, it has failed at its only job —
+they are the grounding truth an agent reads directly, and `classes.json` is validated
+against the kitchen sink's static markup.
+
+**The React component previews are the deliberate exception, and they are compiled.**
+A design's generated `components/ui/*.tsx` are real React, so `designs/<name>/react-
+preview/` renders them through an actual build: `scripts/build-preview.mjs` bundles the
+components (with React + Radix) into a self-contained `app.bundle.js` the page loads.
+This is on purpose — we want to know at *build time* whether a component compiles, not
+discover it in a consumer's project. So the previews trade the no-build guarantee for a
+real compile: after changing a component, run `npm run build:preview` (or `npm run
+verify` to compile without writing, as a CI gate). `check.mjs` stays dependency-free and
+does not run this; it is a separate step for the previews only. The static demos are
+untouched by it.
 
 The compiler is committed rather than loaded from a CDN: a floating version means
 the same commit renders differently depending on when it is opened, which is not

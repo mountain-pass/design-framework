@@ -1,40 +1,51 @@
 # slate — live React preview
 
-This folder renders the **actual** `../components/ui/*.tsx` in a browser, so you can
-see and click the real components (open the select, toggle the switch, open the menu)
-rather than the static kitchen sink.
+This folder renders the **actual** `../components/ui/*.tsx` so you can see and click the
+real components (open the select, toggle the switch, open the menu) rather than the
+static kitchen sink.
 
-It is **not** one of the repo's no-build demos. `../index.html` (the kitchen sink) is
-still the canonical, offline, no-network demo — it renders the same classes as static
-HTML. This preview is a convenience that trades that guarantee for interactivity:
+Unlike the kitchen sink (`../index.html`, static HTML that opens with no build), this
+page is **compiled**: `scripts/build-preview.mjs` bundles `app.tsx` and the design's
+components (with React + Radix) into `app.bundle.js`. The page then loads that bundle
+plus the design's own `theme.css` and the vendored Tailwind compiler — so it is
+self-contained: it opens on any static host, online or offline, with no CDN and no
+runtime transform.
 
-- **It needs a network connection.** React, ReactDOM and the Radix packages load from
-  the [esm.sh](https://esm.sh) CDN; Babel loads from cdnjs.
-- **It runs a transform at page load.** `index.html` fetches each `.tsx`, transforms
-  the TypeScript + JSX with Babel in the browser, and wires everything together with a
-  dynamic import map. There is no bundler and nothing to install, but there *is* a
-  runtime compile.
-- **Modern browser required** (dynamic import maps).
+## Why compiled, not transformed-in-the-browser
 
-Because of those dependencies it is kept out of `check.mjs`'s demo rules and out of the
-"demos must open with no build step" contract on purpose.
+An earlier version fetched each `.tsx` and transformed it in the browser. That broke on
+hosts that don't serve `.ts`/`.tsx` as static files (they return a 404 page, which then
+fails to parse). Compiling ahead of time removes that dependency entirely — and, more
+importantly, **surfaces build errors at build time**: if a generated component doesn't
+compile, `build-preview.mjs` fails.
+
+## Building
+
+Requires `npm install` once at the repo root, then:
+
+```sh
+npm run build:preview        # writes designs/slate/react-preview/app.bundle.js
+# or, to compile without writing (a CI gate that a component still builds):
+npm run verify
+```
+
+Rebuild after changing a component (regenerate the component first with
+`npm run build:components`, then `npm run build:preview`).
 
 ## Running it
 
-Serve the repo over http(s) — same as the kitchen sink — and open this file:
+Serve the repo over http(s) and open this folder:
 
 ```sh
-# from the repo root
-python3 -m http.server 8000
+python3 -m http.server 8000      # from the repo root
 # then visit http://localhost:8000/designs/slate/react-preview/
 ```
 
-Opening it from `file://` will not work (the `.tsx` and `theme.css` fetches are blocked
-cross-origin).
+Opening from `file://` won't work — the `theme.css` fetch is blocked cross-origin.
 
 ## What it proves
 
-The components you'd copy into a real project are exactly these files, and they render
-from the design's own `theme.css`. The class strings in them are generated from
-`../classes.json` (see `scripts/build-components.mjs`), which `check.mjs` validates
+The components you'd copy into a real project are exactly these files, they **compile**,
+and they render from the design's own `theme.css`. Their class strings are generated
+from `../classes.json` (`scripts/build-components.mjs`), which `check.mjs` validates
 against the kitchen sink — so what you see here is what a consuming app gets.

@@ -1,0 +1,33 @@
+{
+  "name": "design-framework-build",
+  "private": true,
+  "type": "module",
+  "description": "Build tooling for compiling and verifying a design's generated React components. The static demos (kitchen sinks, wireframes, string sinks) still open with no build; this is only for the React component previews.",
+  "scripts": {
+    "check": "node scripts/check.mjs",
+    "build:components": "node scripts/build-components.mjs slate",
+    "build:preview": "node scripts/build-preview.mjs slate",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "verify": "npm run typecheck && node scripts/build-preview.mjs slate --check-only"
+  },
+  "devDependencies": {
+    "@radix-ui/react-checkbox": "^1.1.2",
+    "@radix-ui/react-dropdown-menu": "^2.1.2",
+    "@radix-ui/react-radio-group": "^1.2.1",
+    "@radix-ui/react-select": "^2.1.2",
+    "@radix-ui/react-slider": "^1.2.1",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-switch": "^1.1.1",
+    "@radix-ui/react-tabs": "^1.1.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "esbuild": "^0.24.0",
+    "lucide-react": "^0.462.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^2.5.4",
+    "typescript": "^5.9.3"
+  }
+}
