@@ -161,11 +161,17 @@
 </header>
 
 <main class="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
+  <div class="mb-10 flex flex-wrap items-center gap-x-6 gap-y-3 rounded-lg border border-border bg-muted/40 px-4 py-3 text-sm">
+    <span class="font-medium">Live preview</span>
+    <span class="inline-flex items-center gap-2"><span class="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-[0.6875rem] font-medium text-primary"><span class="h-1.5 w-1.5 rounded-full bg-current"></span>React component</span><span class="text-muted-foreground">rendered from <span class="font-mono text-xs">components/ui/*.tsx</span></span></span>
+    <span class="inline-flex items-center gap-2"><span class="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span><span class="text-muted-foreground">kitchen-sink HTML — a foundation, a composition, or an overlay shown statically open</span></span>
+  </div>
 
 <!-- ========================= 1. FOUNDATIONS ============================== -->
 
 <!-- ---------- tokens ---------- -->
-<section id="tokens" class="ks-section border-t-0">
+<section id="tokens" class="ks-section border-t-0 relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">01 · Foundations</p>
   <h2 class="ks-lede">Colour tokens</h2>
   <p class="ks-note">Every colour in this design comes from one of these. Nothing below hard-codes a value. Toggle dark mode in the header to see each token's dark counterpart.</p>
@@ -262,7 +268,8 @@
 </section>
 
 <!-- ---------- typography ---------- -->
-<section id="typography" class="ks-section">
+<section id="typography" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">02 · Foundations</p>
   <h2 class="ks-lede">Typography</h2>
   <p class="ks-note">Inter for everything, JetBrains Mono for code and data. Two weights only — 400 and 600. Negative tracking scales with size.</p>
@@ -357,7 +364,8 @@
 </section>
 
 <!-- ---------- elevation ---------- -->
-<section id="elevation" class="ks-section">
+<section id="elevation" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">03 · Foundations</p>
   <h2 class="ks-lede">Surface &amp; elevation</h2>
   <p class="ks-note">Borders separate, shadows float. A surface in the page flow gets a border and no shadow; a surface above the page gets both, because a shadow alone is nearly invisible in dark mode.</p>
@@ -382,7 +390,8 @@
 <!-- ========================= 2. PRIMITIVES =============================== -->
 
 <!-- ---------- buttons ---------- -->
-<section id="buttons" class="ks-section">
+<section id="buttons" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-[0.6875rem] font-medium text-primary sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current"></span>React component</span>
   <p class="ks-title">04 · Primitives</p>
   <h2 class="ks-lede">Button</h2>
   <p class="ks-note">Six variants, four sizes. Default height is 36px (<span class="font-mono">h-9</span>). Icons are 16px with <span class="font-mono">gap-2</span>.</p>
@@ -390,7 +399,8 @@
 </section>
 
 <!-- ---------- inputs ---------- -->
-<section id="inputs" class="ks-section">
+<section id="inputs" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-[0.6875rem] font-medium text-primary sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current"></span>React component</span>
   <p class="ks-title">05 · Primitives</p>
   <h2 class="ks-lede">Form controls</h2>
   <p class="ks-note">All controls are 36px tall to match buttons. The error state changes colour only — the border does not thicken, because a thicker border shifts layout by a pixel.</p>
@@ -398,7 +408,8 @@
 </section>
 
 <!-- ---------- form ---------- -->
-<section id="form" class="ks-section">
+<section id="form" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">06 · Primitives</p>
   <h2 class="ks-lede">Composed form</h2>
   <p class="ks-note">Individual controls do not show spacing or rhythm. This does. Sibling fields sit <span class="font-mono">gap-4</span> apart, groups <span class="font-mono">gap-6</span>.</p>
@@ -472,7 +483,8 @@
 <!-- ========================= 3. DATA DISPLAY ============================= -->
 
 <!-- ---------- card ---------- -->
-<section id="card" class="ks-section">
+<section id="card" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-[0.6875rem] font-medium text-primary sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current"></span>React component</span>
   <p class="ks-title">07 · Data display</p>
   <h2 class="ks-lede">Card</h2>
   <p class="ks-note">Border, no shadow — a card sits <em>in</em> the page, not above it. Padding is <span class="font-mono">p-6</span>, or <span class="font-mono">p-4</span> for compact variants.</p>
@@ -480,7 +492,8 @@
 </section>
 
 <!-- ---------- table ---------- -->
-<section id="table" class="ks-section">
+<section id="table" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-[0.6875rem] font-medium text-primary sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current"></span>React component</span>
   <p class="ks-title">08 · Data display</p>
   <h2 class="ks-lede">Table</h2>
   <p class="ks-note">Rows are 44px. Numeric columns are right-aligned with <span class="font-mono">tabular-nums</span> — always. Header is <span class="font-mono">bg-muted/50</span> with uppercase caption type.</p>
@@ -488,7 +501,8 @@
 </section>
 
 <!-- ---------- list ---------- -->
-<section id="list" class="ks-section">
+<section id="list" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">09 · Data display</p>
   <h2 class="ks-lede">List &amp; feed</h2>
   <p class="ks-note">Three list shapes that carry most of an application: a settings list, an activity feed, and a description list.</p>
@@ -587,7 +601,8 @@
 </section>
 
 <!-- ---------- badges ---------- -->
-<section id="badges" class="ks-section">
+<section id="badges" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-[0.6875rem] font-medium text-primary sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current"></span>React component</span>
   <p class="ks-title">10 · Data display</p>
   <h2 class="ks-lede">Badge &amp; status</h2>
   <p class="ks-note">Status colours signal <em>state</em>. They are never used decoratively, and never to distinguish categories in navigation.</p>
@@ -595,7 +610,8 @@
 </section>
 
 <!-- ---------- avatar ---------- -->
-<section id="avatar" class="ks-section">
+<section id="avatar" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">11 · Data display</p>
   <h2 class="ks-lede">Avatar</h2>
   <p class="ks-note">Initials on <span class="font-mono">bg-muted</span> are the fallback. No generated colours per user — that reintroduces uncontrolled colour into the palette.</p>
@@ -645,7 +661,8 @@
 </section>
 
 <!-- ---------- dataviz ---------- -->
-<section id="dataviz" class="ks-section">
+<section id="dataviz" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">12 · Data display</p>
   <h2 class="ks-lede">Data visualisation</h2>
   <p class="ks-note">Chart series are used in order: a two-series chart uses <span class="font-mono">chart-1</span> and <span class="font-mono">chart-2</span>, never <span class="font-mono">chart-1</span> and <span class="font-mono">chart-4</span>. Gridlines are <span class="font-mono">border</span>, labels are <span class="font-mono">muted-foreground</span>.</p>
@@ -736,7 +753,8 @@
 <!-- ========================= 4. NAVIGATION =============================== -->
 
 <!-- ---------- nav ---------- -->
-<section id="nav" class="ks-section">
+<section id="nav" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">13 · Navigation</p>
   <h2 class="ks-lede">Navigation</h2>
   <p class="ks-note">Shown here as components only. <em>Where</em> these go on a page is a layout decision — see <span class="font-mono">layouts/</span>. The sidebar uses the <span class="font-mono">--sidebar-*</span> tokens, which sit one step off the page background.</p>
@@ -857,7 +875,8 @@
 </section>
 
 <!-- ---------- tabs ---------- -->
-<section id="tabs" class="ks-section">
+<section id="tabs" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-[0.6875rem] font-medium text-primary sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current"></span>React component</span>
   <p class="ks-title">14 · Navigation</p>
   <h2 class="ks-lede">Tabs &amp; segmented control</h2>
   <p class="ks-note">Tabs are underline style, not shadcn's default filled pill — a filled tab bar competes with buttons for attention. The segmented control keeps the filled treatment, because it <em>is</em> a control.</p>
@@ -865,7 +884,8 @@
 </section>
 
 <!-- ---------- breadcrumb ---------- -->
-<section id="breadcrumb" class="ks-section">
+<section id="breadcrumb" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">15 · Navigation</p>
   <h2 class="ks-lede">Breadcrumb &amp; pagination</h2>
 
@@ -909,7 +929,8 @@
 </section>
 
 <!-- ---------- menu ---------- -->
-<section id="menu" class="ks-section">
+<section id="menu" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">16 · Navigation</p>
   <h2 class="ks-lede">Menus</h2>
   <p class="ks-note">Rendered open and inline. An agent reading this file must be able to see a menu without executing anything, so nothing here is behind a click.</p>
@@ -1000,7 +1021,8 @@
 <!-- ==================== 5. FEEDBACK & OVERLAYS =========================== -->
 
 <!-- ---------- alerts ---------- -->
-<section id="alerts" class="ks-section">
+<section id="alerts" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-[0.6875rem] font-medium text-primary sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current"></span>React component</span>
   <p class="ks-title">17 · Feedback</p>
   <h2 class="ks-lede">Alert &amp; callout</h2>
   <p class="ks-note">Intent is carried by the icon and a <span class="font-mono">/10</span> tinted background — not by a heavy coloured left bar, which fights the card border for the same job.</p>
@@ -1008,7 +1030,8 @@
 </section>
 
 <!-- ---------- dialog ---------- -->
-<section id="dialog" class="ks-section">
+<section id="dialog" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">18 · Overlays</p>
   <h2 class="ks-lede">Dialog, sheet &amp; popover</h2>
   <p class="ks-note">All shown inline rather than as real overlays. Floating surfaces get <em>both</em> a shadow and a border — in dark mode a shadow against a dark background is nearly invisible, so the border is what keeps the edge legible.</p>
@@ -1123,7 +1146,8 @@
 </section>
 
 <!-- ---------- progress ---------- -->
-<section id="progress" class="ks-section">
+<section id="progress" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">19 · Feedback</p>
   <h2 class="ks-lede">Progress &amp; loading</h2>
 
@@ -1182,7 +1206,8 @@
 </section>
 
 <!-- ---------- toast ---------- -->
-<section id="toast" class="ks-section">
+<section id="toast" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">20 · Feedback</p>
   <h2 class="ks-lede">Toast &amp; notification</h2>
   <p class="ks-note">Popover surface, <span class="font-mono">shadow-lg</span>, stacked bottom-right in a real application. Every toast is dismissible; destructive ones do not auto-dismiss.</p>
@@ -1221,7 +1246,8 @@
 </section>
 
 <!-- ---------- empty ---------- -->
-<section id="empty" class="ks-section">
+<section id="empty" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">21 · Feedback</p>
   <h2 class="ks-lede">Empty, error &amp; loading states</h2>
   <p class="ks-note">Empty states are the one place a heading may be centred. The icon sits in a muted circle rather than floating, so it reads as deliberate rather than as a missing image.</p>
@@ -1265,7 +1291,8 @@
 <!-- ==================== 6. COMPOSED SECTIONS ============================= -->
 
 <!-- ---------- page-header ---------- -->
-<section id="page-header" class="ks-section">
+<section id="page-header" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">22 · Composed</p>
   <h2 class="ks-lede">Application page header</h2>
   <p class="ks-note">Breadcrumb, title, description, actions, tabs. This is the top of nearly every in-app page, and getting it consistent is most of what makes an application feel coherent.</p>
@@ -1318,7 +1345,8 @@
 </section>
 
 <!-- ---------- hero ---------- -->
-<section id="hero" class="ks-section">
+<section id="hero" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">23 · Composed</p>
   <h2 class="ks-lede">Marketing hero</h2>
   <p class="ks-note">Marketing bands use <span class="font-mono">py-16</span> rather than the in-app <span class="font-mono">py-8</span>. Note there is no gradient — <span class="font-mono">slate</span> never uses one.</p>
@@ -1362,7 +1390,8 @@
 </section>
 
 <!-- ---------- features ---------- -->
-<section id="features" class="ks-section">
+<section id="features" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">24 · Composed</p>
   <h2 class="ks-lede">Feature grid</h2>
 
@@ -1413,7 +1442,8 @@
 </section>
 
 <!-- ---------- pricing ---------- -->
-<section id="pricing" class="ks-section">
+<section id="pricing" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">25 · Composed</p>
   <h2 class="ks-lede">Pricing table</h2>
   <p class="ks-note">The recommended tier is marked with a border and a badge — not with a different background colour, which would introduce a second accent surface.</p>
@@ -1461,7 +1491,8 @@
 </section>
 
 <!-- ---------- testimonial ---------- -->
-<section id="testimonial" class="ks-section">
+<section id="testimonial" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">26 · Composed</p>
   <h2 class="ks-lede">Testimonial</h2>
 
@@ -1500,7 +1531,8 @@
 </section>
 
 <!-- ---------- cta ---------- -->
-<section id="cta" class="ks-section">
+<section id="cta" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">27 · Composed</p>
   <h2 class="ks-lede">Call to action band</h2>
   <p class="ks-note">The one inverted surface in the design. It works because it is used once per page — a second inverted band would stop reading as emphasis.</p>
@@ -1520,7 +1552,8 @@
 </section>
 
 <!-- ---------- footer ---------- -->
-<section id="footer" class="ks-section">
+<section id="footer" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">28 · Composed</p>
   <h2 class="ks-lede">Footer</h2>
 
@@ -1585,7 +1618,8 @@
 <!-- ========================= 7. UTILITY ================================== -->
 
 <!-- ---------- icons ---------- -->
-<section id="icons" class="ks-section">
+<section id="icons" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">29 · Utility</p>
   <h2 class="ks-lede">Icon set</h2>
   <p class="ks-note">Lucide, inline SVG, 16px in controls and 20px standalone, stroke width 2 (1.5 above 24px). Never an emoji, never a filled glyph icon — the stroke weight is what keeps the set coherent.</p>
@@ -1613,7 +1647,8 @@
 </section>
 
 <!-- ---------- motion ---------- -->
-<section id="motion" class="ks-section">
+<section id="motion" class="ks-section relative">
+  <span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span>
   <p class="ks-title">30 · Utility</p>
   <h2 class="ks-lede">Motion &amp; interaction</h2>
   <p class="ks-note">One duration for everything interactive. Colour and opacity animate; layout and position do not.</p>
