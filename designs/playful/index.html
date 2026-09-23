@@ -592,36 +592,36 @@
     <div>
       <p class="ks-label">Checkbox</p>
       <div class="space-y-4">
-        <label class="flex items-center gap-3 cursor-pointer">
-          <input type="checkbox" class="peer h-5 w-5 shrink-0 rounded-md border-2 border-input bg-background transition-all checked:bg-primary checked:border-primary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer">
-          <span class="text-sm font-medium peer-checked:text-foreground">Unchecked state</span>
-        </label>
-        <label class="flex items-center gap-3 cursor-pointer">
-          <input type="checkbox" checked class="peer h-5 w-5 shrink-0 rounded-md border-2 border-primary bg-primary transition-all focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer">
+        <div class="flex items-center gap-3">
+          <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 border-input bg-background"></span>
+          <span class="text-sm font-medium">Unchecked state</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 border-primary bg-primary text-primary-foreground"><svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
           <span class="text-sm font-medium">Checked state</span>
-        </label>
-        <label class="flex items-center gap-3 opacity-50 cursor-not-allowed">
-          <input type="checkbox" disabled class="h-5 w-5 shrink-0 rounded-md border-2 border-input bg-muted cursor-not-allowed">
+        </div>
+        <div class="flex items-center gap-3 opacity-50">
+          <span class="flex h-5 w-5 shrink-0 rounded-md border-2 border-input bg-muted"></span>
           <span class="text-sm font-medium text-muted-foreground">Disabled</span>
-        </label>
+        </div>
       </div>
     </div>
     
     <div>
       <p class="ks-label">Radio group</p>
       <div class="space-y-3">
-        <label class="flex items-center gap-3 cursor-pointer">
-          <input type="radio" name="radio-demo" class="peer h-5 w-5 shrink-0 rounded-full border-2 border-input bg-background transition-all checked:bg-primary checked:border-primary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer">
-          <span class="text-sm font-medium peer-checked:text-foreground">Option one</span>
-        </label>
-        <label class="flex items-center gap-3 cursor-pointer">
-          <input type="radio" name="radio-demo" checked class="peer h-5 w-5 shrink-0 rounded-full border-2 border-primary bg-primary transition-all focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer">
+        <div class="flex items-center gap-3">
+          <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-input bg-background"></span>
+          <span class="text-sm font-medium">Option one</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-primary bg-background"><span class="h-2 w-2 rounded-full bg-primary"></span></span>
           <span class="text-sm font-medium">Option two (selected)</span>
-        </label>
-        <label class="flex items-center gap-3 cursor-pointer">
-          <input type="radio" name="radio-demo" class="peer h-5 w-5 shrink-0 rounded-full border-2 border-input bg-background transition-all checked:bg-primary checked:border-primary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer">
-          <span class="text-sm font-medium peer-checked:text-foreground">Option three</span>
-        </label>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-input bg-background"></span>
+          <span class="text-sm font-medium">Option three</span>
+        </div>
       </div>
     </div>
     
@@ -629,28 +629,22 @@
       <p class="ks-label">Switch</p>
       <div class="flex flex-wrap gap-6">
         <label class="inline-flex items-center gap-3 cursor-pointer">
-          <span class="relative inline-block h-6 w-11 shrink-0">
-            <input type="checkbox" class="peer sr-only">
-            <span class="block h-full w-full rounded-full bg-input transition-colors peer-checked:bg-primary peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2"></span>
-            <span class="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-background transition-transform shadow-sm peer-checked:translate-x-5"></span>
+          <span class="inline-flex h-6 w-11 shrink-0 items-center rounded-full border border-transparent bg-input p-0.5 transition-colors">
+            <span class="h-5 w-5 rounded-full bg-background shadow-sm transition-transform"></span>
           </span>
           <span class="text-sm font-medium">Off</span>
         </label>
         
         <label class="inline-flex items-center gap-3 cursor-pointer">
-          <span class="relative inline-block h-6 w-11 shrink-0">
-            <input type="checkbox" checked class="peer sr-only">
-            <span class="block h-full w-full rounded-full bg-primary transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2"></span>
-            <span class="absolute left-0.5 top-0.5 h-5 w-5 translate-x-5 rounded-full bg-background shadow-sm transition-transform"></span>
+          <span class="inline-flex h-6 w-11 shrink-0 items-center rounded-full border border-transparent bg-primary p-0.5 transition-colors">
+            <span class="h-5 w-5 translate-x-5 rounded-full bg-background shadow-sm transition-transform"></span>
           </span>
           <span class="text-sm font-medium">On</span>
         </label>
         
         <label class="inline-flex items-center gap-3 opacity-50 cursor-not-allowed">
-          <span class="relative inline-block h-6 w-11 shrink-0">
-            <input type="checkbox" disabled class="peer sr-only">
-            <span class="block h-full w-full rounded-full bg-muted"></span>
-            <span class="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-background/80"></span>
+          <span class="inline-flex h-6 w-11 shrink-0 items-center rounded-full border border-transparent bg-muted p-0.5">
+            <span class="h-5 w-5 rounded-full bg-background"></span>
           </span>
           <span class="text-sm font-medium text-muted-foreground">Disabled</span>
         </label>
@@ -660,7 +654,11 @@
     <div>
       <p class="ks-label">Slider</p>
       <div class="space-y-4">
-        <input type="range" min="0" max="100" value="60" aria-label="Daily goal" style="--slider-fill: 60%" class="h-2 w-full appearance-none rounded-full bg-muted bg-[linear-gradient(to_right,var(--primary)_var(--slider-fill),transparent_var(--slider-fill))] outline-none [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:shadow-md">
+        <div class="relative flex h-5 w-full items-center">
+          <span class="h-2 w-full rounded-full bg-muted"></span>
+          <span class="absolute left-0 h-2 w-[60%] rounded-full bg-primary"></span>
+          <span class="absolute left-[60%] h-5 w-5 -translate-x-1/2 rounded-full bg-primary shadow-md"></span>
+        </div>
         <p class="text-sm text-muted-foreground">Value: <span data-slider-value>60</span>%</p>
       </div>
     </div>
@@ -745,7 +743,7 @@
           <legend class="text-base font-semibold">Preferences</legend>
           
           <label class="flex items-start gap-3 cursor-pointer">
-            <input type="checkbox" class="mt-0.5 h-5 w-5 shrink-0 rounded-md border-2 border-input bg-background transition-all checked:bg-primary checked:border-primary cursor-pointer">
+            <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 border-input bg-background"></span>
             <div>
               <div class="text-sm font-medium">Email notifications</div>
               <div class="text-sm text-muted-foreground">Receive updates about your account activity</div>
@@ -753,7 +751,7 @@
           </label>
           
           <label class="flex items-start gap-3 cursor-pointer">
-            <input type="checkbox" class="mt-0.5 h-5 w-5 shrink-0 rounded-md border-2 border-input bg-background transition-all checked:bg-primary checked:border-primary cursor-pointer">
+            <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 border-input bg-background"></span>
             <div>
               <div class="text-sm font-medium">Marketing emails</div>
               <div class="text-sm text-muted-foreground">Get tips, updates and special offers</div>

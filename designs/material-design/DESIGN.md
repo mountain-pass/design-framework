@@ -301,6 +301,20 @@ cannot drift apart. Tailwind utilities are order-independent, so match the *set*
 classes, not their character order; state utilities (`hover:`, `active:`,
 `disabled:`) follow the Motion table above and appear as static swatches in the demo.
 
+Ready-made shadcn components generated from that manifest live in
+[`components/ui/`](components/ui/) (with [`lib/utils.ts`](lib/utils.ts)) — real `.tsx`
+you can drop into a Next.js + shadcn project, carrying these exact classes.
+`scripts/build-components.mjs` emits them and `check.mjs` fails if a committed file
+drifts from a fresh generation, so they stay in lockstep with `classes.json`. The
+Radix-driven ones (Select, Checkbox, RadioGroup, Switch, Slider, Tabs, DropdownMenu,
+Avatar, Progress, Dialog, AlertDialog, Popover, Tooltip, Sheet, Toast) weave these
+design classes into stock shadcn/Radix structure, adding the interactive scaffolding —
+focus ring, `data-[state]` transitions, disabled treatment, the portal and scrim — that
+a static demo cannot show. A compiled live preview that renders these `.tsx` —
+`scripts/build-preview.mjs` bundles them into a self-contained page and fails the build
+if a component does not compile — is in [`react-preview/`](react-preview/); the overlay
+components are additionally mounted there as real, clickable instances.
+
 ### Button — `components/ui/button.tsx`
 
 ```ts

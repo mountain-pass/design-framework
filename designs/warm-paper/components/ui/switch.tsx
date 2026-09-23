@@ -1,0 +1,23 @@
+// Generated from designs/warm-paper/classes.json by scripts/build-components.mjs.
+// Do not edit by hand — change classes.json and re-run the generator.
+import * as React from "react"
+import * as SwitchPrimitive from "@radix-ui/react-switch"
+
+import { cn } from "@/lib/utils"
+
+function Switch({ className, ...props }: React.ComponentProps<typeof SwitchPrimitive.Root>) {
+  return (
+    <SwitchPrimitive.Root
+      data-slot="switch"
+      className={cn("inline-flex h-5 w-9 shrink-0 items-center rounded-full border border-transparent bg-input p-0.5 shadow-xs transition-colors", "data-[state=checked]:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50", className)}
+      {...props}
+    >
+      <SwitchPrimitive.Thumb
+        data-slot="switch-thumb"
+        className={cn("h-4 w-4 rounded-full bg-background shadow-sm transition-transform", "data-[state=checked]:translate-x-4")}
+      />
+    </SwitchPrimitive.Root>
+  )
+}
+
+export { Switch }

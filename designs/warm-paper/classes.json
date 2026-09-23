@@ -22,7 +22,10 @@
           "icon": "h-9 w-9"
         }
       },
-      "defaultVariants": { "variant": "default", "size": "default" }
+      "defaultVariants": {
+        "variant": "default",
+        "size": "default"
+      }
     },
     "badge": {
       "primitive": "components/ui/badge.tsx",
@@ -36,7 +39,9 @@
           "outline": "border border-border"
         }
       },
-      "defaultVariants": { "variant": "default" }
+      "defaultVariants": {
+        "variant": "default"
+      }
     },
     "statusPill": {
       "primitive": "components/ui/badge.tsx (status variant)",
@@ -207,6 +212,130 @@
         "segmentSelected": "inline-flex h-7 items-center rounded-sm bg-background px-3 text-sm font-medium shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         "segment": "inline-flex h-7 items-center rounded-sm px-3 text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       }
+    },
+    "avatar": {
+      "primitive": "components/ui/avatar.tsx",
+      "kind": "className",
+      "parts": {
+        "root": "relative flex shrink-0 overflow-hidden rounded-full bg-muted",
+        "fallback": "flex h-full w-full items-center justify-center font-medium text-muted-foreground",
+        "sizeXs": "h-6 w-6 text-[0.6875rem]",
+        "sizeSm": "h-8 w-8 text-xs",
+        "sizeMd": "h-10 w-10 text-sm",
+        "sizeLg": "h-14 w-14 text-base",
+        "statusOnline": "absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-chart-3",
+        "statusOffline": "absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-muted-foreground",
+        "groupRing": "border-2 border-background"
+      },
+      "docs": "Initials on bg-muted are the fallback — no per-user generated colours. Group avatars overlap with -space-x-2 and each carries groupRing to punch the overlap."
+    },
+    "breadcrumb": {
+      "primitive": "components/ui/breadcrumb.tsx",
+      "kind": "className",
+      "parts": {
+        "list": "flex flex-wrap items-center gap-1.5 text-sm",
+        "link": "text-muted-foreground transition-colors hover:text-foreground",
+        "separator": "h-3.5 w-3.5",
+        "page": "font-medium"
+      },
+      "docs": "Current page is font-medium, not a link. Separator is a chevron, never a slash."
+    },
+    "pagination": {
+      "primitive": "components/ui/pagination.tsx",
+      "kind": "className",
+      "parts": {
+        "nav": "flex flex-wrap items-center gap-1",
+        "link": "inline-flex h-9 w-9 items-center justify-center rounded-md text-sm tabular-nums transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "linkActive": "inline-flex h-9 w-9 items-center justify-center rounded-md border border-input bg-background text-sm font-medium tabular-nums shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "step": "inline-flex h-9 items-center gap-1 rounded-md px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "ellipsis": "inline-flex h-9 w-9 items-center justify-center text-sm text-muted-foreground"
+      },
+      "docs": "Current page is outlined (linkActive), not filled — a filled page number reads as a primary action."
+    },
+    "progress": {
+      "primitive": "components/ui/progress.tsx",
+      "kind": "className",
+      "parts": {
+        "track": "h-2 w-full overflow-hidden rounded-full bg-muted",
+        "indicator": "h-full rounded-full bg-primary transition-all"
+      },
+      "docs": "Width is data-driven (the indicator's inline width, or a translateX in the Radix component). Ring and skeleton variants live in the same section but are their own primitives."
+    },
+    "skeleton": {
+      "primitive": "components/ui/skeleton.tsx",
+      "kind": "className",
+      "parts": {
+        "base": "animate-pulse rounded-md bg-muted"
+      },
+      "docs": "A pulsing muted block. Callers set width/height and rounded-full for an avatar placeholder."
+    },
+    "dialog": {
+      "primitive": "components/ui/dialog.tsx",
+      "kind": "className",
+      "parts": {
+        "content": "rounded-lg border border-border bg-popover text-popover-foreground shadow-lg",
+        "header": "p-6 pb-4",
+        "title": "text-lg font-semibold tracking-[-0.015em]",
+        "description": "mt-1.5 text-sm text-muted-foreground",
+        "body": "space-y-4 px-6 pb-6",
+        "footer": "flex items-center justify-end gap-3 border-t border-border px-6 py-4",
+        "close": "-mr-2 -mt-2 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      },
+      "docs": "Floating surface: both a shadow and a border, because in dark mode a shadow on a dark background is nearly invisible and the border keeps the edge legible. The overlay scrim is preview scaffolding (bg-background/80 backdrop-blur), not a design token."
+    },
+    "alertDialog": {
+      "primitive": "components/ui/alert-dialog.tsx",
+      "kind": "className",
+      "parts": {
+        "content": "rounded-lg border border-border bg-popover p-6 text-popover-foreground shadow-lg",
+        "iconWrap": "flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-destructive/10 text-destructive",
+        "title": "text-lg font-semibold tracking-[-0.015em]",
+        "description": "mt-1.5 text-sm text-muted-foreground",
+        "footer": "mt-5 flex items-center justify-end gap-3"
+      },
+      "docs": "Destructive confirmation. The action and cancel buttons reuse buttonVariants; the leading icon sits in a destructive-tinted circle."
+    },
+    "popover": {
+      "primitive": "components/ui/popover.tsx",
+      "kind": "className",
+      "parts": {
+        "content": "rounded-lg border border-border bg-popover p-4 text-popover-foreground shadow-md"
+      },
+      "docs": "shadow-md (one step lighter than a dialog's shadow-lg). Width is set by the caller."
+    },
+    "tooltip": {
+      "primitive": "components/ui/tooltip.tsx",
+      "kind": "className",
+      "parts": {
+        "content": "rounded-md border border-border bg-popover px-2.5 py-1.5 text-xs text-popover-foreground shadow-md"
+      },
+      "docs": "Small popover surface at the xs type scale."
+    },
+    "sheet": {
+      "primitive": "components/ui/sheet.tsx",
+      "kind": "className",
+      "parts": {
+        "content": "border border-border bg-popover text-popover-foreground shadow-lg",
+        "header": "flex items-start justify-between gap-4 border-b border-border p-6",
+        "title": "text-lg font-semibold tracking-[-0.015em]",
+        "description": "mt-1 text-sm text-muted-foreground",
+        "footer": "border-t border-border px-6 py-4",
+        "close": "-mr-2 -mt-2 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      },
+      "docs": "A drawer that shares the dialog surface. The side pinning (fixed inset-y-0, a side border) is preview scaffolding; the design classes are the surface, header, and footer."
+    },
+    "toast": {
+      "primitive": "components/ui/toast.tsx",
+      "kind": "className",
+      "parts": {
+        "root": "flex items-start gap-3 rounded-lg border border-border bg-popover p-4 text-popover-foreground shadow-lg",
+        "rootDestructive": "flex items-start gap-3 rounded-lg border border-destructive/30 bg-popover p-4 text-popover-foreground shadow-lg",
+        "title": "text-sm font-medium",
+        "description": "text-sm text-muted-foreground",
+        "close": "-mr-1 -mt-1 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "action": "inline-flex h-7 shrink-0 items-center rounded-md px-2.5 text-xs font-medium text-primary transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      },
+      "docs": "Popover surface, shadow-lg, stacked bottom-right in a real app. Every toast is dismissible; destructive ones (rootDestructive) do not auto-dismiss."
     }
   }
 }

@@ -22,7 +22,10 @@
           "icon": "h-11 w-11"
         }
       },
-      "defaultVariants": { "variant": "default", "size": "default" },
+      "defaultVariants": {
+        "variant": "default",
+        "size": "default"
+      },
       "docs": "Rounded-xl, font-semibold. default/destructive use transition-all so their shadow lifts on hover. sm tightens the radius to rounded-lg. link is padding/height-less (cn()/tailwind-merge drops the size padding)."
     },
     "badge": {
@@ -37,7 +40,9 @@
           "outline": "border border-border"
         }
       },
-      "defaultVariants": { "variant": "default" }
+      "defaultVariants": {
+        "variant": "default"
+      }
     },
     "statusPill": {
       "primitive": "components/ui/badge.tsx (status variant)",
@@ -96,37 +101,43 @@
     "checkbox": {
       "primitive": "components/ui/checkbox.tsx",
       "kind": "className",
-      "docs": "A styled native <input type=checkbox> using the peer + checked: pattern.",
       "parts": {
-        "box": "peer h-5 w-5 shrink-0 rounded-md border-2 border-input bg-background transition-all checked:bg-primary checked:border-primary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer",
-        "disabled": "h-5 w-5 shrink-0 rounded-md border-2 border-input bg-muted cursor-not-allowed",
-        "label": "text-sm font-medium peer-checked:text-foreground"
-      }
+        "box": "flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 border-input bg-background",
+        "boxChecked": "flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 border-primary bg-primary text-primary-foreground",
+        "check": "h-3.5 w-3.5"
+      },
+      "docs": "Radix checkbox: a filled box on check, with a check glyph. Indeterminate shares the filled box with a minus glyph."
     },
     "radio": {
       "primitive": "components/ui/radio-group.tsx",
       "kind": "className",
       "parts": {
-        "box": "peer h-5 w-5 shrink-0 rounded-full border-2 border-input bg-background transition-all checked:bg-primary checked:border-primary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer"
-      }
+        "outer": "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-input bg-background",
+        "outerSelected": "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-primary bg-background",
+        "dot": "h-2 w-2 rounded-full bg-primary"
+      },
+      "docs": "Radio: selected state adds the primary border and the centre dot."
     },
     "switch": {
       "primitive": "components/ui/switch.tsx",
       "kind": "className",
       "parts": {
-        "wrapper": "relative inline-block h-6 w-11 shrink-0",
-        "input": "peer sr-only",
-        "track": "block h-full w-full rounded-full bg-input transition-colors peer-checked:bg-primary peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2",
-        "thumb": "absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-background transition-transform shadow-sm peer-checked:translate-x-5"
-      }
+        "trackOff": "inline-flex h-6 w-11 shrink-0 items-center rounded-full border border-transparent bg-input p-0.5 transition-colors",
+        "trackOn": "inline-flex h-6 w-11 shrink-0 items-center rounded-full border border-transparent bg-primary p-0.5 transition-colors",
+        "thumb": "h-5 w-5 rounded-full bg-background shadow-sm transition-transform",
+        "thumbOn": "h-5 w-5 translate-x-5 rounded-full bg-background shadow-sm transition-transform"
+      },
+      "docs": "Switch: the track fills primary and the thumb slides on check."
     },
     "slider": {
       "primitive": "components/ui/slider.tsx",
       "kind": "className",
       "parts": {
-        "input": "h-2 w-full appearance-none rounded-full bg-muted bg-[linear-gradient(to_right,var(--primary)_var(--slider-fill),transparent_var(--slider-fill))] outline-none [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:shadow-md"
+        "track": "h-2 w-full rounded-full bg-muted",
+        "range": "h-2 rounded-full bg-primary",
+        "thumb": "h-5 w-5 -translate-x-1/2 rounded-full bg-primary shadow-md"
       },
-      "docs": "A native range input with a gradient-filled track and pseudo-element thumbs driven by the --slider-fill custom property."
+      "docs": "Slider: a muted track, a primary range fill, and a round thumb."
     },
     "card": {
       "primitive": "components/ui/card.tsx",
@@ -207,6 +218,130 @@
         "segmentSelected": "inline-flex h-7 items-center rounded-sm bg-background px-3 text-sm font-medium shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         "segment": "inline-flex h-7 items-center rounded-sm px-3 text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       }
+    },
+    "avatar": {
+      "primitive": "components/ui/avatar.tsx",
+      "kind": "className",
+      "parts": {
+        "root": "relative flex shrink-0 overflow-hidden rounded-full bg-muted",
+        "fallback": "flex h-full w-full items-center justify-center font-medium text-muted-foreground",
+        "sizeXs": "h-6 w-6 text-[0.6875rem]",
+        "sizeSm": "h-8 w-8 text-xs",
+        "sizeMd": "h-10 w-10 text-sm",
+        "sizeLg": "h-14 w-14 text-base",
+        "statusOnline": "absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-chart-3",
+        "statusOffline": "absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-muted-foreground",
+        "groupRing": "border-2 border-background"
+      },
+      "docs": "Initials on bg-muted are the fallback — no per-user generated colours. Group avatars overlap with -space-x-2 and each carries groupRing to punch the overlap."
+    },
+    "breadcrumb": {
+      "primitive": "components/ui/breadcrumb.tsx",
+      "kind": "className",
+      "parts": {
+        "list": "flex flex-wrap items-center gap-1.5 text-sm",
+        "link": "text-muted-foreground transition-colors hover:text-foreground",
+        "separator": "h-3.5 w-3.5",
+        "page": "font-medium"
+      },
+      "docs": "Current page is font-medium, not a link. Separator is a chevron, never a slash."
+    },
+    "pagination": {
+      "primitive": "components/ui/pagination.tsx",
+      "kind": "className",
+      "parts": {
+        "nav": "flex flex-wrap items-center gap-1",
+        "link": "inline-flex h-9 w-9 items-center justify-center rounded-lg text-sm tabular-nums transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "linkActive": "inline-flex h-9 w-9 items-center justify-center rounded-xl border border-input bg-background text-sm font-medium tabular-nums shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "step": "inline-flex h-11 items-center gap-1 rounded-lg px-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "ellipsis": "inline-flex h-9 w-9 items-center justify-center text-sm text-muted-foreground"
+      },
+      "docs": "Current page is outlined (linkActive), not filled — a filled page number reads as a primary action."
+    },
+    "progress": {
+      "primitive": "components/ui/progress.tsx",
+      "kind": "className",
+      "parts": {
+        "track": "h-2 w-full overflow-hidden rounded-full bg-muted",
+        "indicator": "h-full rounded-full bg-primary transition-all"
+      },
+      "docs": "Width is data-driven (the indicator's inline width, or a translateX in the Radix component). Ring and skeleton variants live in the same section but are their own primitives."
+    },
+    "skeleton": {
+      "primitive": "components/ui/skeleton.tsx",
+      "kind": "className",
+      "parts": {
+        "base": "animate-pulse rounded-lg bg-muted"
+      },
+      "docs": "A pulsing muted block. Callers set width/height and rounded-full for an avatar placeholder."
+    },
+    "dialog": {
+      "primitive": "components/ui/dialog.tsx",
+      "kind": "className",
+      "parts": {
+        "content": "rounded-xl border border-border bg-popover text-popover-foreground shadow-lg",
+        "header": "p-6 pb-4",
+        "title": "text-lg font-semibold tracking-[-0.015em]",
+        "description": "mt-1.5 text-sm text-muted-foreground",
+        "body": "space-y-4 px-6 pb-6",
+        "footer": "flex items-center justify-end gap-3 border-t border-border px-6 py-4",
+        "close": "-mr-2 -mt-2 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      },
+      "docs": "Floating surface: both a shadow and a border, because in dark mode a shadow on a dark background is nearly invisible and the border keeps the edge legible. The overlay scrim is preview scaffolding (bg-background/80 backdrop-blur), not a design token."
+    },
+    "alertDialog": {
+      "primitive": "components/ui/alert-dialog.tsx",
+      "kind": "className",
+      "parts": {
+        "content": "rounded-xl border border-border bg-popover p-6 text-popover-foreground shadow-lg",
+        "iconWrap": "flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-destructive/10 text-destructive",
+        "title": "text-lg font-semibold tracking-[-0.015em]",
+        "description": "mt-1.5 text-sm text-muted-foreground",
+        "footer": "mt-5 flex items-center justify-end gap-3"
+      },
+      "docs": "Destructive confirmation. The action and cancel buttons reuse buttonVariants; the leading icon sits in a destructive-tinted circle."
+    },
+    "popover": {
+      "primitive": "components/ui/popover.tsx",
+      "kind": "className",
+      "parts": {
+        "content": "rounded-xl border border-border bg-popover p-4 text-popover-foreground shadow-md"
+      },
+      "docs": "shadow-md (one step lighter than a dialog's shadow-lg). Width is set by the caller."
+    },
+    "tooltip": {
+      "primitive": "components/ui/tooltip.tsx",
+      "kind": "className",
+      "parts": {
+        "content": "rounded-xl border border-border bg-popover px-2.5 py-1.5 text-xs text-popover-foreground shadow-md"
+      },
+      "docs": "Small popover surface at the xs type scale."
+    },
+    "sheet": {
+      "primitive": "components/ui/sheet.tsx",
+      "kind": "className",
+      "parts": {
+        "content": "border border-border bg-popover text-popover-foreground shadow-lg",
+        "header": "flex items-start justify-between gap-4 border-b border-border p-6",
+        "title": "text-lg font-semibold tracking-[-0.015em]",
+        "description": "mt-1 text-sm text-muted-foreground",
+        "footer": "border-t border-border px-6 py-4",
+        "close": "-mr-2 -mt-2 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      },
+      "docs": "A drawer that shares the dialog surface. The side pinning (fixed inset-y-0, a side border) is preview scaffolding; the design classes are the surface, header, and footer."
+    },
+    "toast": {
+      "primitive": "components/ui/toast.tsx",
+      "kind": "className",
+      "parts": {
+        "root": "flex items-start gap-3 rounded-xl border border-border bg-popover p-4 text-popover-foreground shadow-lg",
+        "rootDestructive": "flex items-start gap-3 rounded-xl border border-destructive/30 bg-popover p-4 text-popover-foreground shadow-lg",
+        "title": "text-sm font-medium",
+        "description": "text-sm text-muted-foreground",
+        "close": "-mr-1 -mt-1 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "action": "inline-flex h-7 shrink-0 items-center rounded-lg px-2.5 text-xs font-medium text-primary transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      },
+      "docs": "Popover surface, shadow-lg, stacked bottom-right in a real app. Every toast is dismissible; destructive ones (rootDestructive) do not auto-dismiss."
     }
   }
 }
