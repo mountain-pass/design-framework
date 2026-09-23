@@ -1,8 +1,11 @@
-// Live preview: mounts the real components/ui/*.tsx into the component sections
-// of the kitchen sink (react-preview/index.html is generated from the kitchen
-// sink by scripts/build-preview.mjs, which leaves a <div data-preview-mount="id">
-// where each component section's demo body was). The other sections — foundations
-// and page compositions — are the kitchen sink's own markup, verbatim.
+// Live preview: mounts the real components/ui/*.tsx into the kitchen sink.
+// react-preview/index.html is generated from the kitchen sink by
+// scripts/build-preview.mjs, which (a) replaces a component section's demo body
+// with <div data-preview-mount="id"> — mounted here from DEMOS — and (b) for the
+// overlay sections leaves the static doc device in place and appends a
+// <div data-preview-live="id"> after it, mounted from LIVE_DEMOS as a real,
+// clickable instance. The other sections — foundations and page compositions —
+// are the kitchen sink's own markup, verbatim.
 
 import * as React from "react"
 import { createRoot } from "react-dom/client"
@@ -20,6 +23,33 @@ import { Slider } from "@/components/ui/slider"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
+import { Pagination, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis } from "@/components/ui/pagination"
+import { Progress } from "@/components/ui/progress"
+import { Skeleton } from "@/components/ui/skeleton"
+import {
+  DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut,
+} from "@/components/ui/dropdown-menu"
+import {
+  Dialog, DialogTrigger, DialogClose, DialogContent, DialogHeader, DialogBody,
+  DialogFooter, DialogTitle, DialogDescription, dialogCloseClass,
+} from "@/components/ui/dialog"
+import {
+  AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogAction, AlertDialogCancel,
+  alertDialogIconWrapClass,
+} from "@/components/ui/alert-dialog"
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
+import {
+  Sheet, SheetTrigger, SheetClose, SheetContent, SheetHeader, SheetFooter,
+  SheetTitle, SheetDescription, sheetCloseClass,
+} from "@/components/ui/sheet"
+import {
+  ToastProvider, ToastViewport, Toast, ToastTitle, ToastDescription, ToastClose, ToastAction,
+} from "@/components/ui/toast"
 
 // --- inline icons, exact Lucide paths from the kitchen sink -----------------
 type IconProps = { className?: string }
@@ -52,6 +82,12 @@ const AlertCircleI = mk(<><circle cx="12" cy="12" r="10" /><path d="M12 8v4m0 4h
 const CheckCircle = mk(<><circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" /></>)
 const Warning = mk(<><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z" /><path d="M12 9v4m0 4h.01" /></>)
 const XCircle = mk(<><circle cx="12" cy="12" r="10" /><path d="m15 9-6 6m0-6 6 6" /></>)
+const UserI = mk(<><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></>)
+const CreditCard = mk(<path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />)
+const Users = mk(<><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /></>)
+const LogOut = mk(<><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="m16 17 5-5-5-5M21 12H9" /></>)
+const X = mk(<path d="M18 6 6 18M6 6l12 12" />)
+const Copy = mk(<><rect x="9" y="9" width="12" height="12" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></>)
 
 // --------------------------------------------------------------- sections ---
 
@@ -311,7 +347,7 @@ function StatusPill({ tone, children }: { tone: string; children: React.ReactNod
     </span>
   )
 }
-function Avatar({ initials }: { initials: string }) {
+function InitialsChip({ initials }: { initials: string }) {
   return <span className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-[0.6875rem] font-medium text-muted-foreground">{initials}</span>
 }
 
@@ -353,7 +389,7 @@ function TableDemo() {
                 : <span className="flex h-4 w-4 rounded-sm border border-input bg-background" />}</TableCell>
               <TableCell className="font-mono text-[0.8125rem]">{r.id}</TableCell>
               <TableCell><StatusPill tone={r.tone}>{r.status}</StatusPill></TableCell>
-              <TableCell><span className="flex items-center gap-2"><Avatar initials={r.who} />{r.name}</span></TableCell>
+              <TableCell><span className="flex items-center gap-2"><InitialsChip initials={r.who} />{r.name}</span></TableCell>
               <TableCell className="text-muted-foreground tabular-nums">{r.ago}</TableCell>
               <TableCell className="text-right tabular-nums">{r.dur}</TableCell>
               <TableCell><button aria-label="Row actions" className="inline-flex h-8 w-8 items-center justify-center rounded-md transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><Dots className="h-4 w-4" /></button></TableCell>
@@ -484,8 +520,287 @@ function TabsDemo() {
   )
 }
 
+function AvatarDemo() {
+  return (
+    <div className="ks-grid grid-cols-2 md:grid-cols-4">
+      <div>
+        <p className="ks-label">Sizes</p>
+        <div className="flex items-center gap-3">
+          <Avatar className="h-6 w-6 text-[0.6875rem]"><AvatarFallback>RK</AvatarFallback></Avatar>
+          <Avatar className="h-8 w-8 text-xs"><AvatarFallback>RK</AvatarFallback></Avatar>
+          <Avatar className="h-10 w-10 text-sm"><AvatarFallback>RK</AvatarFallback></Avatar>
+          <Avatar className="h-14 w-14 text-base"><AvatarFallback>RK</AvatarFallback></Avatar>
+        </div>
+      </div>
+      <div>
+        <p className="ks-label">With image</p>
+        <div className="flex items-center gap-3">
+          <Avatar className="h-10 w-10"><AvatarFallback><UserI className="h-6 w-6" /></AvatarFallback></Avatar>
+          <span className="text-[0.8125rem] text-muted-foreground">Image slot, icon fallback</span>
+        </div>
+      </div>
+      <div>
+        <p className="ks-label">With status</p>
+        <div className="flex items-center gap-4">
+          <span className="relative inline-flex">
+            <Avatar className="h-10 w-10 text-sm"><AvatarFallback>JW</AvatarFallback></Avatar>
+            <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-chart-3" />
+          </span>
+          <span className="relative inline-flex">
+            <Avatar className="h-10 w-10 text-sm"><AvatarFallback>TO</AvatarFallback></Avatar>
+            <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-muted-foreground" />
+          </span>
+        </div>
+      </div>
+      <div>
+        <p className="ks-label">Group</p>
+        <div className="flex -space-x-2">
+          <Avatar className="h-8 w-8 border-2 border-background text-xs"><AvatarFallback>RK</AvatarFallback></Avatar>
+          <Avatar className="h-8 w-8 border-2 border-background text-xs"><AvatarFallback>TO</AvatarFallback></Avatar>
+          <Avatar className="h-8 w-8 border-2 border-background text-xs"><AvatarFallback>JW</AvatarFallback></Avatar>
+          <Avatar className="h-8 w-8 border-2 border-background bg-secondary text-xs"><AvatarFallback className="tabular-nums text-secondary-foreground">+3</AvatarFallback></Avatar>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function BreadcrumbDemo() {
+  return (
+    <div className="ks-grid grid-cols-1 lg:grid-cols-2">
+      <div>
+        <p className="ks-label">Breadcrumb</p>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem><BreadcrumbLink href="#breadcrumb">Acme</BreadcrumbLink></BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem><BreadcrumbLink asChild><button aria-label="Show hidden levels">…</button></BreadcrumbLink></BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem><BreadcrumbLink href="#breadcrumb">acme-web</BreadcrumbLink></BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem><BreadcrumbPage>Deployments</BreadcrumbPage></BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <p className="mt-3 font-mono text-xs text-muted-foreground">Current page is <span className="text-foreground">font-medium</span>, not a link. Separator is a chevron, never a slash.</p>
+      </div>
+      <div>
+        <p className="ks-label">Pagination</p>
+        <Pagination>
+          <PaginationPrevious />
+          <PaginationLink>1</PaginationLink>
+          <PaginationLink isActive>2</PaginationLink>
+          <PaginationLink>3</PaginationLink>
+          <PaginationEllipsis />
+          <PaginationLink>24</PaginationLink>
+          <PaginationNext />
+        </Pagination>
+        <p className="mt-3 font-mono text-xs text-muted-foreground">Current page is outlined, not filled — a filled page number reads as a primary action.</p>
+      </div>
+    </div>
+  )
+}
+
+function ProgressDemo() {
+  return (
+    <div className="ks-grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+      <div>
+        <p className="ks-label">Progress bar</p>
+        <div className="space-y-4">
+          <div>
+            <Progress value={68} />
+            <p className="mt-2 text-xs text-muted-foreground tabular-nums">68% — uploading assets</p>
+          </div>
+          <div>
+            <Progress value={24} indicatorClassName="bg-chart-4" />
+            <p className="mt-2 text-xs text-muted-foreground tabular-nums">24% — quota used</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p className="ks-label">Spinner</p>
+        <div className="flex items-center gap-5">
+          <Spinner className="h-4 w-4 animate-spin text-muted-foreground" />
+          <Spinner className="h-6 w-6 animate-spin text-primary" />
+          <span className="inline-flex items-center gap-2 text-sm text-muted-foreground"><Spinner className="h-4 w-4 animate-spin" />Checking…</span>
+        </div>
+      </div>
+      <div>
+        <p className="ks-label">Progress ring</p>
+        <div className="relative inline-flex h-20 w-20 items-center justify-center">
+          <svg viewBox="0 0 36 36" className="h-20 w-20 -rotate-90">
+            <circle cx="18" cy="18" r="15.5" fill="none" stroke="currentColor" className="text-muted" strokeWidth={3.5} />
+            <circle cx="18" cy="18" r="15.5" fill="none" stroke="currentColor" className="text-primary" strokeWidth={3.5} strokeLinecap="round" strokeDasharray="97.4" strokeDashoffset="31.2" />
+          </svg>
+          <span className="absolute text-sm font-semibold tabular-nums">68%</span>
+        </div>
+      </div>
+      <div>
+        <p className="ks-label">Skeleton</p>
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-9 w-9 shrink-0 rounded-full" />
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-3 w-2/3" />
+              <Skeleton className="h-3 w-1/3" />
+            </div>
+          </div>
+          <Skeleton className="h-20 w-full" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// --- live interactive demos, appended after the static overlay sections -----
+
+function LiveTag({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mt-10 rounded-lg border border-dashed border-primary/40 bg-primary/[0.03] p-5">
+      <p className="mb-4 inline-flex items-center gap-1.5 text-xs font-medium text-primary">
+        <span className="h-1.5 w-1.5 rounded-full bg-primary" />Live — click to open the real component
+      </p>
+      {children}
+    </div>
+  )
+}
+
+function MenuLive() {
+  return (
+    <LiveTag>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline">Open account menu<ChevronDown className="h-4 w-4" /></Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-60">
+          <DropdownMenuLabel>rina@acme.com</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem><UserI className="h-4 w-4 shrink-0" />Profile<DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut></DropdownMenuItem>
+          <DropdownMenuItem><CreditCard className="h-4 w-4 shrink-0" />Billing<DropdownMenuShortcut>⌘B</DropdownMenuShortcut></DropdownMenuItem>
+          <DropdownMenuItem><Users className="h-4 w-4 shrink-0" />Invite team</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="text-destructive focus:bg-destructive/10 focus:text-destructive"><LogOut className="h-4 w-4 shrink-0" />Sign out</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </LiveTag>
+  )
+}
+
+function DialogLive() {
+  return (
+    <LiveTag>
+      <div className="flex flex-wrap items-center gap-3">
+        <Dialog>
+          <DialogTrigger asChild><Button variant="outline">Add domain…</Button></DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <DialogTitle>Add a custom domain</DialogTitle>
+                  <DialogDescription>Point your domain at Acme and we will issue a certificate automatically.</DialogDescription>
+                </div>
+                <DialogClose className={dialogCloseClass} aria-label="Close"><X className="h-4 w-4" /></DialogClose>
+              </div>
+            </DialogHeader>
+            <DialogBody>
+              <div className="space-y-2">
+                <label htmlFor="live-domain" className="text-sm font-medium leading-none">Domain</label>
+                <Input id="live-domain" placeholder="app.example.com" />
+              </div>
+              <label className="flex items-center gap-2 text-sm leading-none"><Checkbox defaultChecked /> Redirect www to apex</label>
+            </DialogBody>
+            <DialogFooter>
+              <DialogClose asChild><Button variant="ghost">Cancel</Button></DialogClose>
+              <Button>Add domain</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild><Button variant="outline">Delete project…</Button></AlertDialogTrigger>
+          <AlertDialogContent>
+            <div className="flex gap-4">
+              <span className={alertDialogIconWrapClass}><Warning className="h-4 w-4" /></span>
+              <div className="min-w-0">
+                <AlertDialogTitle>Delete acme-web?</AlertDialogTitle>
+                <AlertDialogDescription>This removes all deployments, logs, and environment variables. It cannot be undone.</AlertDialogDescription>
+              </div>
+            </div>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction variant="destructive">Delete project</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <Popover>
+          <PopoverTrigger asChild><Button variant="outline">Build minutes</Button></PopoverTrigger>
+          <PopoverContent className="w-64">
+            <p className="text-sm font-medium">Build minutes</p>
+            <p className="mt-1 text-sm text-muted-foreground">Time spent compiling, across all projects in this workspace.</p>
+            <Progress value={41} className="mt-3" />
+            <p className="mt-1.5 text-xs text-muted-foreground tabular-nums">412 / 1,000</p>
+          </PopoverContent>
+        </Popover>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="outline" size="icon" aria-label="Copy deployment URL"><Copy className="h-4 w-4" /></Button>
+            </TooltipTrigger>
+            <TooltipContent>Copy deployment URL</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <Sheet>
+          <SheetTrigger asChild><Button variant="outline">Environment variables…</Button></SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <div>
+                <SheetTitle>Environment variables</SheetTitle>
+                <SheetDescription>Applied at build and at runtime.</SheetDescription>
+              </div>
+              <SheetClose className={sheetCloseClass} aria-label="Close"><X className="h-4 w-4" /></SheetClose>
+            </SheetHeader>
+            <div className="divide-y divide-border">
+              <div className="flex items-center justify-between gap-4 px-6 py-3 text-sm"><span className="font-mono text-[0.8125rem]">DATABASE_URL</span><span className="font-mono text-[0.8125rem] text-muted-foreground">••••••••</span></div>
+              <div className="flex items-center justify-between gap-4 px-6 py-3 text-sm"><span className="font-mono text-[0.8125rem]">NEXT_PUBLIC_API</span><span className="font-mono text-[0.8125rem] text-muted-foreground">https://api.acme.com</span></div>
+              <div className="flex items-center justify-between gap-4 px-6 py-3 text-sm"><span className="font-mono text-[0.8125rem]">LOG_LEVEL</span><span className="font-mono text-[0.8125rem] text-muted-foreground">info</span></div>
+            </div>
+            <SheetFooter>
+              <Button variant="outline" className="w-full"><Plus className="h-4 w-4" />Add variable</Button>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
+      </div>
+    </LiveTag>
+  )
+}
+
+function ToastLive() {
+  const [toasts, setToasts] = React.useState<number[]>([])
+  return (
+    <LiveTag>
+      <ToastProvider swipeDirection="right" duration={4000}>
+        <Button variant="outline" onClick={() => setToasts((t) => [...t, Date.now()])}>Show toast</Button>
+        {toasts.map((id) => (
+          <Toast key={id} defaultOpen onOpenChange={(open) => { if (!open) setToasts((t) => t.filter((x) => x !== id)) }}>
+            <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-chart-3" />
+            <div className="min-w-0 flex-1 space-y-1">
+              <ToastTitle>Deployment promoted</ToastTitle>
+              <ToastDescription><span className="font-mono text-[0.8125rem]">8f21ba9</span> is now live on acme.com.</ToastDescription>
+            </div>
+            <ToastAction altText="Undo the promotion">Undo</ToastAction>
+          </Toast>
+        ))}
+        <ToastViewport />
+      </ToastProvider>
+    </LiveTag>
+  )
+}
+
 // --------------------------------------------------------------- mount ---
 
+// Sections whose demo body is the real component, rendered in place.
 const DEMOS: Record<string, () => React.ReactElement> = {
   buttons: ButtonsDemo,
   inputs: InputsDemo,
@@ -494,9 +809,24 @@ const DEMOS: Record<string, () => React.ReactElement> = {
   badges: BadgesDemo,
   alerts: AlertsDemo,
   tabs: TabsDemo,
+  avatar: AvatarDemo,
+  breadcrumb: BreadcrumbDemo,
+  progress: ProgressDemo,
+}
+
+// Overlay sections: the static doc device stays, and a live interactive
+// instance is appended after it (build-preview.mjs leaves the mount point).
+const LIVE_DEMOS: Record<string, () => React.ReactElement> = {
+  menu: MenuLive,
+  dialog: DialogLive,
+  toast: ToastLive,
 }
 
 for (const [id, Demo] of Object.entries(DEMOS)) {
   const el = document.querySelector(`[data-preview-mount="${id}"]`)
+  if (el) createRoot(el).render(<Demo />)
+}
+for (const [id, Demo] of Object.entries(LIVE_DEMOS)) {
+  const el = document.querySelector(`[data-preview-live="${id}"]`)
   if (el) createRoot(el).render(<Demo />)
 }

@@ -538,6 +538,492 @@ export { SidebarNav, SidebarNavItem, SidebarGroupLabel }
 `;
 };
 
+const avatar = (design, c) => {
+  const p = c.avatar.parts;
+  return HEADER(design) +
+`import * as React from "react"
+import * as AvatarPrimitive from "@radix-ui/react-avatar"
+
+import { cn } from "@/lib/utils"
+
+function Avatar({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Root>) {
+  return <AvatarPrimitive.Root data-slot="avatar" className={cn(${JSON.stringify(p.root)}, className)} {...props} />
+}
+
+function AvatarImage({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Image>) {
+  return <AvatarPrimitive.Image data-slot="avatar-image" className={cn("aspect-square h-full w-full object-cover", className)} {...props} />
+}
+
+function AvatarFallback({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Fallback>) {
+  return <AvatarPrimitive.Fallback data-slot="avatar-fallback" className={cn(${JSON.stringify(p.fallback)}, className)} {...props} />
+}
+
+export { Avatar, AvatarImage, AvatarFallback }
+`;
+};
+
+const breadcrumb = (design, c) => {
+  const p = c.breadcrumb.parts;
+  return HEADER(design) +
+`import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { ChevronRight, MoreHorizontal } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+
+function Breadcrumb(props: React.ComponentProps<"nav">) {
+  return <nav aria-label="Breadcrumb" data-slot="breadcrumb" {...props} />
+}
+
+function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
+  return <ol data-slot="breadcrumb-list" className={cn(${JSON.stringify(p.list)}, className)} {...props} />
+}
+
+function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
+  return <li data-slot="breadcrumb-item" className={cn("inline-flex items-center gap-1.5", className)} {...props} />
+}
+
+function BreadcrumbLink({ className, asChild, ...props }: React.ComponentProps<"a"> & { asChild?: boolean }) {
+  const Comp = asChild ? Slot : "a"
+  return <Comp data-slot="breadcrumb-link" className={cn(${JSON.stringify(p.link)}, className)} {...props} />
+}
+
+function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
+  return <span data-slot="breadcrumb-page" role="link" aria-disabled="true" aria-current="page" className={cn(${JSON.stringify(p.page)}, className)} {...props} />
+}
+
+function BreadcrumbSeparator({ children, className, ...props }: React.ComponentProps<"li">) {
+  return (
+    <li data-slot="breadcrumb-separator" role="presentation" aria-hidden="true" className={cn("text-muted-foreground", className)} {...props}>
+      {children ?? <ChevronRight className=${JSON.stringify(p.separator)} />}
+    </li>
+  )
+}
+
+function BreadcrumbEllipsis({ className, ...props }: React.ComponentProps<"span">) {
+  return (
+    <span data-slot="breadcrumb-ellipsis" role="presentation" aria-hidden="true" className={cn("flex h-9 w-9 items-center justify-center", className)} {...props}>
+      <MoreHorizontal className="h-4 w-4" />
+    </span>
+  )
+}
+
+export {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  BreadcrumbEllipsis,
+}
+`;
+};
+
+const pagination = (design, c) => {
+  const p = c.pagination.parts;
+  return HEADER(design) +
+`import * as React from "react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+
+function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
+  return <nav role="navigation" aria-label="Pagination" data-slot="pagination" className={cn(${JSON.stringify(p.nav)}, className)} {...props} />
+}
+
+function PaginationLink({ className, isActive, ...props }: React.ComponentProps<"button"> & { isActive?: boolean }) {
+  return (
+    <button
+      data-slot="pagination-link"
+      aria-current={isActive ? "page" : undefined}
+      className={cn(isActive ? ${JSON.stringify(p.linkActive)} : ${JSON.stringify(p.link)}, className)}
+      {...props}
+    />
+  )
+}
+
+function PaginationPrevious({ className, ...props }: React.ComponentProps<"button">) {
+  return (
+    <button data-slot="pagination-previous" aria-label="Go to previous page" className={cn(${JSON.stringify(p.step)}, className)} {...props}>
+      <ChevronLeft className="h-4 w-4" />
+      Previous
+    </button>
+  )
+}
+
+function PaginationNext({ className, ...props }: React.ComponentProps<"button">) {
+  return (
+    <button data-slot="pagination-next" aria-label="Go to next page" className={cn(${JSON.stringify(p.step)}, className)} {...props}>
+      Next
+      <ChevronRight className="h-4 w-4" />
+    </button>
+  )
+}
+
+function PaginationEllipsis({ className, ...props }: React.ComponentProps<"span">) {
+  return (
+    <span data-slot="pagination-ellipsis" aria-hidden className={cn(${JSON.stringify(p.ellipsis)}, className)} {...props}>…</span>
+  )
+}
+
+export { Pagination, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis }
+`;
+};
+
+const progress = (design, c) => {
+  const p = c.progress.parts;
+  return HEADER(design) +
+`import * as React from "react"
+import * as ProgressPrimitive from "@radix-ui/react-progress"
+
+import { cn } from "@/lib/utils"
+
+function Progress({ className, indicatorClassName, value, ...props }: React.ComponentProps<typeof ProgressPrimitive.Root> & { indicatorClassName?: string }) {
+  return (
+    <ProgressPrimitive.Root data-slot="progress" className={cn(${JSON.stringify(p.track)}, className)} value={value} {...props}>
+      <ProgressPrimitive.Indicator
+        data-slot="progress-indicator"
+        className={cn(${JSON.stringify(p.indicator)}, indicatorClassName)}
+        style={{ width: \`\${value ?? 0}%\` }}
+      />
+    </ProgressPrimitive.Root>
+  )
+}
+
+export { Progress }
+`;
+};
+
+const skeleton = (design, c) => {
+  const p = c.skeleton.parts;
+  return HEADER(design) +
+`import * as React from "react"
+
+import { cn } from "@/lib/utils"
+
+function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
+  return <div data-slot="skeleton" className={cn(${JSON.stringify(p.base)}, className)} {...props} />
+}
+
+export { Skeleton }
+`;
+};
+
+// Dialogs, sheets, popovers, tooltips and toasts all portal to the top of the
+// document and open on interaction. The manifest carries the design's *surface*
+// (border, popover fill, shadow, padding, type); the emitter adds the portal,
+// the scrim, and the positioning the static kitchen sink cannot show. The scrim
+// is a token-based blur (bg-background/80), never a raw black overlay.
+const dialog = (design, c) => {
+  const p = c.dialog.parts;
+  return HEADER(design) +
+`import * as React from "react"
+import * as DialogPrimitive from "@radix-ui/react-dialog"
+
+import { cn } from "@/lib/utils"
+
+const Dialog = DialogPrimitive.Root
+const DialogTrigger = DialogPrimitive.Trigger
+const DialogPortal = DialogPrimitive.Portal
+const DialogClose = DialogPrimitive.Close
+
+function DialogOverlay({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Overlay>) {
+  return <DialogPrimitive.Overlay data-slot="dialog-overlay" className={cn("fixed inset-0 z-50 bg-background/80 backdrop-blur-sm", className)} {...props} />
+}
+
+function DialogContent({ className, children, ...props }: React.ComponentProps<typeof DialogPrimitive.Content>) {
+  return (
+    <DialogPortal>
+      <DialogOverlay />
+      <DialogPrimitive.Content
+        data-slot="dialog-content"
+        className={cn("fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2", ${JSON.stringify(p.content)}, className)}
+        {...props}
+      >
+        {children}
+      </DialogPrimitive.Content>
+    </DialogPortal>
+  )
+}
+
+function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
+  return <div data-slot="dialog-header" className={cn(${JSON.stringify(p.header)}, className)} {...props} />
+}
+
+function DialogBody({ className, ...props }: React.ComponentProps<"div">) {
+  return <div data-slot="dialog-body" className={cn(${JSON.stringify(p.body)}, className)} {...props} />
+}
+
+function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
+  return <div data-slot="dialog-footer" className={cn(${JSON.stringify(p.footer)}, className)} {...props} />
+}
+
+function DialogTitle({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Title>) {
+  return <DialogPrimitive.Title data-slot="dialog-title" className={cn(${JSON.stringify(p.title)}, className)} {...props} />
+}
+
+function DialogDescription({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Description>) {
+  return <DialogPrimitive.Description data-slot="dialog-description" className={cn(${JSON.stringify(p.description)}, className)} {...props} />
+}
+
+const dialogCloseClass = ${JSON.stringify(p.close)}
+
+export {
+  Dialog,
+  DialogTrigger,
+  DialogPortal,
+  DialogClose,
+  DialogOverlay,
+  DialogContent,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+  dialogCloseClass,
+}
+`;
+};
+
+const alertDialog = (design, c) => {
+  const p = c.alertDialog.parts;
+  return HEADER(design) +
+`import * as React from "react"
+import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog"
+
+import { cn } from "@/lib/utils"
+import { buttonVariants } from "@/components/ui/button"
+
+const AlertDialog = AlertDialogPrimitive.Root
+const AlertDialogTrigger = AlertDialogPrimitive.Trigger
+
+function AlertDialogOverlay({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Overlay>) {
+  return <AlertDialogPrimitive.Overlay data-slot="alert-dialog-overlay" className={cn("fixed inset-0 z-50 bg-background/80 backdrop-blur-sm", className)} {...props} />
+}
+
+function AlertDialogContent({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Content>) {
+  return (
+    <AlertDialogPrimitive.Portal>
+      <AlertDialogOverlay />
+      <AlertDialogPrimitive.Content
+        data-slot="alert-dialog-content"
+        className={cn("fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2", ${JSON.stringify(p.content)}, className)}
+        {...props}
+      />
+    </AlertDialogPrimitive.Portal>
+  )
+}
+
+function AlertDialogTitle({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Title>) {
+  return <AlertDialogPrimitive.Title data-slot="alert-dialog-title" className={cn(${JSON.stringify(p.title)}, className)} {...props} />
+}
+
+function AlertDialogDescription({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Description>) {
+  return <AlertDialogPrimitive.Description data-slot="alert-dialog-description" className={cn(${JSON.stringify(p.description)}, className)} {...props} />
+}
+
+function AlertDialogFooter({ className, ...props }: React.ComponentProps<"div">) {
+  return <div data-slot="alert-dialog-footer" className={cn(${JSON.stringify(p.footer)}, className)} {...props} />
+}
+
+function AlertDialogAction({ className, variant = "default", ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Action> & { variant?: "default" | "destructive" }) {
+  return <AlertDialogPrimitive.Action className={cn(buttonVariants({ variant }), className)} {...props} />
+}
+
+function AlertDialogCancel({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Cancel>) {
+  return <AlertDialogPrimitive.Cancel className={cn(buttonVariants({ variant: "outline" }), className)} {...props} />
+}
+
+const alertDialogIconWrapClass = ${JSON.stringify(p.iconWrap)}
+
+export {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+  AlertDialogCancel,
+  alertDialogIconWrapClass,
+}
+`;
+};
+
+const popover = (design, c) => {
+  const p = c.popover.parts;
+  return HEADER(design) +
+`import * as React from "react"
+import * as PopoverPrimitive from "@radix-ui/react-popover"
+
+import { cn } from "@/lib/utils"
+
+const Popover = PopoverPrimitive.Root
+const PopoverTrigger = PopoverPrimitive.Trigger
+const PopoverAnchor = PopoverPrimitive.Anchor
+
+function PopoverContent({ className, align = "center", sideOffset = 4, ...props }: React.ComponentProps<typeof PopoverPrimitive.Content>) {
+  return (
+    <PopoverPrimitive.Portal>
+      <PopoverPrimitive.Content
+        data-slot="popover-content"
+        align={align}
+        sideOffset={sideOffset}
+        className={cn("z-50 w-72 outline-none", ${JSON.stringify(p.content)}, className)}
+        {...props}
+      />
+    </PopoverPrimitive.Portal>
+  )
+}
+
+export { Popover, PopoverTrigger, PopoverAnchor, PopoverContent }
+`;
+};
+
+const tooltip = (design, c) => {
+  const p = c.tooltip.parts;
+  return HEADER(design) +
+`import * as React from "react"
+import * as TooltipPrimitive from "@radix-ui/react-tooltip"
+
+import { cn } from "@/lib/utils"
+
+const TooltipProvider = TooltipPrimitive.Provider
+const Tooltip = TooltipPrimitive.Root
+const TooltipTrigger = TooltipPrimitive.Trigger
+
+function TooltipContent({ className, sideOffset = 6, ...props }: React.ComponentProps<typeof TooltipPrimitive.Content>) {
+  return (
+    <TooltipPrimitive.Portal>
+      <TooltipPrimitive.Content
+        data-slot="tooltip-content"
+        sideOffset={sideOffset}
+        className={cn("z-50 outline-none", ${JSON.stringify(p.content)}, className)}
+        {...props}
+      />
+    </TooltipPrimitive.Portal>
+  )
+}
+
+export { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent }
+`;
+};
+
+const sheet = (design, c) => {
+  const p = c.sheet.parts;
+  const surface = drop(p.content, /^border$/); // right sheet uses border-l, not a full border
+  return HEADER(design) +
+`import * as React from "react"
+import * as SheetPrimitive from "@radix-ui/react-dialog"
+
+import { cn } from "@/lib/utils"
+
+const Sheet = SheetPrimitive.Root
+const SheetTrigger = SheetPrimitive.Trigger
+const SheetClose = SheetPrimitive.Close
+
+function SheetOverlay({ className, ...props }: React.ComponentProps<typeof SheetPrimitive.Overlay>) {
+  return <SheetPrimitive.Overlay data-slot="sheet-overlay" className={cn("fixed inset-0 z-50 bg-background/80 backdrop-blur-sm", className)} {...props} />
+}
+
+function SheetContent({ className, children, ...props }: React.ComponentProps<typeof SheetPrimitive.Content>) {
+  return (
+    <SheetPrimitive.Portal>
+      <SheetOverlay />
+      <SheetPrimitive.Content
+        data-slot="sheet-content"
+        className={cn("fixed inset-y-0 right-0 z-50 flex h-full w-full max-w-md flex-col border-l", ${JSON.stringify(surface)}, className)}
+        {...props}
+      >
+        {children}
+      </SheetPrimitive.Content>
+    </SheetPrimitive.Portal>
+  )
+}
+
+function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
+  return <div data-slot="sheet-header" className={cn(${JSON.stringify(p.header)}, className)} {...props} />
+}
+
+function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
+  return <div data-slot="sheet-footer" className={cn(${JSON.stringify(p.footer)}, className)} {...props} />
+}
+
+function SheetTitle({ className, ...props }: React.ComponentProps<typeof SheetPrimitive.Title>) {
+  return <SheetPrimitive.Title data-slot="sheet-title" className={cn(${JSON.stringify(p.title)}, className)} {...props} />
+}
+
+function SheetDescription({ className, ...props }: React.ComponentProps<typeof SheetPrimitive.Description>) {
+  return <SheetPrimitive.Description data-slot="sheet-description" className={cn(${JSON.stringify(p.description)}, className)} {...props} />
+}
+
+const sheetCloseClass = ${JSON.stringify(p.close)}
+
+export {
+  Sheet,
+  SheetTrigger,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+  sheetCloseClass,
+}
+`;
+};
+
+const toast = (design, c) => {
+  const p = c.toast.parts;
+  return HEADER(design) +
+`import * as React from "react"
+import * as ToastPrimitive from "@radix-ui/react-toast"
+
+import { cn } from "@/lib/utils"
+
+const ToastProvider = ToastPrimitive.Provider
+
+function ToastViewport({ className, ...props }: React.ComponentProps<typeof ToastPrimitive.Viewport>) {
+  return (
+    <ToastPrimitive.Viewport
+      data-slot="toast-viewport"
+      className={cn("fixed bottom-0 right-0 z-[100] flex max-h-screen w-full flex-col gap-3 p-4 sm:max-w-md", className)}
+      {...props}
+    />
+  )
+}
+
+function Toast({ className, variant = "default", ...props }: React.ComponentProps<typeof ToastPrimitive.Root> & { variant?: "default" | "destructive" }) {
+  return (
+    <ToastPrimitive.Root
+      data-slot="toast"
+      className={cn(variant === "destructive" ? ${JSON.stringify(p.rootDestructive)} : ${JSON.stringify(p.root)}, className)}
+      {...props}
+    />
+  )
+}
+
+function ToastTitle({ className, ...props }: React.ComponentProps<typeof ToastPrimitive.Title>) {
+  return <ToastPrimitive.Title data-slot="toast-title" className={cn(${JSON.stringify(p.title)}, className)} {...props} />
+}
+
+function ToastDescription({ className, ...props }: React.ComponentProps<typeof ToastPrimitive.Description>) {
+  return <ToastPrimitive.Description data-slot="toast-description" className={cn(${JSON.stringify(p.description)}, className)} {...props} />
+}
+
+function ToastClose({ className, ...props }: React.ComponentProps<typeof ToastPrimitive.Close>) {
+  return <ToastPrimitive.Close data-slot="toast-close" className={cn(${JSON.stringify(p.close)}, className)} {...props} />
+}
+
+function ToastAction({ className, ...props }: React.ComponentProps<typeof ToastPrimitive.Action>) {
+  return <ToastPrimitive.Action data-slot="toast-action" className={cn(${JSON.stringify(p.action)}, className)} {...props} />
+}
+
+export { ToastProvider, ToastViewport, Toast, ToastTitle, ToastDescription, ToastClose, ToastAction }
+`;
+};
+
 // The full set. cva/cn primitives carry the manifest classes verbatim; the
 // Radix components weave those design classes into stock shadcn structure and
 // add the interactive scaffolding the static kitchen sink cannot show.
@@ -558,6 +1044,17 @@ const EMITTERS = {
   "components/ui/dropdown-menu.tsx": (d, c) => dropdownMenu(d, c),
   "components/ui/table.tsx": (d, c) => table(d, c),
   "components/ui/sidebar-nav.tsx": (d, c) => sidebarNav(d, c),
+  "components/ui/avatar.tsx": (d, c) => avatar(d, c),
+  "components/ui/breadcrumb.tsx": (d, c) => breadcrumb(d, c),
+  "components/ui/pagination.tsx": (d, c) => pagination(d, c),
+  "components/ui/progress.tsx": (d, c) => progress(d, c),
+  "components/ui/skeleton.tsx": (d, c) => skeleton(d, c),
+  "components/ui/dialog.tsx": (d, c) => dialog(d, c),
+  "components/ui/alert-dialog.tsx": (d, c) => alertDialog(d, c),
+  "components/ui/popover.tsx": (d, c) => popover(d, c),
+  "components/ui/tooltip.tsx": (d, c) => tooltip(d, c),
+  "components/ui/sheet.tsx": (d, c) => sheet(d, c),
+  "components/ui/toast.tsx": (d, c) => toast(d, c),
 };
 
 export function buildComponents(design) {

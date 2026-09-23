@@ -35,7 +35,17 @@ const entry = join(designDir, "react-preview", "app.tsx");
 //   - form, nav: bespoke page compositions (a specific form layout; a top bar +
 //     sidebar + rail + mobile bar). They render identically verbatim and
 //     componentising them ports layout, not new components.
-const COMPONENT_SECTIONS = ["buttons", "inputs", "card", "table", "badges", "alerts", "tabs"];
+const COMPONENT_SECTIONS = [
+  "buttons", "inputs", "card", "table", "badges", "alerts", "tabs",
+  "avatar", "breadcrumb", "progress",
+];
+
+// Overlay sections the kitchen sink draws statically open (a menu, a dialog, a
+// stack of toasts). We keep that static doc device verbatim AND append a live,
+// interactive instance after it — a real trigger you click to open the actual
+// Radix component — mounted at <div data-preview-live="id">. So these sections
+// show both: the at-rest specimen, and proof the component works.
+const LIVE_APPEND_SECTIONS = ["menu", "dialog", "toast"];
 
 // Generate react-preview/index.html FROM the kitchen sink: same shell (styles,
 // header, table of contents), the same non-component sections verbatim, and a
@@ -54,7 +64,7 @@ function generatePreviewHtml() {
   // components/ui/*.tsx; a muted "Static markup" pill marks the rest (a
   // foundation, a page composition, or an overlay a portalled component can't
   // draw open inline). Preview-only chrome — the kitchen sink never carries it.
-  const live = new Set(COMPONENT_SECTIONS);
+  const live = new Set([...COMPONENT_SECTIONS, ...LIVE_APPEND_SECTIONS]);
   const pill = (isLive) =>
     isLive
       ? `<span class="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-[0.6875rem] font-medium text-primary sm:right-6"><span class="h-1.5 w-1.5 rounded-full bg-current"></span>React component</span>`
@@ -68,16 +78,27 @@ function generatePreviewHtml() {
   const legend = `  <div class="mb-10 flex flex-wrap items-center gap-x-6 gap-y-3 rounded-lg border border-border bg-muted/40 px-4 py-3 text-sm">
     <span class="font-medium">Live preview</span>
     <span class="inline-flex items-center gap-2"><span class="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-[0.6875rem] font-medium text-primary"><span class="h-1.5 w-1.5 rounded-full bg-current"></span>React component</span><span class="text-muted-foreground">rendered from <span class="font-mono text-xs">components/ui/*.tsx</span></span></span>
-    <span class="inline-flex items-center gap-2"><span class="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span><span class="text-muted-foreground">kitchen-sink HTML — a foundation, a composition, or an overlay shown statically open</span></span>
+    <span class="inline-flex items-center gap-2"><span class="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-40"></span>Static markup</span><span class="text-muted-foreground">kitchen-sink HTML — a foundation, a page composition, or a showcase with no component</span></span>
   </div>\n`;
   html = html.replace(/(<main[^>]*>\n)/, `$1${legend}`);
 
-  // Swap each component section's demo body (everything after its ks-note) for a
-  // mount point, keeping the section's id, class and its title/lede/note.
+  // Swap each component section's demo body for a mount point, keeping the
+  // section header — its title, lede, and ks-note if it has one (breadcrumb and
+  // progress do not). app.tsx mounts the React version into it.
   for (const id of COMPONENT_SECTIONS) {
-    const re = new RegExp(`(<section id="${id}"[\\s\\S]*?<p class="ks-note">[\\s\\S]*?</p>)[\\s\\S]*?(</section>)`);
-    if (!re.test(html)) throw new Error(`kitchen sink section #${id} not found (or has no ks-note)`);
+    const re = new RegExp(
+      `(<section id="${id}"[\\s\\S]*?<h2 class="ks-lede">[\\s\\S]*?</h2>(?:\\s*<p class="ks-note">[\\s\\S]*?</p>)?)[\\s\\S]*?(</section>)`
+    );
+    if (!re.test(html)) throw new Error(`kitchen sink section #${id} not found (or has no ks-lede)`);
     html = html.replace(re, `$1\n  <div data-preview-mount="${id}"></div>\n$2`);
+  }
+
+  // For the overlay sections, keep the whole static body and append a live
+  // interactive mount just before </section>.
+  for (const id of LIVE_APPEND_SECTIONS) {
+    const re = new RegExp(`(<section id="${id}"[\\s\\S]*?)(</section>)`);
+    if (!re.test(html)) throw new Error(`kitchen sink section #${id} not found`);
+    html = html.replace(re, `$1  <div data-preview-live="${id}"></div>\n$2`);
   }
   html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${design} — live component preview</title>`);
   html = html.replace("</body>", '<script src="app.bundle.js"></script>\n</body>');
