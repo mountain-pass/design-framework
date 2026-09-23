@@ -656,7 +656,7 @@ function ProgressDemo() {
 function LiveTag({ children }: { children: React.ReactNode }) {
   return (
     <div className="mt-10 rounded-lg border border-dashed border-primary/40 bg-primary/[0.03] p-5">
-      <p className="mb-4 inline-flex items-center gap-1.5 text-xs font-medium text-primary">
+      <p className="mb-4 flex items-center gap-1.5 text-xs font-medium text-primary">
         <span className="h-1.5 w-1.5 rounded-full bg-primary" />Live — click to open the real component
       </p>
       {children}
