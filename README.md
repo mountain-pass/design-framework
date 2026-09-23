@@ -166,7 +166,11 @@ When a user names a design, layout or voice:
    read. Both are rendered answers, not descriptions of them.
 5. Follow the region structure and responsive rules in `LAYOUT.md`.
 
-`CLAUDE.md` in the repo root contains the full agent instructions.
+The full, copy-pasteable version of these instructions — every file to fetch and
+every rule — is [`DESIGN.md.template`](DESIGN.md.template), which the gallery fills
+in for the design/layout/voice you pick. (`CLAUDE.md` in the repo root is *not* it:
+that governs working inside this repo — authoring designs and the build tooling —
+not consuming one.)
 
 ### Creating a new design, layout or voice
 

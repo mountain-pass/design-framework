@@ -28,7 +28,6 @@ repo: https://github.com/mountain-pass/design-framework
 Before writing any code, fetch and read these files in full.
 
 Shared contracts:
-  https://raw.githubusercontent.com/mountain-pass/design-framework/main/CLAUDE.md
   https://raw.githubusercontent.com/mountain-pass/design-framework/main/shared/TOKENS.md
   https://raw.githubusercontent.com/mountain-pass/design-framework/main/shared/COMPONENTS.md
   https://raw.githubusercontent.com/mountain-pass/design-framework/main/shared/ACCESSIBILITY.md
@@ -96,8 +95,9 @@ leave out. `DESIGN.md` describes a button; `index.html` *is* one. `VOICE.md`
 describes an error message; the string sink *is* one. Telling the agent to copy from
 the demo rather than invent removes most of the drift.
 
-**It restates the token rule.** The rule is already in `CLAUDE.md` and `DESIGN.md`,
-but hard-coding colour is the most common failure, so the redundancy earns its place.
+**It restates the token rule.** The rule is already in `DESIGN.md` and the shared
+contracts, but hard-coding colour is the most common failure, so the redundancy earns
+its place.
 
 **It asks for the copy explicitly.** Without this, an agent writes the components
 correctly and fills them with `Lorem ipsum` or `Submit` — and the voice, which you

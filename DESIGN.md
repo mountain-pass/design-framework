@@ -8,7 +8,6 @@ Before writing any UI or any user-facing copy, fetch and read these in full:
 
 ```
 Shared contracts
-  https://raw.githubusercontent.com/mountain-pass/design-framework/main/CLAUDE.md
   https://raw.githubusercontent.com/mountain-pass/design-framework/main/shared/TOKENS.md
   https://raw.githubusercontent.com/mountain-pass/design-framework/main/shared/COMPONENTS.md
   https://raw.githubusercontent.com/mountain-pass/design-framework/main/shared/ACCESSIBILITY.md
@@ -54,6 +53,31 @@ Copy the theme verbatim into this project's global stylesheet
   into that component's own definition — its `cva` variants, its base className —
   not into each place it's used. A design's shape (radius, border weight, shadow)
   is a property of the component, not of any one screen that happens to use it.
+  - **Some designs hand you the finished primitives.** When the design's `DESIGN.md`
+    lists a `components/ui/` set (real `.tsx` generated from its `classes.json`, with
+    a `lib/utils.ts`), fetch and drop those files in directly instead of hand-porting
+    — they already carry the exact classes, so this is faster and cannot drift. The
+    class contract in `DESIGN.md` and the kitchen sink is then what you *verify* them
+    against, not what you retype. When the design ships no such set, port the classes
+    by hand as above.
+- **Utility classes, copied verbatim — never bespoke CSS.** A component's
+  appearance is the exact list of Tailwind classes the kitchen sink puts on it.
+  Reproduce that list character-for-character (the only change is `class` →
+  `className` when moving to JSX); don't paraphrase it, don't drop classes from it,
+  and don't re-express any of it as a stylesheet rule, a CSS-in-JS block, an inline
+  `style`, or a new `.css` file. `theme.css` (pasted above) is the only stylesheet
+  this design needs — fonts included, via its `@font-face` rules and the
+  `font-sans`/`font-mono` classes. If a visual property looks like it needs custom
+  CSS, check the kitchen sink first: it almost certainly already does it with a
+  utility class.
+  - **The one exception needs sign-off.** Custom CSS is allowed only for a
+    component this design does not cover — no kitchen-sink entry, no shadcn
+    primitive to key off — that genuinely can't be built from utility classes.
+    Confirm it with me first (name the component and why utilities won't do, and
+    get an explicit yes), and even then route every value through the design tokens
+    (`var(--primary)`, `var(--radius)`, the `--color-*` properties), never a
+    hard-coded colour. Anything already in the kitchen sink is not a candidate —
+    reproduce its classes instead.
 - **Verify with a `/kitchensink` page.** After updating the primitives, build a
   `/kitchensink` route rendering the same components, in the same order, as the
   design's own `index.html` — using the project's own updated components, not

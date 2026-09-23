@@ -26,7 +26,6 @@ Before writing any UI or any user-facing copy, fetch and read these in full:
 
 ```
 Shared contracts
-  https://raw.githubusercontent.com/mountain-pass/design-framework/main/CLAUDE.md
   https://raw.githubusercontent.com/mountain-pass/design-framework/main/shared/TOKENS.md
   https://raw.githubusercontent.com/mountain-pass/design-framework/main/shared/COMPONENTS.md
   https://raw.githubusercontent.com/mountain-pass/design-framework/main/shared/ACCESSIBILITY.md
@@ -72,6 +71,13 @@ Copy the theme verbatim into this project's global stylesheet
   into that component's own definition — its `cva` variants, its base className —
   not into each place it's used. A design's shape (radius, border weight, shadow)
   is a property of the component, not of any one screen that happens to use it.
+  - **Some designs hand you the finished primitives.** When the design's `DESIGN.md`
+    lists a `components/ui/` set (real `.tsx` generated from its `classes.json`, with
+    a `lib/utils.ts`), fetch and drop those files in directly instead of hand-porting
+    — they already carry the exact classes, so this is faster and cannot drift. The
+    class contract in `DESIGN.md` and the kitchen sink is then what you *verify* them
+    against, not what you retype. When the design ships no such set, port the classes
+    by hand as above.
 - **Utility classes, copied verbatim — never bespoke CSS.** A component's
   appearance is the exact list of Tailwind classes the kitchen sink puts on it.
   Reproduce that list character-for-character (the only change is `class` →

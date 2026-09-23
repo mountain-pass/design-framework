@@ -1,120 +1,23 @@
-# Instructions for AI agents
+# Instructions for AI agents (working in this repository)
 
-This repository is a design system library. You will encounter it in two modes.
+This repository is a design system library — a catalogue of designs, layouts and
+voices that *other* projects consume. This file is for an agent working **inside
+this repo**: adding or editing a design, layout or voice, and keeping the demos and
+tooling honest.
 
----
-
-## Mode 1: A user has named a design or layout
-
-The trigger looks like:
-
-> "Use the styling and components from the `slate` design."
-> "Build this with the `app-shell` layout and the `slate` design."
-> "Make it look like `warm-paper`, and write it in the `plain-spoken` voice."
-
-### What to do
-
-1. **Read the whole instruction file.** `designs/<name>/DESIGN.md`,
-   `layouts/<name>/LAYOUT.md`, or `voices/<name>/VOICE.md`. Not a skim — these files
-   contain specific numbers and specific prohibitions, and the value of the design
-   is in those specifics.
-
-2. **Read the shared contracts** if you have not already in this session:
-   `shared/TOKENS.md`, `shared/COMPONENTS.md`, `shared/ACCESSIBILITY.md`, and
-   `shared/COPY.md` if a voice is named.
-
-3. **Open the demo HTML.** `designs/<name>/index.html` is a rendered answer to
-   "what does a button look like in this design". When you are unsure how to style
-   something, find it in the kitchen sink and copy the class list. Do not invent a
-   treatment that the kitchen sink already answers.
-
-4. **Update shadcn primitives, not call sites.** If the project already has local
-   shadcn components (`src/components/ui/*.tsx`), copy the kitchen sink's classes
-   into that component's own definition — its `cva` variants, its base className —
-   not into each place it's used. A design's shape (radius, border weight, shadow)
-   is a property of the component, not of any one screen that happens to use it.
-   Copying classes ad hoc into every call site instead means the same shape
-   decision gets re-made, and can drift, at every screen the component appears on.
-
-   **Copy the classes exactly, and never as CSS.** The kitchen sink's class list for
-   a component is the contract, not an inspiration. Reproduce it character-for-
-   character — the only edit allowed is the mechanical `class` → `className` rename
-   when translating the HTML to JSX. Do not paraphrase it, do not drop classes you
-   think are redundant, and do not re-express any of it as a stylesheet rule, a
-   `styled`/CSS-in-JS block, an inline `style`, or a new `.css` file. Component
-   appearance in this system is Tailwind utility classes routed through tokens, full
-   stop — bespoke CSS for anything the kitchen sink states as classes is the failure
-   mode, because it drifts from the demo the instant either side changes and it
-   escapes every check that keeps the design swappable. `theme.css` (step 5) is the
-   only stylesheet this design adds: everything utilities genuinely cannot express —
-   the `@font-face` rules, the `@layer base` defaults, `prefers-reduced-motion`, and
-   any slider-thumb pseudo-element or `--uppercase-optical-nudge` a design ships —
-   already lives inside it. Fonts included: the typefaces arrive through `theme.css`
-   and the token-driven `font-sans`/`font-mono` classes the kitchen sink already
-   uses, so never re-declare a `font-family` in component CSS.
-
-   **The one exception — and it needs sign-off.** Custom CSS is permitted only for a
-   component the design does *not* cover — one with no entry in the kitchen sink and
-   no shadcn primitive to key off — and whose appearance genuinely cannot be built
-   from utility classes. Even then: confirm it with the user *before* writing it —
-   name the component, say why a utility-class build won't do, and get an explicit
-   yes — and still route every value through the design tokens (`var(--primary)`,
-   `var(--radius)`, the `--color-*` custom properties `theme.css` exposes), never a
-   hard-coded hex or a Tailwind palette class. A component that *is* in the kitchen
-   sink is never a candidate for this exception: reproduce its classes instead. If
-   you reach for custom CSS to tweak something the design already ships, that is the
-   failure mode, not the exception.
-
-5. **Install the theme.** Copy `designs/<name>/theme.css` into the target project's
-   global stylesheet (`app/globals.css` in a Next.js + shadcn project). It is
-   written to be pasted verbatim.
-
-6. **Build using tokens only.** Every colour comes from a semantic token —
-   `bg-background`, `text-muted-foreground`, `border-border`. If you find yourself
-   writing `bg-blue-600` or `#1a1a1a`, stop: you are hard-coding something that
-   will break the moment the user switches designs or toggles dark mode. That is
-   the entire failure mode this repo exists to prevent.
-
-7. **Respect the design's prohibitions.** Each `DESIGN.md` has a "Never" section.
-   Those are the rules that make one design distinguishable from another, and they
-   are the first thing to erode when an agent is working quickly.
-
-8. **Verify with a `/kitchensink` page.** After updating the shadcn primitives,
-   create a throwaway `/kitchensink` route in the target project that renders the
-   same components, in the same order, as `designs/<name>/index.html` — built from
-   the project's own (now-updated) components, not copied markup. Open it in a
-   browser, or screenshot it, and compare it against the design's kitchen sink.
-   This is what actually confirms a primitive was updated correctly and that the
-   project's real build — fonts, bundler, Tailwind config — renders it as intended,
-   catching drift and render issues before they reach a real screen. Leave it in
-   place rather than deleting it once confirmed — it is cheap to keep and pays for
-   itself the next time a design changes or a primitive drifts.
-
-### Combining a design, a layout, and a voice
-
-They compose without negotiation, because they own disjoint things:
-
-- The **layout** decides the regions, their nesting, their sizes, and how they
-  reflow at each breakpoint.
-- The **design** decides what everything inside those regions looks like.
-- The **voice** decides what the words in them say.
-
-Where a layout wireframe says `<navigation goes here>`, put the navigation
-component from the design's kitchen sink. Where it says `<document controls go
-here>`, put a toolbar built from the design's buttons and segmented controls.
-
-If a layout and a design appear to conflict, the layout wins on structure and the
-design wins on appearance. If they genuinely conflict on something else, say so to
-the user rather than silently picking one.
-
-A voice conflicts with the other two at exactly one point: **string length**. Each
-`VOICE.md` carries character budgets per slot, and each design sizes its regions
-around them. If a voice's budgets exceed what a design's components can hold, say
-so — do not quietly truncate the copy or let the buttons wrap.
+Using one of these designs in another project is a different job with a different
+entrypoint. The gallery at the repo root (`index.html`) generates a ready-to-paste
+instruction file for a consuming agent, filled in from `DESIGN.md.template`. Every
+rule a consumer needs — which files to fetch, tokens-only, the exact-classes rule,
+the `/kitchensink` verification, how the three axes compose — lives in that template,
+not here. So don't point a consuming agent at this file; point them at the gallery
+or the generated `DESIGN.md` it produces. When you change how a design should be
+*consumed*, edit `DESIGN.md.template` (and re-run `build-gallery.mjs`); this file
+governs only how the repo itself is built and maintained.
 
 ---
 
-## Mode 2: A user is adding a new design or layout to this repo
+## Adding or editing a design, layout, or voice
 
 The trigger looks like:
 
