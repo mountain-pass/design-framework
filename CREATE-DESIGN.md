@@ -382,8 +382,9 @@ With `classes.json` in place, a design can also ship the finished primitives —
 real `components/ui/*.tsx` a consumer drops straight in — plus a compiled preview that
 proves they render. `designs/slate/` is the fully worked example; follow it.
 
-- **Generate the components.** `node scripts/build-components.mjs <name>` emits
-  `components/ui/*.tsx` and `lib/utils.ts` from `classes.json` — cva/`cn` primitives
+- **Generate the components.** `node scripts/build-components.mjs <name>` (or
+  `npm run build:components -- <name>`) emits `components/ui/*.tsx`, `lib/utils.ts`
+  and the design's own `tsconfig.json` from `classes.json` — cva/`cn` primitives
   carrying the classes verbatim, and Radix-driven ones that weave those classes into
   stock shadcn structure. **Never hand-edit the output:** when both `classes.json` and
   a `components/` folder exist, `check.mjs` regenerates the files and fails if a
@@ -398,10 +399,13 @@ proves they render. `designs/slate/` is the fully worked example; follow it.
 - **Keep `DESIGN.md` in step.** The Component notes (section 3) are the human-readable
   view of the same strings; update both together.
 
-The npm shortcuts (`build:components`, `build:preview`, `verify`, `typecheck`) and
-`tsconfig.json` are currently pinned to `slate`; for another design invoke the scripts
-directly with your `<name>` as above (widening that tooling to every design is a
-follow-up, not something to solve inside a design folder).
+The tooling is design-agnostic — no folder name is baked into it. The npm shortcuts
+take your design after `--` (`npm run build:components -- <name>`,
+`npm run build:preview -- <name>`), and `npm run typecheck` / `npm run verify` / the
+`build` script pick up every design that has a `components/` and a `react-preview/`
+automatically, so your design is covered the moment you generate it. Type-checking
+runs against the `tsconfig.json` the generator drops in your design folder, which
+resolves `@/...` imports to your own components; there is nothing to wire up by hand.
 
 ---
 
@@ -412,6 +416,7 @@ node scripts/check.mjs
 node scripts/build-gallery.mjs
 # if this design ships the generated component layer (section 5):
 node scripts/build-components.mjs <name>
+node scripts/typecheck.mjs <name>
 node scripts/build-preview.mjs <name>
 ```
 
@@ -421,6 +426,9 @@ generated `.tsx` against a fresh generation. Fix everything it reports.
 `build-gallery.mjs` adds the design to the root gallery. `build-components.mjs` and
 `build-preview.mjs` regenerate the components and the compiled preview; run them after
 any change to `classes.json`, and commit their output so `check.mjs` stays green.
+`typecheck.mjs` type-checks the generated `.tsx` against your own components (the
+bundler only strips types) — it, `build-preview.mjs --all` and the `build` script all
+discover your design automatically once it ships the component layer.
 
 Then open `designs/<name>/index.html` and look at it. Automated checks confirm the
 sections exist; they cannot tell you the design is good. Specifically check that:

@@ -5,11 +5,11 @@
   "description": "Build tooling for compiling and verifying a design's generated React components. The static demos (kitchen sinks, wireframes, string sinks) still open with no build; this is only for the React component previews.",
   "scripts": {
     "check": "node scripts/check.mjs",
-    "build:components": "node scripts/build-components.mjs slate",
-    "build:preview": "node scripts/build-preview.mjs slate",
-    "typecheck": "tsc --noEmit -p tsconfig.json",
-    "verify": "npm run typecheck && npm run build:preview",
-    "build": "npm run verify && node scripts/build-site.mjs"
+    "build:components": "node scripts/build-components.mjs",
+    "build:preview": "node scripts/build-preview.mjs",
+    "typecheck": "node scripts/typecheck.mjs",
+    "verify": "npm run typecheck && node scripts/build-preview.mjs --all --check-only",
+    "build": "npm run typecheck && node scripts/build-preview.mjs --all && node scripts/build-site.mjs"
   },
   "devDependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.23",

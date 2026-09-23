@@ -77,10 +77,15 @@ preview/` renders them through an actual build: `scripts/build-preview.mjs` bund
 components (with React + Radix) into a self-contained `app.bundle.js` the page loads.
 This is on purpose — we want to know at *build time* whether a component compiles, not
 discover it in a consumer's project. So the previews trade the no-build guarantee for a
-real compile: after changing a component, run `npm run build:preview` (or `npm run
-verify` to compile without writing, as a CI gate). `check.mjs` stays dependency-free and
-does not run this; it is a separate step for the previews only. The static demos are
-untouched by it.
+real compile: after changing a component, run `npm run build:preview -- <name>` for one
+design, or `npm run verify` to type-check and compile every design's preview without
+writing, as a CI gate. The tooling is design-agnostic — `build:components`,
+`build:preview`, `typecheck`, `verify` and the `build` script take a design after `--`
+or discover every design that ships the component layer, so nothing is pinned to one
+folder; each design carries its own generated `tsconfig.json` (extending
+`tsconfig.base.json`) that resolves `@/...` to its own components. `check.mjs` stays
+dependency-free and does not run this; it is a separate step for the previews only. The
+static demos are untouched by it.
 
 The compiler is committed rather than loaded from a CDN: a floating version means
 the same commit renders differently depending on when it is opened, which is not

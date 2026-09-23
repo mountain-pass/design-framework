@@ -1,0 +1,22 @@
+{
+  // Shared TypeScript settings for every design's generated React components.
+  // Each design that ships components/ has its own generated
+  // designs/<name>/tsconfig.json that extends this file and points the `@`
+  // alias at that design's own folder, so `npm run typecheck` checks each
+  // design against its own components rather than one pinned design.
+  //
+  // This is the type gate only: esbuild (build-preview) strips types without
+  // checking them. The static demos need none of this.
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowImportingTsExtensions": true
+  }
+}

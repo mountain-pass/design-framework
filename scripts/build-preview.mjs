@@ -7,22 +7,21 @@
 // This is also the build-time gate: if a generated component does not compile,
 // esbuild fails here and so does `npm run build:preview`.
 //
-//   node scripts/build-preview.mjs slate                # write the bundle
-//   node scripts/build-preview.mjs slate --check-only    # compile, but don't write (CI verify)
+//   node scripts/build-preview.mjs slate                # write one design's bundle
+//   node scripts/build-preview.mjs --all                 # every design that has a preview
+//   node scripts/build-preview.mjs --all --check-only    # compile all, don't write (CI verify)
+//   node scripts/build-preview.mjs slate --check-only    # compile one, don't write
 //
-// Requires `npm install` (esbuild, react, radix, …). The static demos still need
-// none of this — only the React previews do.
+// With no design and no --all it defaults to slate. Requires `npm install`
+// (esbuild, react, radix, …). The static demos still need none of this — only
+// the React previews do.
 
 import { build } from "esbuild";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync, readdirSync } from "node:fs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const design = process.argv[2] || "slate";
-const checkOnly = process.argv.includes("--check-only");
-const designDir = join(ROOT, "designs", design);
-const entry = join(designDir, "react-preview", "app.tsx");
 
 // The kitchen sink sections re-rendered by React in the preview, from the actual
 // components. Everything else is kept verbatim, so the preview is the kitchen
@@ -51,7 +50,7 @@ const LIVE_APPEND_SECTIONS = ["menu", "dialog", "toast"];
 // header, table of contents), the same non-component sections verbatim, and a
 // <div data-preview-mount="id"> placeholder where each component section's demo
 // body was — app.tsx mounts the React version into it.
-function generatePreviewHtml() {
+function generatePreviewHtml(design, designDir) {
   let html = readFileSync(join(designDir, "index.html"), "utf8");
   // Relative paths shift by one folder in react-preview/.
   html = html.replace(/fetch\(\s*["']theme\.css["']\s*\)/g, 'fetch("../theme.css")');
@@ -106,33 +105,63 @@ function generatePreviewHtml() {
   console.log(`${design}: wrote react-preview/index.html (kitchen sink shell + ${COMPONENT_SECTIONS.length} React sections)`);
 }
 
-if (!existsSync(entry)) {
-  console.error(`No react-preview/app.tsx for '${design}' (${entry})`);
-  process.exit(2);
+// Compile (and unless --check-only, write) one design's preview. Returns true
+// on success, false if a component failed to compile.
+async function buildOne(design, checkOnly) {
+  const designDir = join(ROOT, "designs", design);
+  const entry = join(designDir, "react-preview", "app.tsx");
+  if (!existsSync(entry)) {
+    console.error(`No react-preview/app.tsx for '${design}' (${entry})`);
+    return false;
+  }
+  try {
+    const result = await build({
+      entryPoints: [entry],
+      bundle: true,
+      minify: true,
+      format: "iife",
+      platform: "browser",
+      target: ["es2020"],
+      jsx: "automatic",
+      loader: { ".tsx": "tsx", ".ts": "ts" },
+      alias: { "@": designDir },
+      define: { "process.env.NODE_ENV": '"production"' },
+      write: !checkOnly,
+      outfile: join(designDir, "react-preview", "app.bundle.js"),
+      logLevel: "info",
+    });
+    const warnings = result.warnings?.length ?? 0;
+    console.log(
+      `${design}: components compiled cleanly${warnings ? ` (${warnings} warning(s))` : ""}${checkOnly ? " — not written" : " → react-preview/app.bundle.js"}`
+    );
+    if (!checkOnly) generatePreviewHtml(design, designDir);
+    return true;
+  } catch (err) {
+    console.error(`\n${design}: build FAILED — a component does not compile (see above).`);
+    return false;
+  }
 }
 
-try {
-  const result = await build({
-    entryPoints: [entry],
-    bundle: true,
-    minify: true,
-    format: "iife",
-    platform: "browser",
-    target: ["es2020"],
-    jsx: "automatic",
-    loader: { ".tsx": "tsx", ".ts": "ts" },
-    alias: { "@": designDir },
-    define: { "process.env.NODE_ENV": '"production"' },
-    write: !checkOnly,
-    outfile: join(designDir, "react-preview", "app.bundle.js"),
-    logLevel: "info",
-  });
-  const warnings = result.warnings?.length ?? 0;
-  console.log(
-    `${design}: components compiled cleanly${warnings ? ` (${warnings} warning(s))` : ""}${checkOnly ? " — not written" : " → react-preview/app.bundle.js"}`
+// Every design that ships a react-preview/app.tsx.
+const withPreview = () =>
+  readdirSync(join(ROOT, "designs")).filter(
+    (n) => !n.startsWith(".") && n !== "_template" &&
+      existsSync(join(ROOT, "designs", n, "react-preview", "app.tsx"))
   );
-  if (!checkOnly) generatePreviewHtml();
-} catch (err) {
-  console.error(`\n${design}: build FAILED — a component does not compile (see above).`);
-  process.exit(1);
+
+const args = process.argv.slice(2);
+const checkOnly = args.includes("--check-only");
+const named = args.filter((a) => !a.startsWith("--"));
+const targets = args.includes("--all") ? withPreview() : [named[0] || "slate"];
+
+if (targets.length === 0) {
+  console.log("no designs with a react-preview/app.tsx — nothing to compile");
+  process.exit(0);
 }
+
+let failed = 0;
+for (const design of targets) {
+  const ok = await buildOne(design, checkOnly);
+  if (!ok) failed++;
+}
+if (failed) process.exit(1);

@@ -102,8 +102,10 @@ before you write any code rather than after the copy is in.
     ├── check.mjs            Validates every folder against the contracts (no deps)
     ├── build-gallery.mjs    Regenerates index.html from the folders
     ├── build-components.mjs  Generates a design's shadcn .tsx from its classes.json
-    └── build-preview.mjs    Compiles a design's components into its React preview
-                             (needs `npm install`; the static demos do not)
+    ├── build-preview.mjs    Compiles a design's components into its React preview
+    │                        (needs `npm install`; the static demos do not)
+    └── typecheck.mjs        Type-checks each design's generated components (needs
+                             `npm install`; the static demos do not)
 ```
 
 ---
