@@ -39,13 +39,18 @@ at, and copy `designs/_template/` as your starting point.
 
 ```
 designs/<name>/
-├── DESIGN.md      Instructions for an AI implementing this design
-├── theme.css      Paste-ready CSS custom properties
-└── index.html     Kitchen sink demo, no build step
+├── DESIGN.md       Instructions for an AI implementing this design
+├── theme.css       Paste-ready CSS custom properties
+├── index.html      Kitchen sink demo, no build step
+└── classes.json    Machine-readable class manifest, grounded against index.html
 ```
 
 `<name>` is lowercase kebab-case, and it is the label a user will say out loud:
 "use the `warm-paper` design". Name it for the feel, not the implementation.
+
+A design may also ship the *generated* layer that `slate` demonstrates — real
+`components/ui/*.tsx` (with `lib/utils.ts`) built from `classes.json`, and a compiled
+`react-preview/`. Those are produced by the scripts, not hand-written; see section 5.
 
 ---
 
@@ -324,9 +329,13 @@ values, and the rule for when a surface uses a border versus a shadow versus bot
 **Motion** — Duration and easing, what animates and what does not, hover, focus,
 active, and disabled treatments. Include a `prefers-reduced-motion` rule.
 
-**Component notes** — For each component group in `shared/COMPONENTS.md`, anything
-an implementer would otherwise get wrong. Where a component behaves the same as
-stock shadcn, say "stock" and move on; only spend words where this design differs.
+**Component notes** — The exact-class contract for this design's components: the
+literal Tailwind classes each one carries in `index.html`, arranged as the shadcn
+primitive that consumes them, plus anything an implementer would otherwise get wrong.
+This is the human-readable twin of `classes.json` (section 4) — keep the two in step.
+Copy the strings verbatim; where a component is otherwise stock shadcn, say "stock"
+and only spend words where this design differs. `designs/slate/DESIGN.md` is the model
+for the depth and format.
 
 **Accessibility** — Required, and checked by `check.mjs`. What *this design*
 decides: the focus ring treatment and its measured contrast, the target sizes for
@@ -345,6 +354,55 @@ text."
 **Extensions** — Any tokens added beyond `shared/TOKENS.md`, and what a consumer
 that ignores them will get.
 
+### 4. `classes.json`
+
+The machine-readable twin of the "Component notes" above: every component's class
+strings as structured data, so real React components can be generated from them and
+`check.mjs` can prove they never drift from the kitchen sink.
+
+- **Copy the shape from `designs/slate/classes.json` exactly** — the same component
+  keys (`button`, `badge`, `input`, … through `toast`) and the same
+  `parts`/`variants`/`base` names under each. The emitters in
+  `scripts/build-components.mjs` read those names, so a renamed or missing part
+  produces a broken component. Fill each string with *this* design's classes, lifted
+  verbatim from the matching element in your `index.html`.
+- **Every class token must appear in `index.html`.** `check.mjs` grounds the manifest
+  against the rendered markup (a `hover:`/`focus-visible:`/`disabled:` token is
+  satisfied by its static form) and fails on any class the demo doesn't show. That is
+  what keeps `classes.json`, `DESIGN.md`'s Component notes, and `index.html` from ever
+  disagreeing. Route every value through a token, never a raw colour — same rule as
+  everywhere else.
+
+`check.mjs` treats `classes.json` as opt-in (a design without it still passes), but it
+is the source of truth for the Component notes and for the next section, so ship it.
+
+### 5. React components and a live preview (recommended)
+
+With `classes.json` in place, a design can also ship the finished primitives — the
+real `components/ui/*.tsx` a consumer drops straight in — plus a compiled preview that
+proves they render. `designs/slate/` is the fully worked example; follow it.
+
+- **Generate the components.** `node scripts/build-components.mjs <name>` emits
+  `components/ui/*.tsx` and `lib/utils.ts` from `classes.json` — cva/`cn` primitives
+  carrying the classes verbatim, and Radix-driven ones that weave those classes into
+  stock shadcn structure. **Never hand-edit the output:** when both `classes.json` and
+  a `components/` folder exist, `check.mjs` regenerates the files and fails if a
+  committed one has drifted. Change `classes.json` and re-run instead.
+- **Build the preview.** Copy `designs/slate/react-preview/app.tsx` as a starting
+  point — it mounts the generated components into a copy of the kitchen sink and is
+  token-driven, so it renders in your theme unchanged — then
+  `node scripts/build-preview.mjs <name>` bundles it (with React + Radix) into a
+  self-contained `react-preview/index.html` + `app.bundle.js`. That bundle step is the
+  build-time gate: a generated component that doesn't compile fails here, not in a
+  consumer's project.
+- **Keep `DESIGN.md` in step.** The Component notes (section 3) are the human-readable
+  view of the same strings; update both together.
+
+The npm shortcuts (`build:components`, `build:preview`, `verify`, `typecheck`) and
+`tsconfig.json` are currently pinned to `slate`; for another design invoke the scripts
+directly with your `<name>` as above (widening that tooling to every design is a
+follow-up, not something to solve inside a design folder).
+
 ---
 
 ## Finishing
@@ -352,10 +410,17 @@ that ignores them will get.
 ```sh
 node scripts/check.mjs
 node scripts/build-gallery.mjs
+# if this design ships the generated component layer (section 5):
+node scripts/build-components.mjs <name>
+node scripts/build-preview.mjs <name>
 ```
 
-`check.mjs` verifies files, tokens, and section IDs. Fix everything it reports.
-`build-gallery.mjs` adds the design to the root gallery.
+`check.mjs` verifies files, tokens, and section IDs, grounds `classes.json` against
+the kitchen sink, and — when the design ships a `components/` folder — drift-checks the
+generated `.tsx` against a fresh generation. Fix everything it reports.
+`build-gallery.mjs` adds the design to the root gallery. `build-components.mjs` and
+`build-preview.mjs` regenerate the components and the compiled preview; run them after
+any change to `classes.json`, and commit their output so `check.mjs` stays green.
 
 Then open `designs/<name>/index.html` and look at it. Automated checks confirm the
 sections exist; they cannot tell you the design is good. Specifically check that:
