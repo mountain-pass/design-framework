@@ -275,16 +275,21 @@ Ready-made shadcn components generated from that manifest live in
 [`components/ui/`](components/ui/) (with [`lib/utils.ts`](lib/utils.ts)) — real `.tsx`
 you can drop into a Next.js + shadcn project, carrying these exact classes.
 `scripts/build-components.mjs` emits them and `check.mjs` fails if a committed file
-drifts from a fresh generation, so they stay in lockstep with `classes.json`. The set
-is complete: the cva/`cn` primitives (Button, Badge, Input, Textarea, Card, Alert)
-carry the manifest classes verbatim, and the Radix-driven ones (Select, Checkbox,
-RadioGroup, Switch, Slider, Tabs, DropdownMenu, Table, SidebarNav) weave those design
-classes into stock shadcn/Radix structure, adding the interactive scaffolding — focus
-ring, `data-[state]` transitions, disabled treatment — that a static demo cannot show.
-All 16 were verified by building and rendering them with real React + Radix. A
-compiled live preview that renders these `.tsx` — `scripts/build-preview.mjs` bundles
-them into a self-contained page that opens on any host, and fails the build if a
-component does not compile — is in [`react-preview/`](react-preview/).
+drifts from a fresh generation, so they stay in lockstep with `classes.json`. Three
+shapes: the cva/`cn` primitives (Button, Badge, Input, Textarea, Card, Alert) carry the
+manifest classes verbatim; the plain ones (Breadcrumb, Pagination, Skeleton) are
+structure-only; and the Radix-driven ones (Select, Checkbox, RadioGroup, Switch,
+Slider, Tabs, DropdownMenu, Table, SidebarNav, Avatar, Progress, Dialog, AlertDialog,
+Popover, Tooltip, Sheet, Toast) weave those design classes into stock shadcn/Radix
+structure, adding the interactive scaffolding — focus ring, `data-[state]` transitions,
+disabled treatment, the portal and scrim — that a static demo cannot show. Every one
+was verified by building and rendering it with real React + Radix. A compiled live
+preview that renders these `.tsx` — `scripts/build-preview.mjs` bundles them into a
+self-contained page that opens on any host, and fails the build if a component does not
+compile — is in [`react-preview/`](react-preview/). The overlay components (Dialog,
+AlertDialog, Popover, Tooltip, Sheet, Toast, DropdownMenu), which the kitchen sink can
+only draw statically open, are additionally mounted there as real, clickable instances,
+so the portalled behaviour is exercised and not just described.
 
 Two reading notes. Tailwind utilities are order-independent, so a string here and the
 same set in a different order in the kitchen sink render identically — match the *set*,
@@ -394,9 +399,12 @@ const badgeVariants = cva(
 - Body: `<tbody class="[&_td]:h-11 [&_td]:px-4 [&_td]:align-middle">`; rows `border-b border-border`, hover `bg-muted/50`, **selected `bg-accent`**.
 - Sortable header is a `<button>` inside the `<th>`, and the `<th>` carries `aria-sort`. Numeric columns are `text-right` + `tabular-nums`. Row actions are a ghost icon button revealed with `opacity` and `:focus-within` — never `display:none`, which is unfocusable.
 
-### Dropdown / Popover / Dialog
+### Dropdown menu — `components/ui/dropdown-menu.tsx`
 
-- Surface: `rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-md` (dialogs use `shadow-lg` and their body is padded, not `p-1`).
+The popover surface here is shared by the overlays below (Dialog, Popover, Tooltip,
+Sheet, Toast) — they differ only in shadow depth and body padding.
+
+- Surface: `rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-md`.
 - Menu item: `flex h-8 w-full items-center gap-2.5 rounded-sm px-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground`; the highlighted item is `bg-accent text-accent-foreground`.
 - Destructive item: `flex h-8 w-full items-center gap-2.5 rounded-sm px-2 text-sm text-destructive transition-colors hover:bg-destructive/10`.
 - Section label `px-2 py-1.5 text-xs font-medium text-muted-foreground`; separator `my-1 h-px bg-border`; shortcut hint `ml-auto font-mono text-xs tracking-widest text-muted-foreground`.
@@ -424,6 +432,41 @@ const badgeVariants = cva(
 - Inactive tab: `shrink-0 whitespace-nowrap border-b-2 border-transparent px-4 pt-3 pb-3 text-sm text-muted-foreground transition-colors hover:border-border hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:rounded-t-md`.
 - Segmented control (keeps the fill, because it *is* a control): wrapper `inline-flex items-center gap-1 rounded-md bg-muted p-1`; selected segment `inline-flex h-7 items-center rounded-sm bg-background px-3 text-sm font-medium shadow-xs …`; unselected `inline-flex h-7 items-center rounded-sm px-3 text-sm text-muted-foreground transition-colors hover:text-foreground …`.
 - Vertical tabs use the **sidebar item** treatment (`flex h-8 items-center rounded-md px-2.5 …`, active `bg-accent text-accent-foreground`), not an underline.
+
+### Avatar — `components/ui/avatar.tsx`
+
+- Root: `relative flex shrink-0 overflow-hidden rounded-full bg-muted`. Fallback: `flex h-full w-full items-center justify-center font-medium text-muted-foreground`. Initials on `bg-muted` are the fallback — **no per-user generated colours**, which would reintroduce uncontrolled colour into the palette.
+- Sizes are the caller's `h-*`/`w-*`/text pair on the root (text cascades into the fallback): `h-6 w-6 text-[0.6875rem]`, `h-8 w-8 text-xs`, `h-10 w-10 text-sm`, `h-14 w-14 text-base`.
+- Status dot: `absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-chart-3` (online) or `bg-muted-foreground` (offline). Group: overlap with `-space-x-2`, each avatar carrying `border-2 border-background` to punch the overlap; a `+N` chip uses `bg-secondary text-secondary-foreground`.
+
+### Breadcrumb & pagination — `components/ui/breadcrumb.tsx`, `pagination.tsx`
+
+- Breadcrumb list `flex flex-wrap items-center gap-1.5 text-sm`; link `text-muted-foreground transition-colors hover:text-foreground`; the current page is `font-medium` and **not a link**. Separator is a chevron (`h-3.5 w-3.5`), never a slash.
+- Pagination nav `flex flex-wrap items-center gap-1`. A page link is `inline-flex h-9 w-9 items-center justify-center rounded-md text-sm tabular-nums transition-colors hover:bg-accent …`; the current page is **outlined, not filled** — `border border-input bg-background … font-medium shadow-xs` — because a filled number reads as a primary action. Prev/Next are `inline-flex h-9 items-center gap-1 rounded-md px-3 text-sm font-medium …`; the ellipsis is a non-interactive `inline-flex h-9 w-9 items-center justify-center text-sm text-muted-foreground`.
+
+### Progress & loading — `components/ui/progress.tsx`, `skeleton.tsx`
+
+- **Progress bar**: track `h-2 w-full overflow-hidden rounded-full bg-muted`, indicator `h-full rounded-full bg-primary transition-all` with the value as an inline `width`. The component takes an optional `indicatorClassName` so a non-default fill (e.g. `bg-chart-4` for a quota bar) routes through a token instead of a hard-coded colour.
+- **Skeleton**: `animate-pulse rounded-md bg-muted`; the caller sets width/height and adds `rounded-full` for an avatar placeholder.
+- Spinner (`animate-spin` on a Lucide arc) and the SVG progress ring are not components — they are inline markup in `#progress`.
+
+### Dialog, alert dialog & sheet — `components/ui/dialog.tsx`, `alert-dialog.tsx`, `sheet.tsx`
+
+All three share the floating surface and get **both** a shadow and a border, because in dark mode a shadow on a dark background is nearly invisible and the border is what keeps the edge legible. The overlay scrim is a **token-based blur** — `fixed inset-0 z-50 bg-background/80 backdrop-blur-sm` — never a raw black overlay.
+
+- **Dialog** content: `rounded-lg border border-border bg-popover text-popover-foreground shadow-lg`. Header `p-6 pb-4`; title `text-lg font-semibold tracking-[-0.015em]`; description `mt-1.5 text-sm text-muted-foreground`; body `space-y-4 px-6 pb-6`; footer `flex items-center justify-end gap-3 border-t border-border px-6 py-4`. Close button `-mr-2 -mt-2 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground …`, pulled into the header's top-right corner.
+- **Alert dialog** content: `rounded-lg border border-border bg-popover p-6 text-popover-foreground shadow-lg`. The leading icon sits in a destructive-tinted circle `flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-destructive/10 text-destructive`; footer `mt-5 flex items-center justify-end gap-3`. Action and cancel reuse `buttonVariants` (the destructive confirmation passes `variant="destructive"`; cancel is `variant="outline"`).
+- **Sheet** (drawer) shares the surface but pins to a side — `fixed inset-y-0 right-0 … flex h-full w-full max-w-md flex-col border-l` (the full `border` becomes a single side border). Header `flex items-start justify-between gap-4 border-b border-border p-6`; footer `border-t border-border px-6 py-4`; rows divide with `divide-y divide-border`.
+
+### Popover & tooltip — `components/ui/popover.tsx`, `tooltip.tsx`
+
+- **Popover** content: `rounded-lg border border-border bg-popover p-4 text-popover-foreground shadow-md` — `shadow-md`, one step lighter than a dialog's `shadow-lg`; the caller sets the width.
+- **Tooltip** content: `rounded-md border border-border bg-popover px-2.5 py-1.5 text-xs text-popover-foreground shadow-md` — the same surface at the `text-xs` scale.
+
+### Toast — `components/ui/toast.tsx`
+
+- Root: `flex items-start gap-3 rounded-lg border border-border bg-popover p-4 text-popover-foreground shadow-lg`; the destructive variant swaps the border to `border-destructive/30`. Title `text-sm font-medium`; description `text-sm text-muted-foreground`.
+- Dismiss button `-mr-1 -mt-1 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent …`; an inline action is `inline-flex h-7 shrink-0 items-center rounded-md px-2.5 text-xs font-medium text-primary transition-colors hover:bg-accent …`. Every toast is dismissible; **destructive ones do not auto-dismiss**. In an app they stack bottom-right.
 
 ---
 
